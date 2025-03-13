@@ -7,30 +7,41 @@ import datetime
 _id_ = 0
 _data_base_ = {}
 
+def dateTimeNow()->str:
+    return (
+        datetime.
+        datetime.
+        now().
+        replace(tzinfo=datetime.timezone.utc).
+        isoformat()
+    )
+
+
 hostName = "localhost"
 serverPort = 8080
 def _postSave_(data):
     global _id_
     global _data_base_
+    now = dateTimeNow()
     _id_ = _id_ + 1
     data['id'] = _id_
     data['is_active'] = True
-    data['created_at'] = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat(),
-    data['updated_at'] = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat()
+    data['created_at'] = deepcopy(now)
+    data['updated_at'] = deepcopy(now)
     _data_base_[str(_id_)] = data
 
-def _postEdit_(data):
-    _id = str(data['id'])
-    if 'id' not in data:
+def _postEdit_(data_):
+    _id = str(data_['id'])
+    if 'id' not in data_:
         return
     if _id not in _data_base_:
         return
     if _data_base_[_id]['is_active'] == False:
         return
-    data['is_active'] = True
-    data['created_at'] = _data_base_[_id]['created_at']
-    data['updated_at'] = datetime.datetime.now().replace(tzinfo=datetime.timezone.utc).isoformat()
-    _data_base_[_id] = data
+    data_['is_active'] = True
+    data_['created_at'] = _data_base_[_id]['created_at']
+    data_['updated_at'] = dateTimeNow()
+    _data_base_[_id] = data_
 
 
 def _delete_(ids_ : list[int]):
@@ -68,6 +79,9 @@ def _getFilter_(filters_):
                     if c in _data_base_[a][b]:
                         out[a] = _data_base_[a]
     return _getCopy_(out)
+
+
+
 
 class Server(BaseHTTPRequestHandler):
     def _get_variables(self):
