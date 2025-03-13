@@ -1,11 +1,14 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from copy import deepcopy 
+from sys import argv
 import json
 import time
 import datetime
 
 _id_ = 0
+_index_ = []
 _data_base_ = {}
+_save_data_ = True
 
 def dateTimeNow()->str:
     return (
@@ -19,16 +22,74 @@ def dateTimeNow()->str:
 
 hostName = "localhost"
 serverPort = 8080
-def _postSave_(data):
+
+def _fileName(id_:str)->str:
+    return (
+        'db/'+
+        str(id_)+
+        '.json'
+    )
+
+def _dbSave(id_:str):
+    global _data_base_
+    with open(_fileName(id_), 'w') as file_:
+        json.dump(_data_base_[id_], file_)
+
+def _dbRead(id_:str):
+    global _data_base_
+    with open(_fileName(id_), 'r') as file_:
+        _data_base_[id_] = json.load(file_)
+
+def _dbReadAll():
+    global _index_
+    for i in _index_:
+        _dbRead(i)
+
+def _indexSave():
+    global _index_
+    with open('index.json', 'w') as file_:
+        json.dump(_index_, file_)
+
+def _indexRead():
+    global _index_
+    with open('index.json', 'r') as file_:
+         _index_ = json.load(file_)
+
+def _indexAdd(id_:str)->int:
+    global _index_
+    if id_ not in _index_:
+        _index_.append(id_)
+    _indexSave()
+
+def _indexDel(id_:str)->int:
+    global _index_
+    del _index_[_index_.index(id_)]
+    _indexSave()
+
+def _findId():
+    global _index_
     global _id_
+    for i in  _index_:
+        if int(i) > _id_:
+            _id_ = deepcopy(int(i))
+
+def _addId():
+    global _id_
+    _id_ = _id_ + 1
+    return deepcopy(str(_id_))
+
+
+def _postSave_(data):
     global _data_base_
     now = dateTimeNow()
-    _id_ = _id_ + 1
-    data['id'] = _id_
+    _id = _addId()
+    data['id'] = _id
     data['is_active'] = True
     data['created_at'] = deepcopy(now)
     data['updated_at'] = deepcopy(now)
-    _data_base_[str(_id_)] = data
+    _data_base_[_id] = data
+    _indexAdd(_id)
+    _dbSave(_id)
 
 def _postEdit_(data_):
     _id = str(data_['id'])
@@ -42,6 +103,7 @@ def _postEdit_(data_):
     data_['created_at'] = _data_base_[_id]['created_at']
     data_['updated_at'] = dateTimeNow()
     _data_base_[_id] = data_
+    _dbSave(_id)
 
 
 def _delete_(ids_ : list[int]):
@@ -96,12 +158,13 @@ class Server(BaseHTTPRequestHandler):
         else:
            var_array = [var_string]
         for block in var_array:
-            pos = block.index('=')
-            value = block[pos+1:]
-            key = block[:pos]
-            if key not in out:
-                out[key] = []
-            out[key].append(value)
+            if '=' in block:
+                pos = block.index('=')
+                value = block[pos+1:]
+                key = block[:pos]
+                if key not in out:
+                   out[key] = []
+                out[key].append(value)
         return out
     def _do_response(self, data):
         out = data.encode()
@@ -153,14 +216,16 @@ class Server(BaseHTTPRequestHandler):
         self._do_response(json.dumps('{}'))
 
 
+_indexRead()
+_dbReadAll()
+_findId()
+
 def run(server_class=HTTPServer, handler_class=Server, port=8008,  protocol_version='HTTP/1.1'):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class, protocol_version)
-    print ('Starting httpd on port')
     httpd.serve_forever()
 
 if __name__ == "__main__":
-    from sys import argv
     if len(argv) == 3:
         run(port=int(argv[1]))
     else:
