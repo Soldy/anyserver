@@ -11,6 +11,7 @@ _index_ = []
 _data_base_ = {}
 _save_data_ = True
 _load_data_ = True
+_log_level_ = logging.ERROR
 
 
 def dateTimeNow()->str:
@@ -221,7 +222,7 @@ class Server(BaseHTTPRequestHandler):
         return
 
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=_log_level_)
 if _load_data_ == True:
     _indexRead()
     _dbReadAll()
