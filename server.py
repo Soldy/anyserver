@@ -1,14 +1,17 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
 from copy import deepcopy 
 from sys import argv
 import json
 import time
 import datetime
+import logging
 
 _id_ = 0
 _index_ = []
 _data_base_ = {}
 _save_data_ = True
+_load_data_ = True
+
 
 def dateTimeNow()->str:
     return (
@@ -32,8 +35,9 @@ def _fileName(id_:str)->str:
 
 def _dbSave(id_:str):
     global _data_base_
-    with open(_fileName(id_), 'w') as file_:
-        json.dump(_data_base_[id_], file_)
+    if _save_data_ == True:
+        with open(_fileName(id_), 'w') as file_:
+            json.dump(_data_base_[id_], file_)
 
 def _dbRead(id_:str):
     global _data_base_
@@ -147,7 +151,6 @@ def _getFilter_(filters_):
 
 class Server(BaseHTTPRequestHandler):
     def _get_variables(self):
-        print(self.requestline)
         out = {}
         if '?' not in self.path:
            return out
@@ -205,7 +208,6 @@ class Server(BaseHTTPRequestHandler):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        print(post_data)
         _delete_(post_data)
         self._do_response(json.dumps('{}'))
     def do_PATCH(self):
@@ -214,11 +216,17 @@ class Server(BaseHTTPRequestHandler):
         post_data = json.loads(field)
         _postEdit_(post_data)
         self._do_response(json.dumps('{}'))
+    def log_message(self, format, *args):
+        logging.info(args[0]+" "+args[1]+""+args[2])
+        return
 
 
-_indexRead()
-_dbReadAll()
-_findId()
+logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+if _load_data_ == True:
+    _indexRead()
+    _dbReadAll()
+    _findId()
+
 
 def run(server_class=HTTPServer, handler_class=Server, port=8008,  protocol_version='HTTP/1.1'):
     server_address = ('', port)
