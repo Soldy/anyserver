@@ -105,25 +105,25 @@ def _findId():
         if int(i) > _id_:
             _id_ = deepcopy(int(i))
 
-def _addId():
+def _addId()->str:
     global _id_
     _id_ = _id_ + 1
     return deepcopy(str(_id_))
 
 
-def _postSave_(data):
+def _postSave_(data_: dict[str, str]):
     global _data_base_
     now = dateTimeNow()
     _id = _addId()
-    data['id'] = _id
-    data['is_active'] = True
-    data['created_at'] = deepcopy(now)
-    data['updated_at'] = deepcopy(now)
-    _data_base_[_id] = data
+    data_['id'] = _id
+    data_['is_active'] = True
+    data_['created_at'] = deepcopy(now)
+    data_['updated_at'] = deepcopy(now)
+    _data_base_[_id] = data_
     _indexAdd(_id)
     _dbSave(_id)
 
-def _postEdit_(data_):
+def _postEdit_(data_: dict[str,str]):
     _id = str(data_['id'])
     if 'id' not in data_:
         return
@@ -143,9 +143,9 @@ def _delete_(ids_ : list[int]):
          if str(ids_[i]) in _data_base_:
              _data_base_[str(ids_[i])]['is_active'] = False
 
-def _getCopy_(result_):
+def _getCopy_(ids_:list[str]):
     out = []
-    for i in result_:
+    for i in ids_:
         if _data_base_[i]['is_active']:
              out.append(deepcopy(_data_base_[i]))
              out[len(out)-1]['is_active'] = 'true'
@@ -163,7 +163,7 @@ def _getId_(ids_):
             out[str(i)] = _data_base_[str(i)]
     return _getCopy_(out)
 
-def _getFilter_(filters_):
+def _getFilter_(filters_: dict[str,str]):
     global _data_base_
     out = {}
     for a in _data_base_:
@@ -197,16 +197,16 @@ class Server(BaseHTTPRequestHandler):
                    out[key] = []
                 out[key].append(value)
         return out
-    def _do_response(self, data):
-        out = data.encode()
-        self.send_response(200)
+    def _do_response(self, data_: dict[str, any]):
+        out = data_.encode()
         self.protocol_version = 'HTTP/1.1'
+        self.send_response(200)
         self.send_header('Protocol-Version', "HTTP/1.1")
         self.send_header('Content-type', 'application/json')
         self.send_header('Content-length', len(out))
         self.end_headers()
         self.wfile.write(out)
-    def _do_json_response(self, data_):
+    def _do_json_response(self, data_: dict[str, any]):
         return self._do_response(
             json.dumps(
                 data_
@@ -244,11 +244,16 @@ class Server(BaseHTTPRequestHandler):
         post_data = json.loads(field)
         _postEdit_(post_data)
         self._do_response(json.dumps('{}'))
-    def log_message(self, format, *args):
-        logging.info(args[0]+" "+args[1]+""+args[2])
+    def log_message(self, format, *args: list[str]):
+        if len(args) == 3:
+            logging.info(args[0]+" "+args[1]+" "+args[2])
+            return
+        out = ''
+        for i in args:
+            out = out + str(i)
+        logging.info(out)
         return
 
-    
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=_log_level_)
 
