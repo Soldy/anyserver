@@ -1,18 +1,24 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
 from copy import deepcopy 
 from sys import argv
+import os
 import json
 import time
 import datetime
 import logging
 
 _id_ = 0
-_index_ = []
+_index_file_ = 'index.json'
+_server_host_ = 'localhost'
+_server_port_ = 8008
 _data_base_ = {}
 _save_data_ = True
 _load_data_ = True
-_log_level_ = logging.ERROR
+_log_level_ = logging.INFO
 
+_fresh_db_ = False
+_index_ = []
+_db_dir_ = 'db'
 
 def dateTimeNow()->str:
     return (
@@ -24,12 +30,33 @@ def dateTimeNow()->str:
     )
 
 
-hostName = "localhost"
-serverPort = 8080
+
+def _dbExistCheck():
+    _error = False
+    if not _save_data_ and not _load_data_:
+        return 
+    if not os.path.exists(_db_dir_):
+        logging.info('Creating database directory')
+        os.makedirs(_db_dir_)
+        _fresh_db_ = True 
+    if not os.path.isdir(_db_dir_):
+        logging.critical('Database directory error')
+        _error = True
+    if not os.path.exists(_index_file_):
+        logging.info('Creating index file')
+        with open(_index_file_, 'w') as file_:
+            json.dump([], file_)
+        _fresh_db_ = True 
+    if not os.path.isfile(_index_file_):
+        logging.critical('Index file error')
+        _error = True
+    if _error:
+          quit()
 
 def _fileName(id_:str)->str:
     return (
-        'db/'+
+        _db_dir_+
+        '/'+
         str(id_)+
         '.json'
     )
@@ -52,12 +79,12 @@ def _dbReadAll():
 
 def _indexSave():
     global _index_
-    with open('index.json', 'w') as file_:
+    with open(_index_file_, 'w') as file_:
         json.dump(_index_, file_)
 
 def _indexRead():
     global _index_
-    with open('index.json', 'r') as file_:
+    with open(_index_file_, 'r') as file_:
          _index_ = json.load(file_)
 
 def _indexAdd(id_:str)->int:
@@ -221,21 +248,25 @@ class Server(BaseHTTPRequestHandler):
         logging.info(args[0]+" "+args[1]+""+args[2])
         return
 
+    
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=_log_level_)
-if _load_data_ == True:
+
+_dbExistCheck()
+
+if _load_data_ and not _fresh_db_:
     _indexRead()
     _dbReadAll()
     _findId()
 
 
-def run(server_class=HTTPServer, handler_class=Server, port=8008,  protocol_version='HTTP/1.1'):
-    server_address = ('', port)
+
+def run(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
+    server_address = (host, port)
     httpd = server_class(server_address, handler_class, protocol_version)
+    logging.info('httpd starting')
     httpd.serve_forever()
+   
 
 if __name__ == "__main__":
-    if len(argv) == 3:
-        run(port=int(argv[1]))
-    else:
-        run()
+        run(host=_server_host_, port=_server_port_)
