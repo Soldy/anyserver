@@ -7,6 +7,11 @@ import time
 import datetime
 import logging
 
+
+"""
+This is the temp config zone.
+This should be replaced by a config class or function. 
+"""
 _id_ = 0
 _index_file_ = 'index.json'
 _server_host_ = 'localhost'
@@ -20,6 +25,16 @@ _fresh_db_ = False
 _index_ = []
 _db_dir_ = 'db'
 
+"""
+W3C Date string generator
+
+
+This is just a temporary solution.
+Storing a date string or working with it is stupid.
+Have to change to unix timestamp.
+
+:return: str : w3c
+"""
 def dateTimeNow()->str:
     return (
         datetime.
@@ -31,6 +46,7 @@ def dateTimeNow()->str:
 
 
 
+""" This checking the file system for initialization. """
 def _dbExistCheck():
     _error = False
     if not _save_data_ and not _load_data_:
@@ -53,6 +69,13 @@ def _dbExistCheck():
     if _error:
           quit()
 
+
+"""
+Db record file name 
+
+:param: str : the record id in str
+:return: str: full path 
+"""
 def _fileName(id_:str)->str:
     return (
         _db_dir_+
@@ -61,12 +84,23 @@ def _fileName(id_:str)->str:
         '.json'
     )
 
+
+"""
+Db record save 
+
+:param: str : the record id in str
+"""
 def _dbSave(id_:str):
     global _data_base_
     if _save_data_ == True:
         with open(_fileName(id_), 'w') as file_:
             json.dump(_data_base_[id_], file_)
 
+"""
+Db record load
+
+:param: str : the record id in str
+"""
 def _dbRead(id_:str):
     global _data_base_
     with open(_fileName(id_), 'r') as file_:
@@ -150,7 +184,6 @@ def _getCopy_(ids_:list[str]):
              out.append(deepcopy(_data_base_[i]))
              out[len(out)-1]['is_active'] = 'true'
     return out
-
 def _getAll_():
     global _data_base_
     return _getCopy_(_data_base_)
@@ -178,6 +211,10 @@ def _getFilter_(filters_: dict[str,str]):
 
 
 class Server(BaseHTTPRequestHandler):
+    def _get_clearpath(self):
+        if '?' not in self.path:
+           return deepcopy(self.path)
+        return deepcopy(path[:path.index('?')])
     def _get_variables(self):
         out = {}
         if '?' not in self.path:
@@ -255,6 +292,15 @@ class Server(BaseHTTPRequestHandler):
         return
 
 
+def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
+    server_address = (host, port)
+    httpd = server_class(server_address, handler_class, protocol_version)
+    logging.info('httpd starting')
+    httpd.serve_forever()
+
+"""
+server init
+"""
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=_log_level_)
 
 _dbExistCheck()
@@ -266,12 +312,7 @@ if _load_data_ and not _fresh_db_:
 
 
 
-def run(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
-    server_address = (host, port)
-    httpd = server_class(server_address, handler_class, protocol_version)
-    logging.info('httpd starting')
-    httpd.serve_forever()
    
 
 if __name__ == "__main__":
-        run(host=_server_host_, port=_server_port_)
+        _httpServer(host=_server_host_, port=_server_port_)
