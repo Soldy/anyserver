@@ -9,12 +9,12 @@ _index_ = {}
 
 def save():
     global _index_
-    with open(_index_file_, 'w') as file_:
+    with open(_file_, 'w') as file_:
         json.dump(_index_, file_)
 
 def read():
     global _index_
-    with open(_index_file_, 'r') as file_:
+    with open(_file_, 'r') as file_:
          _index_ = json.load(file_)
 
 def add(path_:str, id_:str)->int:
@@ -31,5 +31,3 @@ def addId(path:str)->str:
         _ids_[path_] = 0
     _ids_[path_] = _ids_[path_] + 1
     return deepcopy(str(_id_[path_]))
-
-
