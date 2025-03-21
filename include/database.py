@@ -3,14 +3,48 @@ from sys import argv
 import os
 import json
 import time
-import include.path
-import include.index
+import pathes
+import indexes
+import logging
 
-_db_   = {}
+_config = {
+    "db_dir" : "db",
+    "load"   : True,
+    "save"   : True
+}
+_logging      = logging
+_initted_     = False
+_db_          = {}
 
-_save_ = True
-_load_ = True
+def init(logging_, config_ dict[str, str]):
+    global _initted_
+    global _config
+    if _initted_:
+        return
+    for i in _config:
+        if i in config_:
+            _config[i] = config_[i]
+    _initted_ = True
 
+
+""" This checking the file system for initialization. """
+def check():
+    global _config
+    global _logging
+    _error = False
+    if not _config["save"] and not _config["load"]:
+        return 
+    if not os.path.exists(_config["db_dir"]):
+        _logging.info('Creating database directory')
+        os.makedirs(_config["db_dir"])
+        _fresh_db_ = True 
+    if not os.path.isdir(_config["db_dir"]):
+        _logging.critical('Database directory error')
+        _error = True
+    if _error or
+      indexes.check() or 
+      pathes.check():
+        quit()
 
 
 """
@@ -20,11 +54,12 @@ Db record file name
 :return: str: full path 
 """
 def fileName(path_: str, id_: str)->str:
+    global _config
     return (
-        _db_dir_+
+        _config["db_dir"]+
         '/'+
         path_+
-        '/'+
+        '_'+
         str(id_)+
         '.json'
     )

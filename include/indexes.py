@@ -2,10 +2,24 @@ from copy import deepcopy
 from sys import argv
 import os
 import json
+import logging
 
 _file_  = 'indexes.json'
 _ids_ = {}
 _index_ = {}
+_log_level_   = logging.INFO
+
+
+def check()->bool:
+    _error = False
+    if not os.path.exists(_file_):
+        logging.info('Creating index file')
+        with open(_file_, 'w') as file_:
+            json.dump({}, file_)
+    if not os.path.isfile(_file_):
+        logging.critical('Index file error')
+        return True
+    return False
 
 def save():
     global _index_
