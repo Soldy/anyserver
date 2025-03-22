@@ -2,46 +2,41 @@ from copy import deepcopy
 from sys import argv
 import os
 import json
-import logging
-
-_file_  = 'indexes.json'
-_ids_ = {}
-_index_ = {}
-_log_level_   = logging.INFO
 
 
-def check()->bool:
-    _error = False
-    if not os.path.exists(_file_):
-        logging.info('Creating index file')
-        with open(_file_, 'w') as file_:
-            json.dump({}, file_)
-    if not os.path.isfile(_file_):
-        logging.critical('Index file error')
-        return True
-    return False
+class IndexesClass:
+    def __init__(self, logging_, config_):
+       self._log = logging_
+       self._config = config_
+       self._ids = {}
+       self._index = {}
+    def check(self)->bool:
+        _file_ = self._config['index']
+        _error = False
+        if not os.path.exists(_file_):
+            self._log.info('Creating index file')
+            with open(_file_, 'w') as file_:
+                json.dump({}, file_)
+        if not os.path.isfile(_file_):
+            self._log.critical('Index file error')
+            return True
+        return False
+    def save(self):
+        _file_ = self._config['index']
+        with open(self._config['index'], 'w') as file_:
+            json.dump(self._index, file_)
+    def read(self):
+        with open(self._config['index'], 'r') as file_:
+            self._index = json.load(file_)
 
-def save():
-    global _index_
-    with open(_file_, 'w') as file_:
-        json.dump(_index_, file_)
-
-def read():
-    global _index_
-    with open(_file_, 'r') as file_:
-         _index_ = json.load(file_)
-
-def add(path_:str, id_:str)->int:
-    global _index_
-    if path_ not in _index_:
-        _index_[path_] = []
-    if id_ not in _index_:
-        _index_[path_].append(deepcopy(id_))
-        _indexSave()
-
-def addId(path:str)->str:
-    global _ids_
-    if path_ not in _ids_:
-        _ids_[path_] = 0
-    _ids_[path_] = _ids_[path_] + 1
-    return deepcopy(str(_id_[path_]))
+    def add(self, path_:str, id_:str)->int:
+        if path_ not in self._index:
+            self._index[path_] = []
+        if id_ not in self._index:
+            self._index[path_].append(deepcopy(id_))
+            self.save()
+    def addId(self, path:str)->str:
+        if path_ not in self._ids:
+            self_ids[path_] = 0
+        self._ids[path_] = self._ids[path_] + 1
+        return deepcopy(str(self._ids[path_]))
