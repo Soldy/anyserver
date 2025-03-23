@@ -6,10 +6,10 @@ import json
 
 class IndexesClass:
     def __init__(self, logging_, config_):
-       self._log = logging_
-       self._config = config_
-       self._ids = {}
-       self._index = {}
+        self._log = logging_
+        self._config = config_
+        self._ids = {}
+        self._index = {}
     def check(self)->bool:
         _file_ = self._config['index']
         _error = False
@@ -40,3 +40,5 @@ class IndexesClass:
             self_ids[path_] = 0
         self._ids[path_] = self._ids[path_] + 1
         return deepcopy(str(self._ids[path_]))
+    def all(self):
+        return deepcopy(self._index)
