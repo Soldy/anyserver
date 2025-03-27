@@ -6,28 +6,24 @@ import json
 import logging
 import database
 
-_logging      = logging
-_initted_     = False
-_host_        = 'localhost'
-_port_        = 8008
-_log_level_   = logging.INFO
+_config = {
+    "port"   : 8008,
+    "host"   : "localhost",
+    "db_dir" : "db",
+    "index"  : "indexes.json",
+    "path"   : "pathes.json",
+    "log"    : logging.DEBUG,
+    "load"   : True,
+    "save"   : True
+}
 
-def init(logging_, config_ dict[str, str|bool|int]):
-    global _initted_
-    global _host_
-    global _port_
-    global _logging
-    if _innitted_:
-        return
-    if "host" in config_:
-        _host_ = config["host"]
-    if "port" in config_:
-        _port_ = config["port"]
-    _logging = logging_
-    database.init(logging_, config_)
-    _initted_ = True
+
+
 
 class Server(BaseHTTPRequestHandler):
+    def __init__(self, *args):
+        self._logging = logging
+        BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         if '?' not in self.path:
            return deepcopy(self.path)
@@ -51,7 +47,7 @@ class Server(BaseHTTPRequestHandler):
                    out[key] = []
                 out[key].append(value)
         return out
-    def _do_response(self, data_: dict[str, any]):
+    def _do_response(self, data_: str):
         out = data_.encode()
         self.protocol_version = 'HTTP/1.1'
         self.send_response(200)
@@ -60,28 +56,27 @@ class Server(BaseHTTPRequestHandler):
         self.send_header('Content-length', len(out))
         self.end_headers()
         self.wfile.write(out)
-    def _do_json_response(self, data_: dict[str, any]):
+    def _do_json_response(self, data_: dict[str, any] | list[dict[str, any]]):
         return self._do_response(
             json.dumps(
                 data_
             )
         )
     def do_GET(self):
-        database.get(
+        self._do_json_response(
+          _db.get(
             self._clearPath(),
-            self._get_variables()
+            self._getVariables()
+          )
         )
     def do_POST(self):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        database.post(post_data)
-        self._do_response(json.dumps('{}'))
-    def do_DELETE(self):
-        length = int(self.headers['content-length'])
-        field = self.rfile.read(length).decode()
-        post_data = json.loads(field)
-        database.delete(post_data)
+        _db.post(
+          self._clearPath(),
+          post_data
+        )
         self._do_response(json.dumps('{}'))
     def do_PATCH(self):
         length = int(self.headers['content-length'])
@@ -90,23 +85,33 @@ class Server(BaseHTTPRequestHandler):
         database.path(post_data)
         self._do_response(json.dumps('{}'))
     def log_message(self, format, *args: list[str]):
-        global _logging
         if len(args) == 3:
-            _logging.info(args[0]+" "+args[1]+" "+args[2])
+            self._logging.info(args[0]+" "+args[1]+" "+args[2])
             return
         out = ''
         for i in args:
             out = out + str(i)
-        _logging.info(out)
+        self._logging.info(out)
         return
 
 def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
     server_address = (host, port)
     httpd = server_class(server_address, handler_class, protocol_version)
-    _logging.info('httpd starting')
+    logging.debug('httpd starting')
     httpd.serve_forever()
 
 def start():
-    global _host_
-    global _port_
-    _httpServer(host=_host_, port=_port_)
+    global _config
+    _httpServer(host=_config['host'], port=_config['port'])
+
+"""
+server init
+"""
+logging.basicConfig(
+  format='%(asctime)s - %(levelname)s - %(message)s',
+  level=_config['log']
+)
+
+_db = database.DatabasesClass(logging, _config)
+start()
+
