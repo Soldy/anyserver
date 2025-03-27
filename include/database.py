@@ -111,15 +111,22 @@ class DatabasesClass:
               'w'
             ) as file_:
                 json.dump(self._db[path_][id_], file_)
-    def _set(self, path_, id_, data_):
-        if path not in self._db :
+    """
+    set record value
+
+    :param: str : the record path
+    :param: str : the record id in str
+    :param: dict[str,any] : data
+    """
+    def _set(self, path_: str, id_: str, data_: dict[str,any]):
+        if path_ not in self._db :
             self._db[path_] = {}
-        self._db[path_][_id] = {}
+        self._db[path_][id_] = {}
         data_['id'] = deepcopy(id_)
-        self._db[path_][_id]['data'] = deepcopy(data_)
-        self._db[path_][_id]['id'] = deepcopy(_id)
-        self._indexes.add(path_, _id)
-        self.save(path_, _id)
+        self._db[path_][id_]['data'] = deepcopy(data_)
+        self._db[path_][id_]['id'] = deepcopy(id_)
+        self._indexes.add(path_, id_)
+        self.save(path_, id_)
 
     """
     Db record post
@@ -128,7 +135,7 @@ class DatabasesClass:
     :return: int : result code 0 ok
     """
     def post(self, path_: str, data_: dict[str, str])->int:
-        path = self._pathesVes.get(
+        path = self._patheses.get(
           self._pathFix(path_)
         )
         _id = self._indexes.addId(
@@ -150,7 +157,7 @@ class DatabasesClass:
     :return: int : result code 0 ok
     """
     def patch(self, path_: str, data_: dict[str, str])->int:
-        path = self._pathesVes.get(
+        path = self._patheses.get(
           self._pathFix(path_)
         )
         if 'id' not in data:
