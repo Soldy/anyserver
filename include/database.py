@@ -4,18 +4,7 @@ import os
 import json
 import pathes
 import indexes
-import logging
 
-_config = {
-    "db_dir" : "db",
-    "index"  : "indexes.json",
-    "path"   : "pathes.json",
-    "load"   : True,
-    "save"   : True
-}
-
-indexes._config = _config
-pathes._config = _config
 
 class DatabasesClass:
     def __init__(self, logging_, config_):
@@ -30,11 +19,22 @@ class DatabasesClass:
           self._log,
           self._config
         )
+        self.check()
+        self._patheses.load()
+        self._indexes.load()
+        self.loadAll()
+    """
+    path name fix
+    """
+    def _pathFix(self, path_:str)->str:
+        return path_.replace("/", "_")
     """ This checking the file system for initialization. """
-    def check():
-        if not self._config["save"] and
-           not self._config["load"]:
-            return 
+    def check(self):
+        _error = False
+        if not self._config["save"]:
+            return
+        if not self._config["load"]:
+            return
         if not os.path.exists(
           self._config["db_dir"]
         ):
@@ -51,19 +51,22 @@ class DatabasesClass:
               'Database directory error'
             )
             _error = True
-        if _error or
-          self._indexes.check() or 
-          self._pathes.check():
+        if self._patheses.check():
+            _error = True
+        if self._indexes.check():
+            _error = True
+        if _error :
             quit()
+
     """
     Db record file name 
 
     :param: str : the record id in str
     :return: str: full path 
     """
-    def fileName(path_: str, id_: str)->str:
+    def _fileName(self, path_: str, id_: str)->str:
         return (
-          slef._config["db_dir"]+
+          self._config["db_dir"]+
           '/'+
           path_+
           '_'+
@@ -75,66 +78,111 @@ class DatabasesClass:
 
     :param: str : the record id in str
     """
-    def load(path_: str, id_: str):
-        if self._config["load"] == True:
-            if path_ not in self._db:
-                self._db[path_] = {}
-            with open(self._fileName(path_, id_), 'r') as file_:
-                self._db[path_][id_] = json.load(file_)
+    def load(self, path_: str, id_: str):
+        if not self._config["load"]:
+            return
+        if path_ not in self._db:
+            self._db[path_] = {}
+        with open(self._fileName(path_, id_), 'r') as file_:
+            self._db[path_][id_] = json.load(file_)
     """
     load all db records
 
     :param: dict[str, dict[str, str]] index
     """
-    def loadAll(index_: dict[str, dict[str, str]]):
-        index =  self._indexes.all()
-        for path in index:
-            for id_ in index[path]:
+    def loadAll(self):
+        for path in self._patheses.all():
+            path = self._patheses.get(
+              path
+            )
+            for id_ in self._indexes.all(
+              path
+            ):
                 self.load(path, id_)
     """
     Db record save
 
     :param: str : the record id in str
     """
-    def save(path_: str, id_:str):
-        if _save_ == True:
-            with open(_fileName(path_, id_), 'w') as file_:
+    def save(self, path_: str, id_:str):
+        if self._config['save'] == True:
+            with open(
+              self._fileName(path_, id_),
+              'w'
+            ) as file_:
                 json.dump(self._db[path_][id_], file_)
+    def _set(self, path_, id_, data_):
+        if path not in self._db :
+            self._db[path_] = {}
+        self._db[path_][_id] = {}
+        data_['id'] = deepcopy(id_)
+        self._db[path_][_id]['data'] = deepcopy(data_)
+        self._db[path_][_id]['id'] = deepcopy(_id)
+        self._indexes.add(path_, _id)
+        self.save(path_, _id)
 
     """
     Db record post
 
     :param: str : the record id in str
+    :return: int : result code 0 ok
     """
-    def post(path_: str, data_: dict[str, str]):
+    def post(self, path_: str, data_: dict[str, str])->int:
+        path = self._pathesVes.get(
+          self._pathFix(path_)
+        )
         _id = self._indexes.addId(
           self._patheses.get(
-            _path
+            self._pathFix(path_)
           )
         )
-        self._db[_id] = {}
-        data_['id'] = _id
-        self._db[path_][_id]['data'] = deepcopy(data_)
-        self._indexes.add(_path, _id)
-        self.save()
-
+        self._set(path_, _id, data_)
+        return 0
     """
-    Db record save
+    Db record post
+     result codes:
+        0 - O.K.
+        1 - missing id (invalid request)
+        2 - unkown path 
+        3 - unkown id
 
     :param: str : the record id in str
+    :return: int : result code 0 ok
     """
-    def _getCopy(self, path_:str, ids_:list[str]):
+    def patch(self, path_: str, data_: dict[str, str])->int:
+        path = self._pathesVes.get(
+          self._pathFix(path_)
+        )
+        if 'id' not in data:
+            return 1
+        _id = data_['id']
+        if path not in self._db:
+            return 2
+        if _id not in self._db[path]:
+            return 3
+        self._set(path_, data_['id'], data_)
+        return 0
+
+    """
+    get result element copy
+
+    :param:  str : element path
+    :param:  list[str] : element list
+    :return: list[dict[str,any]] : result element copy
+    """
+    def _getCopy(self, path_:str, ids_:list[str])->list[dict[str,any]]:
         out = []
         for i in ids_:
-            if self._db[i]:
+            if i in self._db[path_]:
                 pack = deepcopy(self._db[path_][i]['data'])
                 pack['id'] = deepcopy(self._db[path_][i]['id'])
-                out.append(deepcopy(pack)
+                out.append(deepcopy(pack))
         return out
+
     """
     get All record
 
-    :param: str : the record id in str
+    :param: str : path
     """
     def _getAll(self, path_:str):
         return self._getCopy(
@@ -143,12 +191,24 @@ class DatabasesClass:
             path_
           ]
         )
+    """
+    get records by id
+
+    :param: str : path
+    :param: list[str] : id list
+    """
     def _getId(self, path_: str, ids_: list[str]):
         out = []
         for i in ids_:
             if str(i) in self._db[path_]:
                 out.append(str(i))
         return self._getCopy(path_, out)
+    """
+    get elements by filter
+
+    :param: str : path
+    :param: dict[str, str] : filters
+    """
     def _getFilter(self, path_: str, filters_: dict[str,str]):
         out = []
         for a in self._db[path_]:
@@ -158,15 +218,20 @@ class DatabasesClass:
                        if c in self._db[path_][a]['data'][b]:
                             out.append(str(a))
         return self._getCopy(path_, out)
-    def get(path_: str, gets_: dict[str,str]):
+    """
+    get request manager
+
+    :param: str : the record id in str
+    """
+    def get(self, path_: str, gets_: dict[str,str]):
         path = self._patheses.get(
-          path_
+          self._pathFix(path_)
         )
-        if path not in self._db[path]:
+        if path not in self._db:
             return {}
         if 'id' in gets_:
-            return self._getId(path, gets_['id']))
-        if gets == {}:
+            return self._getId(path, gets_['id'])
+        if gets_ == {}:
             return self._getAll(path)
         else:
             return self._getFilter(path, gets_)
