@@ -38,7 +38,7 @@ class DatabasesClass:
         if not os.path.exists(
           self._config["db_dir"]
         ):
-            self._log.info(
+            self._log.debug(
               'Creating database directory'
             )
             os.makedirs(
@@ -91,6 +91,9 @@ class DatabasesClass:
     :param: dict[str, dict[str, str]] index
     """
     def loadAll(self):
+        self._log.debug(
+           'Loading Database'
+        )
         for path in self._patheses.all():
             path = self._patheses.get(
               path

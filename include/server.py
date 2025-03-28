@@ -94,15 +94,27 @@ class Server(BaseHTTPRequestHandler):
         self._logging.info(out)
         return
 
-def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
+def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host="127.0.0.1", protocol_version="HTTP/1.1"):
     server_address = (host, port)
     httpd = server_class(server_address, handler_class, protocol_version)
-    logging.debug('httpd starting')
+    logging.debug("httpd starting "+host+":"+str(port))
     httpd.serve_forever()
 
-def start():
+def start(args):
     global _config
-    _httpServer(host=_config['host'], port=_config['port'])
+    if str(int(args.port)) != args.port:
+       logging.critical("invalid port")
+       quit()
+    _config["port"] = int(args.port)
+    _config["host"] = args.host
+    _config["db_dir"] = args.db
+    _config["index"] = args.index
+    _config["path"] = args.path
+    if args.load == False:
+        _confif["load"] = False
+    if args.save == False:
+        _confif["save"] = False
+    _httpServer(host=_config["host"], port=_config["port"])
 
 """
 server init
@@ -113,5 +125,4 @@ logging.basicConfig(
 )
 
 _db = database.DatabasesClass(logging, _config)
-start()
 
