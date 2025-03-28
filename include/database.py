@@ -146,7 +146,7 @@ class DatabasesClass:
             self._pathFix(path_)
           )
         )
-        self._set(path_, _id, data_)
+        self._set(path, _id, data_)
         return 0
     """
     Db record post
@@ -170,7 +170,7 @@ class DatabasesClass:
             return 2
         if _id not in self._db[path]:
             return 3
-        self._set(path_, data_['id'], data_)
+        self._set(path, data_['id'], data_)
         return 0
 
     """

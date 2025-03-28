@@ -325,7 +325,7 @@ class DatabasesClass:
             self._pathFix(path_)
           )
         )
-        self._set(path_, _id, data_)
+        self._set(path, _id, data_)
         return 0
     """
     Db record post
@@ -349,7 +349,7 @@ class DatabasesClass:
             return 2
         if _id not in self._db[path]:
             return 3
-        self._set(path_, data_['id'], data_)
+        self._set(path, data_['id'], data_)
         return 0
 
     """
@@ -419,6 +419,7 @@ class DatabasesClass:
         if path not in self._db:
             return {}
         if 'id' in gets_:
+            print(gets_)
             return self._getId(path, gets_['id'])
         if gets_ == {}:
             return self._getAll(path)
@@ -434,7 +435,7 @@ class Server(BaseHTTPRequestHandler):
     def _clearPath(self)->str:
         if '?' not in self.path:
            return deepcopy(self.path)
-        return deepcopy(path[:path.index('?')])
+        return deepcopy(self.path[:self.path.index('?')])
     def _getVariables(self)->dict[str,str]:
         out = {}
         if '?' not in self.path:
