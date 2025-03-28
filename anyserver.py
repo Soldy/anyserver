@@ -1,11 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
 from copy import deepcopy 
-from sys import argv
 import os
 import json
 import time
-import datetime
 import logging
+import datetime
+import argparse
 
 
 _config = {
@@ -253,6 +253,9 @@ class DatabasesClass:
     :param: dict[str, dict[str, str]] index
     """
     def loadAll(self):
+        self._log.debug(
+           'Loading Database'
+        )
         for path in self._patheses.all():
             path = self._patheses.get(
               path
@@ -485,12 +488,24 @@ class Server(BaseHTTPRequestHandler):
 def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host='127.0.0.1', protocol_version='HTTP/1.1'):
     server_address = (host, port)
     httpd = server_class(server_address, handler_class, protocol_version)
-    logging.debug('httpd starting')
+    logging.debug("httpd starting "+host+":"+str(port))
     httpd.serve_forever()
 
-def start():
+def start(args):
     global _config
-    _httpServer(host=_config['host'], port=_config['port'])
+    if str(int(args.port)) != args.port:
+       logging.critical("invalid port")
+       quit()
+    _config["port"] = int(args.port)
+    _config["host"] = args.host
+    _config["db_dir"] = args.db
+    _config["index"] = args.index
+    _config["path"] = args.path
+    if args.load == False:
+        _confif["load"] = False
+    if args.save == False:
+        _confif["save"] = False
+    _httpServer(host=_config["host"], port=_config["port"])
 
 """
 server init
@@ -501,6 +516,22 @@ logging.basicConfig(
 )
 
 _db = DatabasesClass(logging, _config)
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--port", dest="port",
+  help="listen port", metavar="PORT", default="8008")
+parser.add_argument("-l", "--host", dest="host",
+  help="listen host", metavar="HOST", default="localhost")
+parser.add_argument("-d", "--db", dest="db",
+  help="data collection directory", metavar="DB", default="db")
+parser.add_argument("--index", dest="index",
+  help="index collection", metavar="INDEXFILE", default="indexes.json")
+parser.add_argument("--path", dest="path",
+  help="url path collection file", metavar="PATHFILE", default="pathes.json")
+parser.add_argument("--save", dest="save",
+  help="save the datacollection", metavar="True/False", default=True)
+parser.add_argument("--load", dest="load",
+  help="load the datacollection at the start", metavar="True/False", default=True)
+args = parser.parse_args()
 
 if __name__ == "__main__":
-    start()
+    start(args)
