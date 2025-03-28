@@ -6,6 +6,7 @@ import json
 import logging
 import database
 
+_db = ''
 _config = {
     "port"   : 8008,
     "host"   : "localhost",
@@ -102,6 +103,8 @@ def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host="
 
 def start(args):
     global _config
+    global _db
+    _db = database.DatabasesClass(logging, _config)
     if str(int(args.port)) != args.port:
        logging.critical("invalid port")
        quit()
@@ -124,5 +127,4 @@ logging.basicConfig(
   level=_config['log']
 )
 
-_db = database.DatabasesClass(logging, _config)
 
