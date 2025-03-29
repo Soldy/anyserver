@@ -98,6 +98,9 @@ class PathesClass:
           'r'
         ) as file_:
             self._path = json.load(file_)
+        for i in self._path:
+            if int(self._path[i]) >= self._serial:
+               self._serial = int(self._path[i]) + 1
     def add(self, path_:str)->str:
         if path_ not in self._path:
             self._serial = self._serial + 1
@@ -419,7 +422,6 @@ class DatabasesClass:
         if path not in self._db:
             return {}
         if 'id' in gets_:
-            print(gets_)
             return self._getId(path, gets_['id'])
         if gets_ == {}:
             return self._getAll(path)
