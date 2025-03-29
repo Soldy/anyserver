@@ -105,7 +105,7 @@ def start(args):
     global _config
     global _db
     _db = database.DatabasesClass(logging, _config)
-    if str(int(args.port)) != args.port:
+    if int(str(int(args.port))) != args.port:
        logging.critical("invalid port")
        quit()
     _config["port"] = int(args.port)
