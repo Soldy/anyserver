@@ -148,6 +148,7 @@ class DatabasesClass:
         )
         self._set(path, _id, data_)
         return 0
+
     """
     Db record post
      result codes:
@@ -201,6 +202,7 @@ class DatabasesClass:
             path_
           ]
         )
+
     """
     get records by id
 
@@ -213,6 +215,7 @@ class DatabasesClass:
             if str(i) in self._db[path_]:
                 out.append(str(i))
         return self._getCopy(path_, out)
+
     """
     get elements by filter
 
@@ -228,6 +231,7 @@ class DatabasesClass:
                        if c in self._db[path_][a]['data'][b]:
                             out.append(str(a))
         return self._getCopy(path_, out)
+
     """
     get request manager
 
@@ -246,4 +250,29 @@ class DatabasesClass:
         else:
             return self._getFilter(path, gets_)
 
+    """
+
+    :param: str :  path name 
+    :return: int : count records in path
+    """
+    def count(self, path_:str)->int:
+        out = 0
+        path = self._patheses.get(
+          self._pathFix(path_)
+        )
+        if path in self._db:
+            for i in self._db[path]:
+                out = out + 1
+        return out
+
+
+    """
+    :return: int : count all records
+    """
+    def countAll(self)->int:
+        out = 0
+        for a in self._db:
+            for i in self._db[a]:
+                out = out + 1
+        return out
 
