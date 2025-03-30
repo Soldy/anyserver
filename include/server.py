@@ -3,27 +3,19 @@ from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHan
 from copy import deepcopy 
 import os
 import json
-import logging
 import database
 
 _db = ''
-_config = {
-    "port"   : 8008,
-    "host"   : "localhost",
-    "db_dir" : "db",
-    "index"  : "indexes.json",
-    "path"   : "pathes.json",
-    "log"    : logging.DEBUG,
-    "load"   : True,
-    "save"   : True
-}
-
+_logging = ''
 
 
 
 class Server(BaseHTTPRequestHandler):
     def __init__(self, *args):
-        self._logging = logging
+        global _logging
+        global _db
+        self._logging = _logging
+        self._db= _db
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         if '?' not in self.path:
@@ -95,36 +87,21 @@ class Server(BaseHTTPRequestHandler):
         self._logging.info(out)
         return
 
-def _httpServer(server_class=HTTPServer, handler_class=Server, port=8008, host="127.0.0.1", protocol_version="HTTP/1.1"):
+def _httpServer(logging_, server_class=HTTPServer, handler_class=Server, port=8008, host="127.0.0.1", protocol_version="HTTP/1.1"):
     server_address = (host, port)
     httpd = server_class(server_address, handler_class, protocol_version)
-    logging.debug("httpd starting "+host+":"+str(port))
+    logging_.debug("httpd starting "+host+":"+str(port))
     httpd.serve_forever()
 
-def start(args):
-    global _config
+def start(logging_, config_):
     global _db
-    _db = database.DatabasesClass(logging, _config)
-    if int(str(int(args.port))) != args.port:
-       logging.critical("invalid port")
-       quit()
-    _config["port"] = int(args.port)
-    _config["host"] = args.host
-    _config["db_dir"] = args.db
-    _config["index"] = args.index
-    _config["path"] = args.path
-    if args.load == False:
-        _confif["load"] = False
-    if args.save == False:
-        _confif["save"] = False
-    _httpServer(host=_config["host"], port=_config["port"])
+    global _logging
+    _db = database.DatabasesClass(
+      logging_,
+      config_
+    )
+    _logging = logging_
+    _httpServer(logging_, host=config_["host"], port=config_["port"])
 
-"""
-server init
-"""
-logging.basicConfig(
-  format='%(asctime)s - %(levelname)s - %(message)s',
-  level=_config['log']
-)
 
 

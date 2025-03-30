@@ -1,5 +1,8 @@
 import argparse
+import log
+import conf
 import server
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port",
@@ -46,6 +49,28 @@ parser.add_argument("--load",
   help="load the datacollection at the start",
   action='store_false'
 )
+parser.add_argument("--log_level",
+  type=int,
+  dest="log_level",
+  help="log level 10 - 50",
+  metavar="LOG_LEVEL",
+  default="50")
+parser.add_argument("--vv",
+  dest="vv",
+  help="Verbose log equal with --log_level 10",
+  action='store_true'
+)
 args = parser.parse_args()
 
-server.start(args)
+if __name__ == "__main__":
+   _config = conf.start(
+     args,
+     log.logging,
+   )
+   log.start(
+     _config
+   )
+   server.start(
+     log.logging,
+     _config
+  )
