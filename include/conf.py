@@ -34,9 +34,9 @@ def start (args, logging_)->dict[str,str]:
     _config["port"] = int(args.port)
     _config["log_level"] = int(args.log_level)
     _config["host"] = args.host
-    _config["db_dir"] = args.db
-    _config["index"] = args.index
-    _config["path"] = args.path
+    _config["db_dir"] = args.db_dir
+    _config["index"] = args.index_file
+    _config["path"] = args.path_file
     if args.load == False:
         _config["load"] = False
     if args.save == False:
