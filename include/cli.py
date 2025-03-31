@@ -1,4 +1,5 @@
 from arg import parser 
+import json
 import pathes
 import database
 import log
@@ -22,11 +23,32 @@ parser.add_argument("-lp", "--list-paths",
   action='store_true'
 )
 
+parser.add_argument("-lc", "--list-columns",
+  dest="list_columns",
+  help="list columns in a path",
+  action='store_true'
+)
+
+parser.add_argument("-sc", "--show-colum",
+  dest="show_column",
+  help="show column in a path",
+  action='store_true'
+)
+
+
 parser.add_argument("-p", "--path",
   type=str,
   dest="path",
   help="path analized",
   metavar="PATH",
+  default=""
+)
+
+parser.add_argument("-tc", "--column",
+  type=str,
+  dest="column",
+  help="column",
+  metavar="COLUMN",
   default=""
 )
 
@@ -46,7 +68,7 @@ if __name__ == "__main__":
     )
     if args.count:
         db = database.DatabasesClass(
-        log.logging, _config)
+          log.logging, _config)
         if args.path == '':
             print(str(db.countAll()))
         else :
@@ -61,4 +83,20 @@ if __name__ == "__main__":
               str(list_path[i])+
               " - "+
              reversPath(str(i))
+            )
+    if args.list_columns :
+        db = database.DatabasesClass(
+          log.logging, _config)
+        if args.path != '':
+            columns = db.columns(args.path) 
+            print(
+              json.dumps(columns)
+            )
+    if args.show_column :
+        db = database.DatabasesClass(
+          log.logging, _config)
+        if args.path != '' and args.column != '':
+            columns = db.columnShow(args.path, args.column) 
+            print(
+              json.dumps(columns)
             )

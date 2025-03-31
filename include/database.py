@@ -250,6 +250,75 @@ class DatabasesClass:
         else:
             return self._getFilter(path, gets_)
 
+
+    """
+
+    :param: str|int :  column name 
+    :return: dict[str,dict[str, int|list[str]]] : 
+    """
+    def _columnLen(self, column_:str|int)->int:
+        if type(column_) is int:
+           return column_
+        if type(column_) is float:
+           return column_
+        return len(column_)
+
+    """
+
+    :param: str :  path name 
+    :return: dict[str,dict[str, int|list[str]]] : 
+    """
+    def columns(self, path_:str)->dict[str,dict[str, int|list[str]]]:
+        path = self._patheses.get(
+          self._pathFix(path_)
+        )
+        out = {}
+        if path not in self._db:
+            return out
+        for i in self._db[path]:
+             for p in self._db[path][i]['data']:
+                 if p not in out:
+                     out[p] = {
+                         "type" : [str(type(self._db[path][i]['data'][p]).__name__)],
+                         "min"  : self._columnLen(self._db[path][i]['data'][p]),
+                         "max"  : self._columnLen(self._db[path][i]['data'][p]),
+                         "str_min" : len(str(self._db[path][i]['data'][p])),
+                         "str_max" : len(str(self._db[path][i]['data'][p]))
+                     }
+                 else:
+                     _type    = str(type(self._db[path][i]['data'][p]).__name__)
+                     _len     = self._columnLen(self._db[path][i]['data'][p])
+                     _str_len =  len(str(self._db[path][i]['data'][p]))
+                     if _type not in out[p]['type']:
+                         out[p]['type'].append(_type)
+                     if  out[p]['min'] > _len:
+                         out[p]['min'] = _len
+                     if  out[p]['max'] < _len:
+                         out[p]['max'] = _len
+                     if  out[p]['str_min'] > _str_len:
+                         out[p]['str_min'] = _str_len
+                     if  out[p]['str_max'] < _str_len:
+                         out[p]['str_max'] = _str_len
+        return out
+
+    """
+
+    :param: str :  path name
+    :param: str :  column name
+    :return: dict[str, any] :
+    """
+    def columnShow(self, path_:str, column_:str)->dict[str,any]:
+        path = self._patheses.get(
+          self._pathFix(path_)
+        )
+        out = {}
+        if path not in self._db:
+            return out
+        for i in self._db[path]:
+             if column_ in self._db[path][i]['data']:
+                 out[str(i)] = self._db[path][i]['data'][column_]
+        return out
+
     """
 
     :param: str :  path name 
