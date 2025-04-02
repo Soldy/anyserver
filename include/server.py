@@ -4,8 +4,10 @@ from copy import deepcopy
 import os
 import json
 import database
+import forward
 
 _db = ''
+_forward = ''
 _logging = ''
 
 
@@ -16,6 +18,7 @@ class Server(BaseHTTPRequestHandler):
         global _db
         self._logging = _logging
         self._db= _db
+        self._forwarder = forward.ForwarderClass(self._db)
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         if '?' not in self.path:
@@ -56,27 +59,46 @@ class Server(BaseHTTPRequestHandler):
             )
         )
     def do_GET(self):
-        self._do_json_response(
-          _db.get(
-            self._clearPath(),
-            self._getVariables()
-          )
+        result = self._forwarder.forward(
+          self.path,
+          self.headers,
+          'GET'
         )
+        if result == '{}':
+          return self._do_json_response(
+            self._db.get(
+              self._clearPath(),
+              self._getVariables()
+            )
+          )
+        return self._do_json_response(result)
+          
     def do_POST(self):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        _db.post(
+        self._db.post(
           self._clearPath(),
           post_data
         )
-        self._do_response(json.dumps('{}'))
+        self._do_response(json.dumps(self._forwarder.post(
+          self.path,
+          self.headers,
+          'POST'
+        )))
     def do_PATCH(self):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        database.path(post_data)
-        self._do_response(json.dumps('{}'))
+        self._db.path(
+          self._clearPath(),
+          post_data
+        )
+        self._do_response(json.dumps(self._forwarder.path(
+          self.path,
+          self.headers,
+          'PATH'
+        )))
     def log_message(self, format, *args: list[str]):
         if len(args) == 3:
             self._logging.info(args[0]+" "+args[1]+" "+args[2])
@@ -95,11 +117,13 @@ def _httpServer(logging_, server_class=HTTPServer, handler_class=Server, port=80
 
 def start(logging_, config_):
     global _db
+    global _forward
     global _logging
     _db = database.DatabasesClass(
       logging_,
       config_
     )
+    _forward = forward.ForwarderClass(_db, logging_, config_)
     _logging = logging_
     _httpServer(logging_, host=config_["host"], port=config_["port"])
 
