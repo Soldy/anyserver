@@ -2,6 +2,7 @@
 _config = {
     "port"      : 8008,
     "host"      : "localhost",
+    "forward"   : "",
     "db_dir"    : "db",
     "index"     : "indexes.json",
     "path"      : "pathes.json",
