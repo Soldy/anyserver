@@ -1,5 +1,6 @@
 
 from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
+from urllib import parse
 from copy import deepcopy 
 import os
 import json
@@ -26,24 +27,11 @@ class Server(BaseHTTPRequestHandler):
            return deepcopy(self.path)
         return deepcopy(self.path[:self.path.index('?')])
     def _getVariables(self)->dict[str,str]:
-        out = {}
         if '?' not in self.path:
-           return out
+           return {}
         start = self.path.index('?')+1
         var_string = self.path[start:]
-        if '&' in var_string:
-           var_array = var_string.split('&')
-        else:
-           var_array = [var_string]
-        for block in var_array:
-            if '=' in block:
-                pos = block.index('=')
-                value = block[pos+1:]
-                key = block[:pos]
-                if key not in out:
-                   out[key] = []
-                out[key].append(value)
-        return out
+        return parse.parse_qs(var_string)
     def _do_response(self, data_: str):
         out = data_.encode()
         self.protocol_version = 'HTTP/1.1'
