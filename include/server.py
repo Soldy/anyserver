@@ -16,14 +16,15 @@ class Server(BaseHTTPRequestHandler):
     def __init__(self, *args):
         global _logging
         global _db
+        global _forward
         self._logging = _logging
         self._db= _db
-        self._forwarder = forward.ForwarderClass(self._db)
+        self._forwarder = _forward
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         if '?' not in self.path:
            return deepcopy(self.path)
-        return deepcopy(path[:path.index('?')])
+        return deepcopy(self.path[:self.path.index('?')])
     def _getVariables(self)->dict[str,str]:
         out = {}
         if '?' not in self.path:
@@ -62,7 +63,8 @@ class Server(BaseHTTPRequestHandler):
         result = self._forwarder.forward(
           self.path,
           self.headers,
-          'GET'
+          'GET',
+          '{}'
         )
         if result == '{}':
           return self._do_json_response(
@@ -81,24 +83,12 @@ class Server(BaseHTTPRequestHandler):
           self._clearPath(),
           post_data
         )
-        self._do_response(json.dumps(self._forwarder.post(
-          self.path,
-          self.headers,
-          'POST'
-        )))
+        self._do_response(json.dumps({}))
     def do_PATCH(self):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        self._db.path(
-          self._clearPath(),
-          post_data
-        )
-        self._do_response(json.dumps(self._forwarder.path(
-          self.path,
-          self.headers,
-          'PATH'
-        )))
+        self._do_response(json.dumps({}))
     def log_message(self, format, *args: list[str]):
         if len(args) == 3:
             self._logging.info(args[0]+" "+args[1]+" "+args[2])
