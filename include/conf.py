@@ -10,6 +10,11 @@ _config = {
     "load"      : True,
     "save"      : True
 }
+def test():
+    global _config
+    _config['save'] = False
+    _config['load'] = False
+    return _config
 
 def start (args, logging_)->dict[str,str]:
     global _config
