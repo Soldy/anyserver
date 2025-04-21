@@ -37,7 +37,7 @@ class Server(BaseHTTPRequestHandler):
         self.protocol_version = 'HTTP/1.1'
         self.send_response(200)
         self.send_header('Protocol-Version', "HTTP/1.1")
-        self.send_header('Content-type', 'application/json')
+        self.send_header('Content-type', 'application/json; charset=utf8')
         self.send_header('Content-length', len(out))
         self.end_headers()
         self.wfile.write(out)
