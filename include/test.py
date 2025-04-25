@@ -20,7 +20,19 @@ _proc = multiprocessing.Process(
      logStart(_config),
      _config
 ])
+_auth_key = ''
 _response = ''
+def authGet(headers_):
+    auth = {
+      "Authorization" : "Bearer "+_auth_key
+    }
+    return {**headers_, **auth}
+
+def requestGet(route_, headers_):
+    return requests.get(
+      'http://localhost:8008' + route_,
+      headers = authGet(headers_)
+    )
 
 def test_serverStart():
     """ get request  """
@@ -28,6 +40,36 @@ def test_serverStart():
     _proc.start()
     time.sleep(1)
     assert (_proc.is_alive())
+
+
+@pytest.mark.skip(reason='not implemented yet')
+def test_keyTest():
+    """ get request  """
+    global _response
+    headers = {"AnyServer": "auth-test"}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.skip(reason='not implemented yet')
+def test_keyRequest():
+    """ get request  """
+    global _response
+    headers = {"AnyServer": "routes"}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
 
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleGet():
