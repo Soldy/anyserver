@@ -4,6 +4,7 @@ import os
 import json
 import pathes
 import indexes
+import time
 
 
 class DatabasesClass:
@@ -44,6 +45,7 @@ class DatabasesClass:
             os.makedirs(
               self._config["db_dir"]
             )
+            time.sleep(1)
         if not os.path.isdir(
           self._config["db_dir"]
         ):

@@ -13,29 +13,25 @@ class PathesClass:
         self._config = config_
         self._serial = 0
         self._path   = {}
-        self.check()
 
     """
     Path cache check
     """
     def check(self)->bool:
+        _file_ = self._config['path']
         _error = False
         if not self._config['load']:
             return False
         if not self._config['save']:
             return False
-        if not os.path.exists(
-          self._config['path'],
-        ):
+        if not os.path.exists(_file_):
             self._log.info('Creating index file')
             with open(
-              self._config['path'],
+              _file_,
               'w'
             ) as file_:
                 json.dump({}, file_)
-        if not os.path.isfile(
-          self._config['path'],
-        ):
+        if not os.path.isfile(_file_):
             self._log.critical('Path file error')
             return True
         return False
