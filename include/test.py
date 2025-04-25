@@ -11,7 +11,10 @@ from server import start as serverStart
 from threading import Thread
 import multiprocessing
 
-_config = configStart()
+_config = configStart({
+  "load" : False,
+  "save" : False
+})
 _proc = multiprocessing.Process(
    target=serverStart, args=[
      logStart(_config),
