@@ -29,13 +29,11 @@ class DatabasesClass:
     """
     def _pathFix(self, path_:str)->str:
         return path_.replace("/", "_")
-    """ This checking the file system for initialization. """
-    def check(self):
-        _error = False
+    def _checkDir(self):
         if not self._config["save"]:
-            return
+            return False
         if not self._config["load"]:
-            return
+            return False
         if not os.path.exists(
           self._config["db_dir"]
         ):
@@ -52,6 +50,12 @@ class DatabasesClass:
             self._log.critical(
               'Database directory error'
             )
+            return True
+        return False
+    """ This checking the file system for initialization. """
+    def check(self):
+        _error = False
+        if self._checkDir():
             _error = True
         if self._patheses.check():
             _error = True
