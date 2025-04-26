@@ -35,6 +35,7 @@ def requestGet(route_, headers_):
       headers = authGet(headers_)
     )
 
+@pytest.mark.dependency()
 def test_serverStart():
     """ get request  """
     global _proc
@@ -43,6 +44,7 @@ def test_serverStart():
     assert (_proc.is_alive())
 
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyTest():
     """ get request  """
@@ -57,6 +59,7 @@ def test_keyTest():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyRequest():
     """ get request  """
@@ -72,6 +75,7 @@ def test_keyRequest():
     )
 
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleGet():
     """ get request  """
@@ -87,6 +91,7 @@ def test_simpleGet():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGet():
     """ get test request  """
@@ -101,6 +106,8 @@ def test_simpleTestRouteGet():
       ==
       'application/json; charset=utf8'
     )
+
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skip(reason='incorrect implementation')
 def test_simpleTestRouteGetById():
     """ get test by id request  """
@@ -116,6 +123,7 @@ def test_simpleTestRouteGetById():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleTestRoutePost():
     """ post test route request  """
@@ -133,6 +141,7 @@ def test_simpleTestRoutePost():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetAfterPost():
     """ get test route request  """
@@ -148,6 +157,7 @@ def test_simpleTestRouteGetAfterPost():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetByIdAfterPost():
     """ get test by id request  """
@@ -163,6 +173,7 @@ def test_simpleTestRouteGetByIdAfterPost():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStart"])
 def test_serverSop():
     """ start server  """
     global _proc
@@ -170,6 +181,7 @@ def test_serverSop():
     time.sleep(1)
     assert _proc.is_alive() is False
 
+@pytest.mark.dependency()
 def test_serverStartWithSave():
     """ get request  """
     global _proc
@@ -183,9 +195,10 @@ def test_serverStartWithSave():
       _config
     ])
     _proc.start()
-    time.sleep(1)
+    time.sleep(3)
     assert (_proc.is_alive())
 
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyTestWithSave():
     """ get request  """
@@ -200,6 +213,7 @@ def test_keyTestWithSave():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyRequestWithSave():
     """ get request  """
@@ -215,7 +229,8 @@ def test_keyRequestWithSave():
     )
 
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
 def test_simpleGetWithSave():
     """ get request  """
     global _response
@@ -230,7 +245,8 @@ def test_simpleGetWithSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetWithSave():
     """ get test request  """
     global _response
@@ -244,6 +260,8 @@ def test_simpleTestRouteGetWithSave():
       ==
       'application/json; charset=utf8'
     )
+
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
 @pytest.mark.skip(reason='incorrect implementation')
 def test_simpleTestRouteGetByIdWithSave():
     """ get test by id request  """
@@ -259,7 +277,8 @@ def test_simpleTestRouteGetByIdWithSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRoutePostWithSave():
     """ post test route request  """
     global _response
@@ -276,7 +295,8 @@ def test_simpleTestRoutePostWithSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetAfterPostWithSave():
     """ get test route request  """
     global _response
@@ -291,7 +311,8 @@ def test_simpleTestRouteGetAfterPostWithSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetByIdAfterPostWithSave():
     """ get test by id request  """
     global _response
@@ -306,13 +327,16 @@ def test_simpleTestRouteGetByIdAfterPostWithSave():
       'application/json; charset=utf8'
     )
 
-def test_serverSopiWithSave():
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
+def test_serverSopWithSave():
     """ start server  """
     global _proc
     _proc.terminate()
     time.sleep(1)
     assert _proc.is_alive() is False
 
+@pytest.mark.dependency()
 def test_serverStartWithLoadAndSave():
     """ get request  """
     global _proc
@@ -326,9 +350,10 @@ def test_serverStartWithLoadAndSave():
       _config
     ])
     _proc.start()
-    time.sleep(1)
+    time.sleep(2)
     assert (_proc.is_alive())
 
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyTestWithLoadAndSave():
     """ get request  """
@@ -343,6 +368,7 @@ def test_keyTestWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
 @pytest.mark.skip(reason='not implemented yet')
 def test_keyRequestWithLoadAndSave():
     """ get request  """
@@ -358,7 +384,8 @@ def test_keyRequestWithLoadAndSave():
     )
 
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleGetWithLoadAndSave():
     """ get request  """
     global _response
@@ -373,7 +400,8 @@ def test_simpleGetWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetWithLoadAndSave():
     """ get test request  """
     global _response
@@ -387,6 +415,8 @@ def test_simpleTestRouteGetWithLoadAndSave():
       ==
       'application/json; charset=utf8'
     )
+
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
 @pytest.mark.skip(reason='incorrect implementation')
 def test_simpleTestRouteGetByIdWithLoadAndSave():
     """ get test by id request  """
@@ -402,7 +432,8 @@ def test_simpleTestRouteGetByIdWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRoutePostWithLoadAndSave():
     """ post test route request  """
     global _response
@@ -419,7 +450,8 @@ def test_simpleTestRoutePostWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetAfterPostWithLoadAndSave():
     """ get test route request  """
     global _response
@@ -434,7 +466,8 @@ def test_simpleTestRouteGetAfterPostWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
-@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetByIdAfterPostWithLoadAndSave():
     """ get test by id request  """
     global _response
@@ -449,9 +482,11 @@ def test_simpleTestRouteGetByIdAfterPostWithLoadAndSave():
       'application/json; charset=utf8'
     )
 
-def test_serverSopiWithLoadAndSave():
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
+def test_serverSopWithLoadAndSave():
     """ start server  """
     global _proc
     _proc.terminate()
-    time.sleep(1)
+    time.sleep(2)
     assert _proc.is_alive() is False

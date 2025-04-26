@@ -19,4 +19,4 @@ jobs:
     - run: sudo apt update
     - run: sudo apt install -y python3-pytest python3-pip
     - run: mkdir db
-    - run: pytest-3 include/test.py -x -v --maxfail 99
+    - run: pytest -v include/test.py
