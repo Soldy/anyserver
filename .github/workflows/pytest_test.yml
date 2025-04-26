@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: sudo apt update
-    - run: sudo apt install -y python3-pytest python3-pip
+    - run: sudo apt install -y python3-pytest python3-pip python3-pytest-dependency
     - run: mkdir db
     - run: pytest -v include/test.py
