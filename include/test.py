@@ -8,12 +8,13 @@ import requests
 from conf import test as configStart
 from log import start as logStart
 from server import start as serverStart
+import server
 from threading import Thread
 import multiprocessing
 
 _config = configStart({
-  "load" : False,
-  "save" : False
+  'load' : False,
+  'save' : False
 })
 _proc = multiprocessing.Process(
    target=serverStart, args=[
@@ -23,9 +24,11 @@ _proc = multiprocessing.Process(
 _auth_key = ''
 _response = ''
 
+
+
 def authGet(headers_):
     auth = {
-      "Authorization" : "Bearer "+_auth_key
+      'Authorization' : 'Bearer '+_auth_key
     }
     return {**headers_, **auth}
 
@@ -34,6 +37,69 @@ def requestGet(route_, headers_):
       'http://localhost:8008' + route_,
       headers = authGet(headers_)
     )
+
+def test_config():
+    config = configStart({
+      'load' : False,
+      'save' : True
+    })
+    assert (config['load'] == False)
+    assert (config['save'] == True)
+    assert (config['dummy_test'] == 'dummy')
+
+
+def test_configAgain():
+    config = configStart({
+      'load' : True,
+      'save' : False,
+      'dummy_test' : 'd2ummy'
+    })
+    assert (config['load'] == True)
+    assert (config['save'] == False)
+    assert (config['dummy_test'] == 'd2ummy')
+
+def test_pathNoSave():
+    config = configStart({
+      'load' : False,
+      'save' : False,
+    })
+    pathes = server.database.pathes.PathesClass(
+      logStart(_config),
+      config
+    )
+    assert(pathes.add('_') == '1')
+    assert(pathes.add('test') == '2')
+
+def test_pathSave():
+    config = configStart({
+      'path' : 'pathes_test.json',
+      'load' : True,
+      'save' : True,
+    })
+    pathes = server.database.pathes.PathesClass(
+      logStart(_config),
+      config
+    )
+    pathes.check()
+    pathes.load()
+    assert(pathes.add('_') == '1')
+    assert(pathes.add('test') == '2')
+
+def test_pathSaveAgain():
+    config = configStart({
+      'path' : 'pathes_test.json',
+      'load' : True,
+      'save' : True,
+    })
+    pathes = server.database.pathes.PathesClass(
+      logStart(_config),
+      config
+    )
+    pathes.check()
+    pathes.load()
+    assert(pathes.add('test2') == '3')
+
+
 
 @pytest.mark.dependency()
 def test_serverStart():
@@ -49,7 +115,7 @@ def test_serverStart():
 def test_keyTest():
     """ get request  """
     global _response
-    headers = {"AnyServer": "auth-test"}
+    headers = {'AnyServer': 'auth-test'}
     _response = requestGet('/',headers)
     assert (_response.status_code == 200)
     assert (_response.text == '{}')
@@ -64,7 +130,7 @@ def test_keyTest():
 def test_keyRequest():
     """ get request  """
     global _response
-    headers = {"AnyServer": "routes"}
+    headers = {'AnyServer': 'routes'}
     _response = requestGet('/',headers)
     assert (_response.status_code == 200)
     assert (_response.text == '{}')
@@ -186,6 +252,7 @@ def test_serverStartWithSave():
     """ get request  """
     global _proc
     _config = configStart({
+       "log_level" : 10,
        "load" : False,
        "save" : True
     })
@@ -195,7 +262,7 @@ def test_serverStartWithSave():
       _config
     ])
     _proc.start()
-    time.sleep(3)
+    time.sleep(20)
     assert (_proc.is_alive())
 
 @pytest.mark.dependency(depends=["test_serverStartWithSave"])

@@ -64,7 +64,7 @@ class PathesClass:
             self._path = json.load(file_)
         for i in self._path:
             if int(self._path[i]) >= self._serial:
-               self._serial = int(self._path[i]) + 1
+               self._serial = int(self._path[i])
     def add(self, path_:str)->str:
         if path_ not in self._path:
             self._serial = self._serial + 1
