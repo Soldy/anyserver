@@ -15,6 +15,24 @@ class PathesClass:
         self._path   = {}
 
     """
+    Path cache load 
+    """
+    def load(self):
+        if not self._config['load']:
+            return
+        self._log.debug(
+          'Loading patheses file'
+        )
+        with open(
+          self._config['path'],
+          'r'
+        ) as file_:
+            self._path = json.load(file_)
+        for i in self._path:
+            if int(self._path[i]) >= self._serial:
+               self._serial = int(self._path[i])
+
+    """
     Path cache check
     """
     def check(self)->bool:
@@ -34,6 +52,7 @@ class PathesClass:
         if not os.path.isfile(_file_):
             self._log.critical('Path file error')
             return True
+        self.load()
         return False
 
     """
@@ -48,23 +67,6 @@ class PathesClass:
         ) as file_:
            json.dump(self._path, file_)
 
-    """
-    Path cache load 
-    """
-    def load(self):
-        if not self._config['load']:
-            return
-        self._log.debug(
-          'Loading patheses file'
-        )
-        with open(
-          self._config['path'],
-          'r'
-        ) as file_:
-            self._path = json.load(file_)
-        for i in self._path:
-            if int(self._path[i]) >= self._serial:
-               self._serial = int(self._path[i])
     def add(self, path_:str)->str:
         if path_ not in self._path:
             self._serial = self._serial + 1
