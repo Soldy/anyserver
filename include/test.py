@@ -85,11 +85,11 @@ def test_pathSave():
     assert(pathes.add('_') == '1')
     assert(pathes.add('test') == '2')
 
-def test_pathSaveAgain():
+def test_pathSaveAndLoad():
     config = configStart({
       'path' : 'pathes_test.json',
       'load' : True,
-      'save' : True,
+      'save' : True
     })
     pathes = server.database.pathes.PathesClass(
       logStart(_config),
@@ -100,6 +100,53 @@ def test_pathSaveAgain():
     assert(pathes.add('test2') == '3')
 
 
+def test_indexNoSave():
+    config = configStart({
+      'load' : False,
+      'save' : False
+    })
+    indexes = server.database.indexes.IndexesClass(
+      logStart(_config),
+      config
+    )
+    assert(indexes.addId('_') == '1')
+    assert(indexes.addId('test') == '1')
+    assert(indexes.addId('_') == '2')
+    assert(indexes.addId('test') == '2')
+
+def test_indexSave():
+    config = configStart({
+      'index': 'indexes_test.json',
+      'load' : True,
+      'save' : True
+    })
+    indexes = server.database.indexes.IndexesClass(
+      logStart(_config),
+      config
+    )
+    indexes.check()
+    assert(indexes.addId('_') == '1')
+    assert(indexes.addId('test') == '1')
+    assert(indexes.addId('_') == '2')
+    assert(indexes.addId('test') == '2')
+
+def test_indexSaveAndLoad():
+    config = configStart({
+      'index': 'indexes_test.json',
+      'load' : True,
+      'save' : True
+    })
+    indexes = server.database.indexes.IndexesClass(
+      logStart(_config),
+      config
+    )
+    indexes.check()
+    indexes.load()
+    assert(indexes.all('_') == ['1', '2'])
+    assert(indexes.addId('_') == '3')
+    assert(indexes.addId('test') == '3')
+    assert(indexes.addId('_') == '4')
+    assert(indexes.addId('test') == '4')
 
 @pytest.mark.dependency()
 def test_serverStart():
@@ -262,7 +309,7 @@ def test_serverStartWithSave():
       _config
     ])
     _proc.start()
-    time.sleep(20)
+    time.sleep(1)
     assert (_proc.is_alive())
 
 @pytest.mark.dependency(depends=["test_serverStartWithSave"])
@@ -417,7 +464,7 @@ def test_serverStartWithLoadAndSave():
       _config
     ])
     _proc.start()
-    time.sleep(2)
+    time.sleep(1)
     assert (_proc.is_alive())
 
 @pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
@@ -555,5 +602,5 @@ def test_serverSopWithLoadAndSave():
     """ start server  """
     global _proc
     _proc.terminate()
-    time.sleep(2)
+    time.sleep(1)
     assert _proc.is_alive() is False
