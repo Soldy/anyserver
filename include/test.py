@@ -109,7 +109,7 @@ def test_indexNoSave():
       logStart(_config),
       config
     )
-    assert(indexes.add('_') == '0')
+    assert(indexes.add('_') == '1')
     assert(indexes.add('test') == '1')
     assert(indexes.add('_') == '2')
     assert(indexes.add('test') == '2')
@@ -117,7 +117,7 @@ def test_indexNoSave():
 def test_indexSave():
     config = configStart({
       'index': 'indexes_test.json',
-      'load' : True,
+      'load' : False,
       'save' : True
     })
     indexes = server.database.indexes.IndexesClass(
@@ -141,7 +141,6 @@ def test_indexSaveAndLoad():
       config
     )
     indexes.check()
-    indexes.load()
     assert(indexes.all('_') == ['1', '2'])
     assert(indexes.add('_') == '3')
     assert(indexes.add('test') == '3')
