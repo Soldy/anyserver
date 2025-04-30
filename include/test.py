@@ -109,6 +109,7 @@ def test_indexNoSave():
       logStart(_config),
       config
     )
+    indexes.check()
     assert(indexes.add('_') == '1')
     assert(indexes.add('test') == '1')
     assert(indexes.add('_') == '2')
