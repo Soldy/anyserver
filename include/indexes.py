@@ -60,18 +60,20 @@ class IndexesClass:
             for i in self._index[path]:
                 if int(i) > self._ids[path]:
                     self._ids[path] = int(i)
-    def add(self, path_:str, id_:str):
+    def _addIndex(self, path_:str, id_:str):
         if path_ not in self._index:
             self._index[path_] = []
         if id_ not in self._index[path_]:
             self._index[path_].append(deepcopy(id_))
             self.save()
-    def addId(self, path_:str)->str:
+    def _addId(self, path_:str):
         if path_ not in self._ids:
             self._ids[path_] = 0
         self._ids[path_] = self._ids[path_] + 1
-        self.add(path_, str(self._ids[path_]))
-        return deepcopy(str(self._ids[path_]))
+    def add(self, path_:str)->str:
+        self._addId(path_)
+        self._addIndex(path_, str(self._ids[path_]))
+        return str(self._ids[path_])
     def all(self, path_:str):
         if path_ not in self._index:
             return []
