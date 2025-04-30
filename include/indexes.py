@@ -15,35 +15,6 @@ class IndexesClass:
         self._index = {}
 
     """
-    Index cache check
-    """
-    def check(self)->bool:
-        _file_ = self._config['index']
-        _error = False
-        if not self._config['load']:
-            return False
-        if not self._config['save']:
-            return False
-        if not os.path.exists(_file_):
-            self._log.info('Creating index file')
-            with open(_file_, 'w') as file_:
-                json.dump({}, file_)
-        if not os.path.isfile(_file_):
-            self._log.critical('Index file error')
-            return True
-        return False
-
-    """
-    Index cache save
-    """
-    def save(self):
-        if not self._config['save']:
-            return
-        _file_ = self._config['index']
-        with open(self._config['index'], 'w') as file_:
-            json.dump(self._index, file_)
-
-    """
     Index cache load 
     """
     def load(self):
@@ -60,6 +31,36 @@ class IndexesClass:
             for i in self._index[path]:
                 if int(i) > self._ids[path]:
                     self._ids[path] = int(i)
+
+    """
+    Index cache check
+    """
+    def check(self)->bool:
+        _file_ = self._config['index']
+        _error = False
+        if not self._config['load']:
+            return False
+        if not self._config['save']:
+            return False
+        if not os.path.exists(_file_):
+            self._log.info('Creating index file')
+            with open(_file_, 'w') as file_:
+                json.dump({}, file_)
+        if not os.path.isfile(_file_):
+            self._log.critical('Index file error')
+            return True
+        self.load()
+        return False
+
+    """
+    Index cache save
+    """
+    def save(self):
+        if not self._config['save']:
+            return
+        _file_ = self._config['index']
+        with open(self._config['index'], 'w') as file_:
+            json.dump(self._index, file_)
     def _addIndex(self, path_:str, id_:str):
         if path_ not in self._index:
             self._index[path_] = []

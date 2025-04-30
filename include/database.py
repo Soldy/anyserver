@@ -134,7 +134,6 @@ class DatabasesClass:
         data_['id'] = deepcopy(id_)
         self._db[path_][id_]['data'] = deepcopy(data_)
         self._db[path_][id_]['id'] = deepcopy(id_)
-        self._indexes.add(path_, id_)
         self.save(path_, id_)
 
     """
@@ -147,7 +146,7 @@ class DatabasesClass:
         path = self._patheses.get(
           self._pathFix(path_)
         )
-        _id = self._indexes.addId(
+        _id = self._indexes.add(
           self._patheses.get(
             self._pathFix(path_)
           )
