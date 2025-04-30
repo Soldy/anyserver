@@ -63,13 +63,14 @@ class IndexesClass:
     def add(self, path_:str, id_:str):
         if path_ not in self._index:
             self._index[path_] = []
-        if id_ not in self._index:
+        if id_ not in self._index[path_]:
             self._index[path_].append(deepcopy(id_))
             self.save()
     def addId(self, path_:str)->str:
         if path_ not in self._ids:
             self._ids[path_] = 0
         self._ids[path_] = self._ids[path_] + 1
+        self.add(path_, str(self._ids[path_]))
         return deepcopy(str(self._ids[path_]))
     def all(self, path_:str):
         if path_ not in self._index:
