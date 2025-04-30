@@ -24,7 +24,14 @@ _proc = multiprocessing.Process(
 _auth_key = ''
 _response = ''
 
-
+def helperDefination(class_, config_):
+    config = configStart(config_)
+    indexes = class_(
+      logStart(config),
+      config
+    )
+    indexes.check()
+    return indexes
 
 def authGet(headers_):
     auth = {
@@ -101,47 +108,41 @@ def test_pathSaveAndLoad():
 
 
 def test_indexNoSave():
-    config = configStart({
-      'load' : False,
-      'save' : False
-    })
-    indexes = server.database.indexes.IndexesClass(
-      logStart(_config),
-      config
+    indexes = helperDefination(
+      server.database.indexes.IndexesClass,
+      {
+        'load' : False,
+        'save' : False
+      }
     )
-    indexes.check()
     assert(indexes.add('_') == '1')
     assert(indexes.add('test') == '1')
     assert(indexes.add('_') == '2')
     assert(indexes.add('test') == '2')
 
 def test_indexSave():
-    config = configStart({
-      'index': 'indexes_test.json',
-      'load' : False,
-      'save' : True
-    })
-    indexes = server.database.indexes.IndexesClass(
-      logStart(_config),
-      config
+    indexes = helperDefination(
+      server.database.indexes.IndexesClass,
+      {
+        'index': 'indexes_test.json',
+        'load' : False,
+        'save' : True
+      }
     )
-    indexes.check()
     assert(indexes.add('_') == '1')
     assert(indexes.add('test') == '1')
     assert(indexes.add('_') == '2')
     assert(indexes.add('test') == '2')
 
 def test_indexSaveAndLoad():
-    config = configStart({
-      'index': 'indexes_test.json',
-      'load' : True,
-      'save' : True
-    })
-    indexes = server.database.indexes.IndexesClass(
-      logStart(_config),
-      config
+    indexes = helperDefination(
+      server.database.indexes.IndexesClass,
+      {
+        'index': 'indexes_test.json',
+        'load' : True,
+        'save' : True
+      }
     )
-    indexes.check()
     assert(indexes.all('_') == ['1', '2'])
     assert(indexes.add('_') == '3')
     assert(indexes.add('test') == '3')
