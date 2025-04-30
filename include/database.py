@@ -21,8 +21,6 @@ class DatabasesClass:
           self._config
         )
         self.check()
-        self._patheses.load()
-        self._indexes.load()
         self.loadAll()
     """
     path name fix
