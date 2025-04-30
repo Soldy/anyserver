@@ -66,44 +66,37 @@ def test_configAgain():
     assert (config['dummy_test'] == 'd2ummy')
 
 def test_pathNoSave():
-    config = configStart({
-      'load' : False,
-      'save' : False,
-    })
-    pathes = server.database.pathes.PathesClass(
-      logStart(_config),
-      config
+    pathes = helperDefination(
+      server.database.pathes.PathesClass,
+      {
+        'load' : False,
+        'save' : False,
+      }
     )
     assert(pathes.add('_') == '1')
     assert(pathes.add('test') == '2')
 
 def test_pathSave():
-    config = configStart({
-      'path' : 'pathes_test.json',
-      'load' : True,
-      'save' : True,
-    })
-    pathes = server.database.pathes.PathesClass(
-      logStart(_config),
-      config
+    pathes = helperDefination(
+      server.database.pathes.PathesClass,
+      {
+        'path' : 'pathes_test.json',
+        'load' : False,
+        'save' : True
+      }
     )
-    pathes.check()
-    pathes.load()
     assert(pathes.add('_') == '1')
     assert(pathes.add('test') == '2')
 
 def test_pathSaveAndLoad():
-    config = configStart({
-      'path' : 'pathes_test.json',
-      'load' : True,
-      'save' : True
-    })
-    pathes = server.database.pathes.PathesClass(
-      logStart(_config),
-      config
+    pathes = helperDefination(
+      server.database.pathes.PathesClass,
+      {
+        'path' : 'pathes_test.json',
+        'load' : True,
+        'save' : True
+      }
     )
-    pathes.check()
-    pathes.load()
     assert(pathes.add('test2') == '3')
 
 
