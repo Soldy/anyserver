@@ -109,10 +109,10 @@ def test_indexNoSave():
       logStart(_config),
       config
     )
-    assert(indexes.addId('_') == '1')
-    assert(indexes.addId('test') == '1')
-    assert(indexes.addId('_') == '2')
-    assert(indexes.addId('test') == '2')
+    assert(indexes.add('_') == '0')
+    assert(indexes.add('test') == '1')
+    assert(indexes.add('_') == '2')
+    assert(indexes.add('test') == '2')
 
 def test_indexSave():
     config = configStart({
@@ -125,10 +125,10 @@ def test_indexSave():
       config
     )
     indexes.check()
-    assert(indexes.addId('_') == '1')
-    assert(indexes.addId('test') == '1')
-    assert(indexes.addId('_') == '2')
-    assert(indexes.addId('test') == '2')
+    assert(indexes.add('_') == '1')
+    assert(indexes.add('test') == '1')
+    assert(indexes.add('_') == '2')
+    assert(indexes.add('test') == '2')
 
 def test_indexSaveAndLoad():
     config = configStart({
@@ -143,10 +143,10 @@ def test_indexSaveAndLoad():
     indexes.check()
     indexes.load()
     assert(indexes.all('_') == ['1', '2'])
-    assert(indexes.addId('_') == '3')
-    assert(indexes.addId('test') == '3')
-    assert(indexes.addId('_') == '4')
-    assert(indexes.addId('test') == '4')
+    assert(indexes.add('_') == '3')
+    assert(indexes.add('test') == '3')
+    assert(indexes.add('_') == '4')
+    assert(indexes.add('test') == '4')
 
 @pytest.mark.dependency()
 def test_serverStart():
