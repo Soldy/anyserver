@@ -1,13 +1,12 @@
 
-from copy import deepcopy 
-from sys import argv
 import os
 import json
-import pathes
-from indexes import IndexesClass
-from pathes import PathesClass
-from databasehelp import DatabaseHelpClass
 import time
+from sys import argv
+from copy import deepcopy 
+from pathes import PathesClass
+from indexes import IndexesClass
+from databasehelp import DatabaseHelpClass
 
 
 class DatabasesClass:
