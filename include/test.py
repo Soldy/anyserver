@@ -149,6 +149,22 @@ def test_databaseHelperPathFix():
     assert(helper.pathFix('/') == '_')
     assert(helper.pathFix('/test') == '_test')
 
+def test_databaseHelperDataHandler():
+    helper = server.database.databasehelp.DatabaseHelpClass()
+    data = helper.create(1,{'dummy':'data'})
+    assert(data['id'] == 1)
+    assert(data['data'] == {'dummy':'data'})
+    assert('created_at' in data)
+    assert('changed_at' in data)
+    assert(data['created_at'] == data['changed_at'])
+    data_c = helper.change(data, {'dummy':'data 2'})
+    assert(data_c['created_at'] is not data_c['changed_at'])
+    assert(data['changed_at'] is not data_c['changed_at'])
+    assert(data['created_at'] == data_c['created_at'])
+    assert(data['id'] == data_c['id'])
+
+
+
 def test_databaseNoSave():
     database = helperDefination(
       server.database.DatabasesClass,
