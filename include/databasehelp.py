@@ -20,19 +20,30 @@ class DatabaseHelpClass:
         out['created_at'] = deepcopy(time)
         out['changed_at'] = deepcopy(time)
         return out
+    """
+    path name fix
+
+    :param: str : the record id in str
+    :return: str: full path 
+    """
+    def pathFix(self, path_:str)->str:
+        return path_.replace("/", "_")
     def change(
       self,
       data_: dict[str,any],
       record_: dict[str,any]
     )->dict[str,any]:
+        record = {}
+        record['id'] = data_['id']
+        record['created_at'] = data_['created_at']
         time = math.floor(
           datetime.datetime.timestamp(
             datetime.datetime.now()
           )
         )
-        record['data']       = deepcopy(data_)
-        record['changed_at'] = deepcopy(time)
-        return record
+        record['data']       = {**data_['data'], **record_}
+        record['changed_at'] = time
+        return deepcopy(record)
     def extend(
       self,
       data_: dict[str,any],
