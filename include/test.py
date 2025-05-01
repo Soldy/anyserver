@@ -144,6 +144,11 @@ def test_indexSaveAndLoad():
     assert(indexes.add('test') == '4')
 
 
+def test_databaseHelperPathFix():
+    helper = server.database.databasehelp.DatabaseHelpClass()
+    assert(helper.pathFix('/') == '_')
+    assert(helper.pathFix('/test') == '_test')
+
 def test_databaseNoSave():
     database = helperDefination(
       server.database.DatabasesClass,
