@@ -1,9 +1,11 @@
+
 from copy import deepcopy 
 from sys import argv
 import os
 import json
 import pathes
 import indexes
+import databasehelp
 import time
 
 
@@ -30,7 +32,7 @@ class DatabasesClass:
         return path_.replace("/", "_")
     def _checkDir(self):
         if self._checked:
-           return  
+           return
         if (not self._config['save'] and
           not self._config['load']):
             return False
