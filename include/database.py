@@ -4,7 +4,8 @@ from sys import argv
 import os
 import json
 import pathes
-import indexes
+from indexes import IndexesClass
+from pathes import PathesClass
 from databasehelp import DatabaseHelpClass
 import time
 
@@ -15,11 +16,11 @@ class DatabasesClass:
         self._config = config_
         self._checked = False
         self._db = {}
-        self._indexes = indexes.IndexesClass(
+        self._indexes = IndexesClass(
           self._log,
           self._config
         )
-        self._patheses = pathes.PathesClass(
+        self._patheses = PathesClass(
           self._log,
           self._config
         )

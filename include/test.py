@@ -68,7 +68,7 @@ def test_configAgain():
 
 def test_pathNoSave():
     pathes = helperDefination(
-      server.database.pathes.PathesClass,
+      server.database.PathesClass,
       {
         'load' : False,
         'save' : False,
@@ -79,7 +79,7 @@ def test_pathNoSave():
 
 def test_pathSave():
     pathes = helperDefination(
-      server.database.pathes.PathesClass,
+      server.database.PathesClass,
       {
         'path' : 'pathes_test.json',
         'load' : False,
@@ -91,7 +91,7 @@ def test_pathSave():
 
 def test_pathSaveAndLoad():
     pathes = helperDefination(
-      server.database.pathes.PathesClass,
+      server.database.PathesClass,
       {
         'path' : 'pathes_test.json',
         'load' : True,
@@ -103,7 +103,7 @@ def test_pathSaveAndLoad():
 
 def test_indexNoSave():
     indexes = helperDefination(
-      server.database.indexes.IndexesClass,
+      server.database.IndexesClass,
       {
         'load' : False,
         'save' : False
@@ -116,7 +116,7 @@ def test_indexNoSave():
 
 def test_indexSave():
     indexes = helperDefination(
-      server.database.indexes.IndexesClass,
+      server.database.IndexesClass,
       {
         'index': 'indexes_test.json',
         'load' : False,
@@ -130,7 +130,7 @@ def test_indexSave():
 
 def test_indexSaveAndLoad():
     indexes = helperDefination(
-      server.database.indexes.IndexesClass,
+      server.database.IndexesClass,
       {
         'index': 'indexes_test.json',
         'load' : True,
