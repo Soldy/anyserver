@@ -12,6 +12,7 @@ import server
 from threading import Thread
 import multiprocessing
 
+_ob = {}
 _config = configStart({
   'load' : False,
   'save' : False
@@ -26,12 +27,12 @@ _response = ''
 
 def helperDefination(class_, config_):
     config = configStart(config_)
-    indexes = class_(
+    helper = class_(
       logStart(config),
       config
     )
-    indexes.check()
-    return indexes
+    helper.check()
+    return helper
 
 def authGet(headers_):
     auth = {
@@ -141,6 +142,71 @@ def test_indexSaveAndLoad():
     assert(indexes.add('test') == '3')
     assert(indexes.add('_') == '4')
     assert(indexes.add('test') == '4')
+
+
+def test_databaseNoSave():
+    database = helperDefination(
+      server.database.DatabasesClass,
+      {
+        'load' : False,
+        'save' : False
+    })
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'id': '1'},
+    ] )
+    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseSave():
+    database = helperDefination(
+      server.database.DatabasesClass,
+      {
+        'db_dir' : 'db_test',
+        'path'   : 'pathes_test.json',
+        'index'  : 'indexes_test.json',
+        'load' : False,
+        'save' : True
+    })
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'id': '1'},
+    ] )
+    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseSaveAndLoad():
+    database = helperDefination(
+      server.database.DatabasesClass,
+      {
+        'db_dir' : 'db_test',
+        'path'   : 'pathes_test.json',
+        'index'  : 'indexes_test.json',
+        'load' : True,
+        'save' : True
+    })
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/',{'id':'1'}) == [
+      {'dummy': 'data', 'id': '1'}])
+    assert(database.post('/',{'dummy':'data plus'}) == 0)
+    assert(database.get('/',{}) == [
+      {'dummy': 'data', 'id': '1'},
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'id': '1'},
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'dummy':['data plus']}) == [
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'id':'2'}) == [
+      {'dummy': 'data plus', 'id': '2'}])
+    assert(database.get('/test', {}) == {} )
 
 @pytest.mark.dependency()
 def test_serverStart():
