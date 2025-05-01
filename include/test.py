@@ -145,12 +145,12 @@ def test_indexSaveAndLoad():
 
 
 def test_databaseHelperPathFix():
-    helper = server.database.databasehelp.DatabaseHelpClass()
+    helper = server.database.DatabaseHelpClass()
     assert(helper.pathFix('/') == '_')
     assert(helper.pathFix('/test') == '_test')
 
 def test_databaseHelperDataHandler():
-    helper = server.database.databasehelp.DatabaseHelpClass()
+    helper = server.database.DatabaseHelpClass()
     data = helper.create(1,{'dummy':'data'})
     assert(data['id'] == 1)
     assert(data['data'] == {'dummy':'data'})

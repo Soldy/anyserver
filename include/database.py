@@ -5,7 +5,7 @@ import os
 import json
 import pathes
 import indexes
-import databasehelp
+from databasehelp import DatabaseHelpClass
 import time
 
 
