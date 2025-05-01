@@ -4,8 +4,9 @@ from urllib import parse
 from copy import deepcopy 
 import os
 import json
-import database
 import forward
+import database
+from database import DatabasesClass
 
 _db = ''
 _forward = ''
@@ -97,7 +98,7 @@ def start(logging_, config_):
     global _db
     global _forward
     global _logging
-    _db = database.DatabasesClass(
+    _db = DatabasesClass(
       logging_,
       config_
     )
