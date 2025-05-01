@@ -11,6 +11,7 @@ class DatabasesClass:
     def __init__(self, logging_, config_):
         self._log = logging_
         self._config = config_
+        self._checked = False
         self._db = {}
         self._indexes = indexes.IndexesClass(
           self._log,
@@ -28,9 +29,10 @@ class DatabasesClass:
     def _pathFix(self, path_:str)->str:
         return path_.replace("/", "_")
     def _checkDir(self):
-        if not self._config["save"]:
-            return False
-        if not self._config["load"]:
+        if self._checked:
+           return  
+        if (not self._config['save'] and
+          not self._config['load']):
             return False
         if not os.path.exists(
           self._config["db_dir"]
@@ -49,6 +51,7 @@ class DatabasesClass:
               'Database directory error'
             )
             return True
+        self._checked = True
         return False
     """ This checking the file system for initialization. """
     def check(self):
