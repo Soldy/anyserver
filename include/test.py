@@ -780,5 +780,128 @@ def test_serverSopWithLoadAndSave():
     """ start server  """
     assert procTerminate().is_alive() is False
 
+@pytest.mark.dependency()
+def test_serverDbmStart():
+    """ get request  """
+    assert (procStart({}))
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skip(reason='not implemented yet')
+def test_keyRequestDbm():
+    """ get request  """
+    global _response
+    headers = {'AnyServer': 'routes'}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleGetDbm():
+    """ get request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetDbm():
+    """ get test request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skip(reason='incorrect implementation')
+def test_simpleTestRouteGetByIdDbm():
+    """ get test by id request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test?id=1'
+    )
+    assert (_response.status_code == 404)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostDbm():
+    """ post test route request  """
+    global _response
+    data = {'test': 'lorem ipsum'}
+    _response = requests.post(
+      'http://localhost:8008/test/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostDbm():
+    """ get test route request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetByIdAfterPostDbm():
+    """ get test by id request  """
+    _response = requests.get(
+      'http://localhost:8008/test/?id=1'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+def test_serverDbmSop():
+    """ start server  """
+    assert procTerminate().is_alive() is False
+
 def test_cleanUp():
     cleanUp()
