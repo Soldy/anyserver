@@ -1,8 +1,8 @@
-from copy import deepcopy 
-from sys import argv
-import dbm.gnu
 import os
 import json
+import dbm.gnu
+from sys import argv
+from copy import deepcopy 
 
 
 """
@@ -54,21 +54,21 @@ class PathesDbmClass:
     :return: str
     """
     def add(self, path_:str)->str:
-        if self.get(path_) == -1:
+        if self.get(path_) == '-1':
             self._serial = self._serial + 1
-            self._db[path_] = deepcopy(self._serial)
+            self._db[path_] = str(self._serial)
         return self.get(path_)
 
     """
-    get a path id
+    get all path
 
     :param: str : path_
     :return: str
     """
     def all(self):
         out = {}
-        key = db.firstkey()
-        while key is not None
-          out[key.decode('utf-8')] = db[key].decode('utf-8')
-          key = self_.db.nextkey(key)
+        key = self._db.firstkey()
+        while key is not None:
+          out[key.decode('utf-8')] = self._db[key].decode('utf-8')
+          key = self._db.nextkey(key)
         return out
