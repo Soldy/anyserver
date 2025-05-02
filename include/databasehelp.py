@@ -1,9 +1,17 @@
-import datetime
+import os
 import math
+import time
+import datetime
 from copy import deepcopy 
 
 
 class DatabaseHelpClass:
+    def __init__(self):
+        self._checked = False
+
+    """
+    create data structure
+    """
     def create(
       self,
       id_: int,
@@ -28,6 +36,38 @@ class DatabaseHelpClass:
     """
     def pathFix(self, path_:str)->str:
         return path_.replace("/", "_")
+
+    """
+    check dir existance
+    :param: str:
+    :return: bool:
+    """
+    def checkDir(self, dir_:str)->bool:
+        if self._checked:
+           return False
+        if not os.path.exists(
+          dir_
+        ):
+            self._log.debug(
+              'Creating database directory'
+            )
+            os.makedirs(
+              dir_
+            )
+            time.sleep(1)
+        if not os.path.isdir(
+          dir_
+        ):
+            self._log.critical(
+              'Database directory error'
+            )
+            return True
+        self._checked = True
+        return False
+
+    """
+    change data structure
+    """
     def change(
       self,
       data_: dict[str,any],
