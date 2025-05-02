@@ -25,11 +25,6 @@ class DatabasesClass:
         )
         self.check()
         self.loadAll()
-    """
-    path name fix
-    """
-    def _pathFix(self, path_:str)->str:
-        return path_.replace("/", "_")
 
     """
     check dir existance
@@ -41,7 +36,11 @@ class DatabasesClass:
         return self._helper.checkDir(
           self._config["db_dir"]
         )
-    """ This checking the file system for initialization. """
+
+    """
+     This checking the file system
+     for initialization.
+    """
     def check(self):
         _error = False
         if self._checkDir():
@@ -56,8 +55,9 @@ class DatabasesClass:
     """
     Db record file name 
 
+    :param: str : the path name
     :param: str : the record id in str
-    :return: str: full path 
+    :return: str: full path
     """
     def _fileName(self, path_: str, id_: str)->str:
         return (
@@ -129,15 +129,18 @@ class DatabasesClass:
     Db record post
 
     :param: str : the record id in str
+    :param: dict[str, str] : record data
     :return: int : result code 0 ok
     """
-    def post(self, path_: str, data_: dict[str, str])->int:
+    def post(
+      self,
+      path_: str, data_: dict[str, str])->int:
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         _id = self._indexes.add(
           self._patheses.get(
-            self._pathFix(path_)
+            self._helper.pathFix(path_)
           )
         )
         self._set(path, _id, data_)
@@ -156,7 +159,7 @@ class DatabasesClass:
     """
     def patch(self, path_: str, data_: dict[str, str])->int:
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         if 'id' not in data:
             return 1
@@ -233,7 +236,7 @@ class DatabasesClass:
     """
     def get(self, path_: str, gets_: dict[str,str]):
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         if path not in self._db:
             return {}
@@ -264,7 +267,7 @@ class DatabasesClass:
     """
     def columns(self, path_:str)->dict[str,dict[str, int|list[str]]]:
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         out = {}
         if path not in self._db:
@@ -303,7 +306,7 @@ class DatabasesClass:
     """
     def columnShow(self, path_:str, column_:str)->dict[str,any]:
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         out = {}
         if path not in self._db:
@@ -321,7 +324,7 @@ class DatabasesClass:
     def count(self, path_:str)->int:
         out = 0
         path = self._patheses.get(
-          self._pathFix(path_)
+          self._helper.pathFix(path_)
         )
         if path in self._db:
             for i in self._db[path]:
