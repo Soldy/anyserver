@@ -54,10 +54,14 @@ def start (args, logging_)->dict[str,str]:
 
     _config['port'] = int(args.port)
     _config['log_level'] = int(args.log_level)
+    _config['store_type'] = args.store_type
     _config['host'] = args.host
     _config['db_dir'] = args.db_dir
+    _config['dbm_dir'] = args.dbm_dir
     _config['index'] = args.index_file
+    _config['dbm_index'] = args.dbm_index
     _config['path'] = args.path_file
+    _config['dbm_path'] = args.dbm_path
     if args.load == False:
         _config['load'] = False
     if args.save == False:

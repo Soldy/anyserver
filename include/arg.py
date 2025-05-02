@@ -14,12 +14,25 @@ parser.add_argument("-l", "--host",
   metavar="HOST",
   default="localhost"
 )
+parser.add_argument(
+  "--store_type",
+  dest="store_type",
+  choices=["json", "dbm"],
+  default="json"
+)
 parser.add_argument("--db_dir",
   type=str,
   dest="db_dir",
   help="data collection directory",
   metavar="DB",
   default="db"
+)
+parser.add_argument("--dbm_dir",
+  type=str,
+  dest="dbm_dir",
+  help="dbm data collection directory",
+  metavar="DBM",
+  default="dbm"
 )
 parser.add_argument("--index_file",
   type=str,
@@ -28,12 +41,26 @@ parser.add_argument("--index_file",
   metavar="INDEXFILE",
   default="indexes.json"
 )
+parser.add_argument("--index_dbm",
+  type=str,
+  dest="dbm_index",
+  help="index collection in dbm",
+  metavar="INDEXDBM",
+  default="indexes.dbm"
+)
 parser.add_argument("--path_file",
   type=str,
   dest="path_file",
   help="url path collection file",
   metavar="PATHFILE",
   default="pathes.json"
+)
+parser.add_argument("--path_dbmn",
+  type=str,
+  dest="dbm_path",
+  help="url path collection dbm",
+  metavar="PATHDBM",
+  default="pathes.dbm"
 )
 parser.add_argument("--save",
   dest="save",
@@ -50,7 +77,8 @@ parser.add_argument("--log_level",
   dest="log_level",
   help="log level 10 - 50",
   metavar="LOG_LEVEL",
-  default="50")
+  default="50"
+)
 parser.add_argument("--vv",
   dest="vv",
   help="Verbose log equal with --log_level 10",
