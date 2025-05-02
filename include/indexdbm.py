@@ -1,7 +1,8 @@
-from copy import deepcopy 
-from sys import argv
 import os
 import json
+import dbm.gnu
+from sys import argv
+from copy import deepcopy 
 
 
 """
@@ -47,26 +48,24 @@ class IndexesDbmClass:
         return json.loads(
           self._db.get(
             path_,
-            b'{serial:0,index:[]}'
+            b'{"serial":0,"index":[]}'
           ).decode("utf-8")
         )
 
-    def add(self, path_:str, id_:str):
-        if (self.get(path_))['serial'] == 0:
-            self._db[path_] = json.dumps({'serial':0,'index':[]})
+    def add(self, path_:str)->str:
         current = self.get(path_)
-        if id_ not in current.index:
-            current.ids.append(deepcopy(id_))
+        current['serial'] = current['serial'] + 1
+        current['index'].append(str(current['serial']))
         self._db[path_] = json.dumps(current)
+        return str(current['serial'])
 
     def addId(self, path_:str)->str:
         current = self.get(path_)
         current['serial'] = current['serial'] + 1
         self._db[path_] = json.dumps(current)
-        return deepcopy(str(
-        (self.get(path_))['serial'] == 0:
-
-        ))
+        return str(
+          (self.get(path_))['serial']
+        )
     """
     get all indexes
 
@@ -74,9 +73,4 @@ class IndexesDbmClass:
     :return: str
     """
     def all(self, path_:str):
-        out = {}
-        key = db.firstkey()
-        while key is not None
-          out[key.decode('utf-8')] = db[key].decode('utf-8')
-          key = self_.db.nextkey(key)
-        return out
+        return deepcopy(self.get(path_)['index'])
