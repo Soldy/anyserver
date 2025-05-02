@@ -6,7 +6,8 @@ from copy import deepcopy
 
 
 class DatabaseHelpClass:
-    def __init__(self):
+    def __init__(self, logging_):
+        self._log     = logging_
         self._checked = False
 
     """
@@ -101,6 +102,8 @@ class DatabaseHelpClass:
       self,
       data_: dict[str,any]
     )->dict[str,any]:
-        out       = deepcopy(record['data'])
-        out['id'] = deepcopy(record['id'])
+        if data_ == {}:
+            return {}
+        out       = deepcopy(data_['data'])
+        out['id'] = deepcopy(data_['id'])
         return out
