@@ -84,7 +84,7 @@ def procStart(config_: dict[str,str])->bool:
         _config
     ])
     _proc.start()
-    time.sleep(1)
+    time.sleep(0.01)
     return _proc.is_alive()
 
 """
@@ -98,7 +98,7 @@ def procTerminate():
         _proc.terminate()
     except Exception:
         return _proc
-    time.sleep(1)
+    time.sleep(0.01)
     return _proc
 
 def helperDefination(class_, config_):
