@@ -13,7 +13,9 @@ class DatabasesClass:
     def __init__(self, logging_, config_):
         self._log = logging_
         self._config = config_
-        self._helper = DatabaseHelpClass()
+        self._helper = DatabaseHelpClass(
+          self._log
+        )
         self._db = {}
         self._indexes = IndexesClass(
           self._log,
@@ -178,7 +180,11 @@ class DatabasesClass:
     :param:  list[str] : element list
     :return: list[dict[str,any]] : result element copy
     """
-    def _getCopy(self, path_:str, ids_:list[str])->list[dict[str,any]]:
+    def _getCopy(
+      self,
+      path_:str,
+      ids_:list[str]
+    )->list[dict[str,any]]:
         out = []
         for i in ids_:
             if i in self._db[path_]:
@@ -217,9 +223,14 @@ class DatabasesClass:
     get elements by filter
 
     :param: str : path
+    :param: dict[str,str]
     :param: dict[str, str] : filters
     """
-    def _getFilter(self, path_: str, filters_: dict[str,str]):
+    def _getFilter(
+      self,
+      path_: str,
+      filters_: dict[str,str]
+    ):
         out = []
         for a in self._db[path_]:
             for b in filters_:
