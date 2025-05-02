@@ -59,13 +59,6 @@ class IndexesDbmClass:
         self._db[path_] = json.dumps(current)
         return str(current['serial'])
 
-    def addId(self, path_:str)->str:
-        current = self.get(path_)
-        current['serial'] = current['serial'] + 1
-        self._db[path_] = json.dumps(current)
-        return str(
-          (self.get(path_))['serial']
-        )
     """
     get all indexes
 
