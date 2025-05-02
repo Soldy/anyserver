@@ -60,6 +60,14 @@ def cleanUp():
     except Exception:
         print()
     try:
+        os.rmdir('db_test')
+    except Exception:
+        print()
+    try:
+        os.rmdir('dbm_test')
+    except Exception:
+        print()
+    try:
         os.remove('pathes_test.json')
     except Exception:
         print()
