@@ -7,16 +7,30 @@ _config = {
     'store_type' : 'json',
     'index'      : 'indexes.json',
     'path'       : 'pathes.json',
+    'dbm_path'   : 'pathes.dbm',
+    'dbm_index'  : 'indexes.dbm',
+    'dbm_dir'    : 'dbm',
     'log_level'  : 10,
     'load'       : True,
     'save'       : True,
     'dummy_test' : 'dummy'
 }
 
-def test(config_):
+"""
+config processor for test
+
+:param: dict[str,str]
+:return: dict[str,str]
+"""
+def test(config_: dict[str,str])->dict[str,str]:
     global _config
     return {**_config, **config_}
 
+"""
+config processor
+
+:return: dict[str,str]
+"""
 def start (args, logging_)->dict[str,str]:
     global _config
     if int(str(int(args.port))) != args.port:
