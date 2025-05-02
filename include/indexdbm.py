@@ -14,7 +14,7 @@ class IndexesDbmClass:
         self._ids = {}
         self._index = {}
         self._db     = dbm.gnu.open(
-          self._config['dbm_path'],
+          self._config['dbm_index'],
           'cs'
         )
 
@@ -38,7 +38,7 @@ class IndexesDbmClass:
         return
 
     """
-    get a path id
+    get an index id in the path
 
     :param: str : path_
     :return: str

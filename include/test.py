@@ -8,7 +8,9 @@ import pytest
 import requests
 from pathes import PathesClass
 from pathesdbm import PathesDbmClass
+from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
+from indexdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
 from conf import test as configTest
@@ -25,6 +27,7 @@ def configStart(config_):
     'path'     : 'pathes_test.json',
     'index'    : 'indexes_test.json',
     'dbm_path' : 'pathes_test.dbm',
+    'dbm_index': 'indexes_test.dbm',
     'save'     : False,
     'load'     : False
 }), **config_})
@@ -60,6 +63,10 @@ def cleanUp():
         print()
     try:
         os.remove('pathes_test.dbm')
+    except Exception:
+        print()
+    try:
+        os.remove('indexes_test.dbm')
     except Exception:
         print()
 
@@ -208,6 +215,17 @@ def test_indexSaveAndLoad():
     assert(indexes.add('_') == '4')
     assert(indexes.add('test') == '4')
 
+def test_indexDbm():
+    indexes = helperDefination(
+      IndexesDbmClass,
+      configStart({})
+    )
+    assert(indexes.all('_') == [])
+    assert(indexes.add('_') == '1')
+    assert(indexes.add('test') == '1')
+    assert(indexes.add('_') == '2')
+    assert(indexes.add('test') == '2')
+    assert(indexes.all('_') == ['1', '2'])
 
 def test_databaseHelperPathFix():
     helper = server.database.DatabaseHelpClass()
