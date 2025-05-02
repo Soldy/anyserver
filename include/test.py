@@ -8,9 +8,8 @@ import pytest
 import requests
 from pathes import PathesClass
 from pathesdbm import PathesDbmClass
-from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
-from indexdbm import IndexesDbmClass
+from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
 from conf import test as configTest
