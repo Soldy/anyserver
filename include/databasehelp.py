@@ -10,25 +10,6 @@ class DatabaseHelpClass:
         self._checked = False
 
     """
-    create data structure
-    """
-    def create(
-      self,
-      id_: int,
-      data_: dict[str,any]
-    )->dict[str,any]:
-        time = math.floor(
-          datetime.datetime.timestamp(
-            datetime.datetime.now()
-          )
-        )
-        out = {}
-        out['data']       = deepcopy(data_)
-        out['id']         = deepcopy(id_)
-        out['created_at'] = deepcopy(time)
-        out['changed_at'] = deepcopy(time)
-        return out
-    """
     path name fix
 
     :param: str : the record id in str
@@ -66,6 +47,26 @@ class DatabaseHelpClass:
         return False
 
     """
+    create data structure
+    """
+    def create(
+      self,
+      id_: int,
+      data_: dict[str,any]
+    )->dict[str,any]:
+        time = math.floor(
+          datetime.datetime.timestamp(
+            datetime.datetime.now()
+          )
+        )
+        out = {}
+        out['data']       = deepcopy(data_)
+        out['id']         = deepcopy(id_)
+        out['created_at'] = deepcopy(time)
+        out['changed_at'] = deepcopy(time)
+        return out
+
+    """
     change data structure
     """
     def change(
@@ -93,6 +94,10 @@ class DatabaseHelpClass:
         for i in data_:
             out[i] = data_[i]
         return self.change(out, record_)
+
+    """
+     output data format
+    """
     def outdata(
       self,
       data_: dict[str,any]
