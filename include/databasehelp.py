@@ -35,7 +35,6 @@ class DatabaseHelpClass:
             os.makedirs(
               dir_
             )
-            time.sleep(1)
         if not os.path.isdir(
           dir_
         ):
