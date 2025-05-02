@@ -12,6 +12,7 @@ from indexes import IndexesClass
 from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
+from databasedbm import DatabasesDbmClass
 from conf import test as configTest
 from log import start as logStart
 from server import start as serverStart
@@ -25,6 +26,7 @@ def configStart(config_):
     'db_dir'   : 'db_test',
     'path'     : 'pathes_test.json',
     'index'    : 'indexes_test.json',
+    'dbm_dir'  : 'dbm_test',
     'dbm_path' : 'pathes_test.dbm',
     'dbm_index': 'indexes_test.dbm',
     'save'     : False,
@@ -50,6 +52,11 @@ def cleanUp():
     try:
         for i in os.listdir('db_test'):
             os.remove('db_test/'+i)
+    except Exception:
+        print()
+    try:
+        for i in os.listdir('dbm_test'):
+            os.remove('dbm_test/'+i)
     except Exception:
         print()
     try:
@@ -227,12 +234,16 @@ def test_indexDbm():
     assert(indexes.all('_') == ['1', '2'])
 
 def test_databaseHelperPathFix():
-    helper = server.database.DatabaseHelpClass()
+    helper = server.database.DatabaseHelpClass(
+      logStart(configStart({}))
+    )
     assert(helper.pathFix('/') == '_')
     assert(helper.pathFix('/test') == '_test')
 
 def test_databaseHelperDataHandler():
-    helper = DatabaseHelpClass()
+    helper = DatabaseHelpClass(
+      logStart(configStart({}))
+    )
     data = helper.create(1,{'dummy':'data'})
     assert(data['id'] == 1)
     assert(data['data'] == {'dummy':'data'})
@@ -285,6 +296,50 @@ def test_databaseSave():
 def test_databaseSaveAndLoad():
     database = helperDefination(
       DatabasesClass,
+      {
+        'db_dir' : 'db_test',
+        'path'   : 'pathes_test.json',
+        'index'  : 'indexes_test.json',
+        'load' : True,
+        'save' : True
+    })
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/',{'id':'1'}) == [
+      {'dummy': 'data', 'id': '1'}])
+    assert(database.post('/',{'dummy':'data plus'}) == 0)
+    assert(database.get('/',{}) == [
+      {'dummy': 'data', 'id': '1'},
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'id': '1'},
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'dummy':['data plus']}) == [
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'id':'2'}) == [
+      {'dummy': 'data plus', 'id': '2'}])
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseDbm():
+    cleanUp()
+    database = helperDefination(
+      DatabasesDbmClass,
+      {}
+    )
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'id': '1'},
+    ] )
+    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseDbmAgain():
+    database = helperDefination(
+      DatabasesDbmClass,
       {
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',
