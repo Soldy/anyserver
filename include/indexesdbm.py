@@ -10,10 +10,10 @@ Index class.
 """
 class IndexesDbmClass:
     def __init__(self, logging_, config_):
-        self._log = logging_
+        self._log    = logging_
         self._config = config_
-        self._ids = {}
-        self._index = {}
+        self._ids    = {}
+        self._index  = {}
         self._db     = dbm.gnu.open(
           self._config['dbm_index'],
           'cs'
@@ -42,9 +42,9 @@ class IndexesDbmClass:
     get an index id in the path
 
     :param: str : path_
-    :return: str
+    :return: dict[str,int|list[str]]
     """
-    def get(self, path_:str)->dict:
+    def get(self, path_:str)->dict[str,int|list[str]]:
         return json.loads(
           self._db.get(
             path_,
@@ -52,10 +52,18 @@ class IndexesDbmClass:
           ).decode("utf-8")
         )
 
+    """
+    add an index id to the path
+
+    :param: str : path_
+    :return: str
+    """
     def add(self, path_:str)->str:
         current = self.get(path_)
         current['serial'] = current['serial'] + 1
-        current['index'].append(str(current['serial']))
+        current['index'].append(
+          str(current['serial'])
+        )
         self._db[path_] = json.dumps(current)
         return str(current['serial'])
 
