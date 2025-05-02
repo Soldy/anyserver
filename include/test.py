@@ -7,6 +7,7 @@ import time
 import pytest
 import requests
 from pathes import PathesClass
+from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
 from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
@@ -20,11 +21,12 @@ import multiprocessing
 _ob = {}
 def configStart(config_):
   return configTest({**({
-    'db_dir' : 'db_test',
-    'path'   : 'pathes_test.json',
-    'index'  : 'indexes_test.json',
-    'save'   : False,
-    'load'  : False
+    'db_dir'   : 'db_test',
+    'path'     : 'pathes_test.json',
+    'index'    : 'indexes_test.json',
+    'dbm_path' : 'pathes_test.dbm',
+    'save'     : False,
+    'load'     : False
 }), **config_})
 
 _config = configStart({})
@@ -54,6 +56,10 @@ def cleanUp():
         print()
     try:
         os.remove('indexes_test.json')
+    except Exception:
+        print()
+    try:
+        os.remove('pathes_test.dbm')
     except Exception:
         print()
 
@@ -146,6 +152,7 @@ def test_pathSave():
     assert(pathes.add('_') == '1')
     assert(pathes.add('test') == '2')
 
+
 def test_pathSaveAndLoad():
     pathes = helperDefination(
       PathesClass,
@@ -153,6 +160,22 @@ def test_pathSaveAndLoad():
     )
     assert(pathes.add('test2') == '3')
 
+def test_pathDbm():
+    pathes = helperDefination(
+      PathesDbmClass,
+      configStart({})
+    )
+    assert(pathes.all() == {})
+    assert(pathes.get('_') == '-1')
+    assert(pathes.add('_') == '1' )
+    assert(pathes.add('_') == '1' )
+    assert(pathes.get('_') == '1')
+    assert(pathes.all() == {'_': '1'})
+    assert(pathes.get('test') == '-1')
+    assert(pathes.add('test') == '2')
+    assert(pathes.add('test') == '2')
+    assert(pathes.get('test') == '2')
+    assert(pathes.all() == {'_': '1','test':'2'})
 
 def test_indexNoSave():
     indexes = helperDefination(
