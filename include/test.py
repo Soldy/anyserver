@@ -6,6 +6,8 @@ import os
 import time
 import pytest
 import requests
+from log import logStart
+from conf import test as configTest
 from pathes import PathesClass
 from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
@@ -13,8 +15,6 @@ from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
 from databasedbm import DatabasesDbmClass
-from conf import test as configTest
-from log import logStart
 from server import serverStart
 import server
 from threading import Thread
@@ -495,6 +495,40 @@ def test_simpleTestRouteGetAfterPost():
 
 @pytest.mark.dependency(depends=["test_serverStart"])
 @pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostOtherPath():
+    """ post test route request  """
+    global _response
+    data = {'test': 'lorem ipsum'}
+    _response = requests.post(
+      'http://localhost:8008/test2/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStart"])
+@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostOtherPath():
+    """ get test route request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test2/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStart"])
+@pytest.mark.skipif(not test_serverStart, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetByIdAfterPost():
     """ get test by id request  """
     _response = requests.get(
@@ -616,6 +650,40 @@ def test_simpleTestRouteGetAfterPostWithSave():
     """ get test route request  """
     _response = requests.get(
       'http://localhost:8008/test/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostOtherPathSave():
+    """ post test route request  """
+    global _response
+    data = {'test': 'lorem ipsum'}
+    _response = requests.post(
+      'http://localhost:8008/test2/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartWithSave"])
+@pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostOtherPathWithSave():
+    """ get test route request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test2/',
     )
     assert (_response.status_code == 200)
     assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
@@ -761,6 +829,41 @@ def test_simpleTestRouteGetAfterPostWithLoadAndSave():
 
 @pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
 @pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostOtherPathWithLoadAndSave():
+    """ post test route request  """
+    global _response
+    data = {'test': 'lorem ipsum'}
+    _response = requests.post(
+      'http://localhost:8008/test2/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostOtherPathWithLoadAndSave():
+    """ get test route request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test2/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text ==
+      '[{"test": "lorem ipsum", "id": "1"}, {"test": "lorem ipsum", "id": "2"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
+@pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
 def test_simpleTestRouteGetByIdAfterPostWithLoadAndSave():
     """ get test by id request  """
     _response = requests.get(
@@ -875,6 +978,40 @@ def test_simpleTestRouteGetAfterPostDbm():
     global _response
     _response = requests.get(
       'http://localhost:8008/test/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostOtherPathDbm():
+    """ post test route request  """
+    global _response
+    data = {'test': 'lorem ipsum'}
+    _response = requests.post(
+      'http://localhost:8008/test2/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverDbmStart"])
+@pytest.mark.skipif(not test_serverDbmStart, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostOtherPathDbm():
+    """ get test route request  """
+    global _response
+    _response = requests.get(
+      'http://localhost:8008/test2/',
     )
     assert (_response.status_code == 200)
     assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
