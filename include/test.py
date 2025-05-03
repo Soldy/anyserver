@@ -99,7 +99,7 @@ def procStart(config_: dict[str,str])->bool:
         _config
     ])
     _proc.start()
-    time.sleep(0.01)
+    time.sleep(0.1)
     return _proc.is_alive()
 
 """
@@ -509,7 +509,7 @@ def test_simpleTestRouteGetByIdAfterPost():
     )
 
 @pytest.mark.dependency(depends=["test_serverStart"])
-def test_serverSop():
+def test_serverStop():
     """ start server  """
     assert procTerminate().is_alive() is False
 
@@ -642,7 +642,7 @@ def test_simpleTestRouteGetByIdAfterPostWithSave():
 
 @pytest.mark.dependency(depends=["test_serverStartWithSave"])
 @pytest.mark.skipif(not test_serverStartWithSave, reason='anyserver start failed no reson to test')
-def test_serverSopWithSave():
+def test_serverStopWithSave():
     """ start server  """
     assert procTerminate().is_alive() is False
 
@@ -776,14 +776,15 @@ def test_simpleTestRouteGetByIdAfterPostWithLoadAndSave():
 
 @pytest.mark.dependency(depends=["test_serverStartWithLoadAndSave"])
 @pytest.mark.skipif(not test_serverStartWithLoadAndSave, reason='anyserver start failed no reson to test')
-def test_serverSopWithLoadAndSave():
+def test_serverStopWithLoadAndSave():
     """ start server  """
     assert procTerminate().is_alive() is False
 
 @pytest.mark.dependency()
 def test_serverDbmStart():
     """ get request  """
-    assert (procStart({}))
+    assert (procStart({'store_type':'dbm'}))
+    time.sleep(2)
 
 @pytest.mark.dependency(depends=["test_serverDbmStart"])
 @pytest.mark.skip(reason='not implemented yet')
@@ -899,7 +900,144 @@ def test_simpleTestRouteGetByIdAfterPostDbm():
     )
 
 @pytest.mark.dependency(depends=["test_serverDbmStart"])
-def test_serverDbmSop():
+def test_serverDbmStop():
+    """ start server  """
+    assert procTerminate().is_alive() is False
+    time.sleep(1)
+
+@pytest.mark.dependency()
+def test_serverStartDbmAgain():
+    """ get request  """
+    assert (procStart({'store_type':'dbm'}))
+    time.sleep(1)
+
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skip(reason='not implemented yet')
+def test_keyTestDbmAgain():
+    """ get request  """
+    headers = {"AnyServer": "auth-test"}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skip(reason='not implemented yet')
+def test_keyRequestDbmAgain():
+    """ get request  """
+    headers = {"AnyServer": "routes"}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_simpleGetDbmAgain():
+    """ get request  """
+    _response = requests.get(
+      'http://localhost:8008/'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetDbmAgain():
+    """ get test request  """
+    _response = requests.get(
+      'http://localhost:8008/test'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skip(reason='incorrect implementation')
+def test_simpleTestRouteGetByIdDbmAgain():
+    """ get test by id request  """
+    _response = requests.get(
+      'http://localhost:8008/test?id=1'
+    )
+    assert (_response.status_code == 404)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostDbmAgain():
+    """ post test route request  """
+    data = {'test2': 'dorol sit amet'}
+    _response = requests.post(
+      'http://localhost:8008/test/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostDbmAgain():
+    """ get test route request  """
+    _response = requests.get(
+      'http://localhost:8008/test/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == 
+      '[{"test": "lorem ipsum", "id": "1"}, {"test2": "dorol sit amet", "id": "2"}]'
+    )
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetByIdAfterPostDbmAgain():
+    """ get test by id request  """
+    _response = requests.get(
+      'http://localhost:8008/test/?id=1'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"test": "lorem ipsum", "id": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgain"])
+@pytest.mark.skipif(not test_serverStartDbmAgain, reason='anyserver start failed no reson to test')
+def test_serverStopDbmAgain():
     """ start server  """
     assert procTerminate().is_alive() is False
 
