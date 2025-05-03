@@ -1,4 +1,6 @@
-
+"""
+main start 
+"""
 import logging
 from arg import parser
 from log import logStart
@@ -8,14 +10,14 @@ from server import serverStart
 
 
 if __name__ == "__main__":
-   args = parser.parse_args()
-   _config = confInit(
-     args,
-     logging
+    args = parser.parse_args()
+    _config = confInit(
+      args,
+      logging
+    )
+    serverStart(
+      logStart(
+        _config
+      ),
+      _config
    )
-   serverStart(
-     logStart(
-       _config
-     ),
-     _config
-  )

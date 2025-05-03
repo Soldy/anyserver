@@ -1,13 +1,13 @@
-
-from http.server import BaseHTTPRequestHandler, HTTPServer, SimpleHTTPRequestHandler
+"""
+server management
+"""
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
-from copy import deepcopy 
-import os
+from copy import deepcopy
 import json
 import forward
-import database
-from database import DatabasesClass
 from databasedbm import DatabasesDbmClass
+from database import DatabasesClass
 
 _db = ''
 _forward = ''
@@ -16,6 +16,9 @@ _logging = ''
 
 
 class Server(BaseHTTPRequestHandler):
+    """
+    basehttprequest implementation
+    """
     def __init__(self, *args):
         global _logging
         global _db
@@ -25,16 +28,25 @@ class Server(BaseHTTPRequestHandler):
         self._forwarder = _forward
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
+        """
+        :return: str
+        """
         if '?' not in self.path:
-           return deepcopy(self.path)
+            return deepcopy(self.path)
         return deepcopy(self.path[:self.path.index('?')])
     def _getVariables(self)->dict[str,str]:
+        """
+        :return: dict[str,str]
+        """
         if '?' not in self.path:
-           return {}
+            return {}
         start = self.path.index('?')+1
         var_string = self.path[start:]
         return parse.parse_qs(var_string)
     def _do_response(self, data_: str):
+        """
+        :param: str
+        """
         out = data_.encode()
         self.protocol_version = 'HTTP/1.1'
         self.send_response(200)
@@ -44,12 +56,18 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(out)
     def _do_json_response(self, data_: dict[str, any] | list[dict[str, any]]):
+        """
+        :param: dict[str, any] | list[dict[str, any]]:
+        """
         return self._do_response(
             json.dumps(
                 data_
             )
         )
     def do_GET(self):
+        """
+        get
+        """
         result = self._forwarder.forward(
           self.path,
           self.headers,
@@ -57,15 +75,18 @@ class Server(BaseHTTPRequestHandler):
           '{}'
         )
         if result == '{}':
-          return self._do_json_response(
-            self._db.get(
-              self._clearPath(),
-              self._getVariables()
-            )
-          )
+            return self._do_json_response(
+                self._db.get(
+                  self._clearPath(),
+                  self._getVariables()
+                )
+           )
         return self._do_json_response(result)
 
     def do_POST(self):
+        """
+        post
+        """
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
@@ -76,12 +97,18 @@ class Server(BaseHTTPRequestHandler):
         self._do_response(json.dumps({}))
 
     def do_PATCH(self):
-        length = int(self.headers['content-length'])
-        field = self.rfile.read(length).decode()
-        post_data = json.loads(field)
-        self._do_response(json.dumps({}))
+        """
+        patch 
+        """
+#       length = int(self.headers['content-length'])
+#       field = self.rfile.read(length).decode()
+#       post_data = json.loads(field)
+#       self._do_response(json.dumps({}))
 
     def log_message(self, format, *args: list[str]):
+        """
+        log
+        """
         if len(args) == 3:
             self._logging.info(args[0]+" "+args[1]+" "+args[2])
             return
@@ -92,13 +119,25 @@ class Server(BaseHTTPRequestHandler):
         return
 
 
-def _httpServer(logging_, server_class=HTTPServer, handler_class=Server, port=8008, host="127.0.0.1", protocol_version="HTTP/1.1"):
+def _httpServer(
+  logging_,
+  server_class=HTTPServer,
+  handler_class=Server,
+  port=8008,
+  host="127.0.0.1"
+):
+    """
+    http server def
+    """
     server_address = (host, port)
-    httpd = server_class(server_address, handler_class, protocol_version)
+    httpd = server_class(server_address, handler_class)
     logging_.debug("httpd starting "+host+":"+str(port))
     httpd.serve_forever()
 
 def serverStart(logging_, config_):
+    """
+    server start
+    """
     global _db
     global _forward
     global _logging
@@ -115,6 +154,3 @@ def serverStart(logging_, config_):
     _forward = forward.ForwarderClass(_db, logging_, config_)
     _logging = logging_
     _httpServer(logging_, host=config_["host"], port=config_["port"])
-
-
-

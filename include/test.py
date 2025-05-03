@@ -47,7 +47,7 @@ _response = ''
 
 """
 standard file system clean up
-""" 
+"""
 def cleanUp():
     try:
         for i in os.listdir('db_test'):
@@ -84,13 +84,13 @@ def cleanUp():
     except Exception:
         print()
 
-"""
-standard multi process server start
-
-:param: dict[str,str]
-:return: bool : is a live result
-"""
 def procStart(config_: dict[str,str])->bool:
+    """
+    standard multi process server start
+
+    :param: dict[str,str]
+    :return: bool : is a live result
+    """
     global _proc
     _config = configStart(config_)
     _proc = multiprocessing.Process(
@@ -102,12 +102,12 @@ def procStart(config_: dict[str,str])->bool:
     time.sleep(0.1)
     return _proc.is_alive()
 
-"""
-standard multi process server stop
-
-:return: multiprocessing.Process
-"""
 def procTerminate():
+    """
+    standard multi process server stop
+
+    :return: multiprocessing.Process
+    """
     global _proc
     try:
         _proc.terminate()
@@ -242,7 +242,7 @@ def test_indexDbm():
     assert(indexes.all('_') == ['1', '2'])
 
 def test_databaseHelperPathFix():
-    helper = server.database.DatabaseHelpClass(
+    helper = DatabaseHelpClass(
       logStart(configStart({}))
     )
     assert(helper.pathFix('/') == '_')

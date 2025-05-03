@@ -1,15 +1,18 @@
-import os
+"""
+dbm indexes
+"""
 import json
 import dbm.gnu
-from sys import argv
-from copy import deepcopy 
+from copy import deepcopy
 
 
-"""
-Index class.
-"""
 class IndexesDbmClass:
-    def __init__(self, logging_, config_):
+    """
+    Index class.
+    :param: logging :
+    :param: dict[str,str] :
+    """
+    def __init__(self, logging_, config_: str):
         self._log    = logging_
         self._config = config_
         self._ids    = {}
@@ -19,32 +22,32 @@ class IndexesDbmClass:
           'cs'
         )
 
-    """
-    Index dbm check
-    :return: bool : False
-    """
     def check(self)->bool:
+        """
+        Index dbm check
+        :return: bool : False
+        """
         return False
 
-    """
-    temp dummy save
-    """
     def save(self):
+        """
+        temp dummy save
+        """
         return
 
-    """
-    temp dummy load 
-    """
     def load(self):
+        """
+        temp dummy load 
+        """
         return
 
-    """
-    get an index id in the path
-
-    :param: str : path_
-    :return: dict[str,int|list[str]]
-    """
     def get(self, path_:str)->dict[str,int|list[str]]:
+        """
+        get an index id in the path
+
+        :param: str : path_
+        :return: dict[str,int|list[str]]
+        """
         return json.loads(
           self._db.get(
             path_,
@@ -52,13 +55,13 @@ class IndexesDbmClass:
           ).decode("utf-8")
         )
 
-    """
-    add an index id to the path
-
-    :param: str : path_
-    :return: str
-    """
     def add(self, path_:str)->str:
+        """
+        add an index id to the path
+
+        :param: str : path_
+        :return: str
+        """
         current = self.get(path_)
         current['serial'] = current['serial'] + 1
         current['index'].append(
@@ -67,11 +70,11 @@ class IndexesDbmClass:
         self._db[path_] = json.dumps(current)
         return str(current['serial'])
 
-    """
-    get all indexes
-
-    :param: str : path_
-    :return: str
-    """
     def all(self, path_:str):
+        """
+        get all indexes
+
+        :param: str : path_
+        :return: str
+        """
         return deepcopy(self.get(path_)['index'])

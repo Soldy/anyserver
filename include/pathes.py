@@ -1,23 +1,31 @@
-from copy import deepcopy 
-from sys import argv
+"""
+Json pathes class
+"""
 import os
 import json
+from copy import deepcopy
 
-
-"""
-Multipath manager class.
-"""
 class PathesClass:
-    def __init__(self, logging_, config_):
+    """
+    Multipath manager class
+
+    :param: logging :
+    :param: dict[str,str] :
+    """
+    def __init__(
+      self,
+      logging_,
+      config_: dict[str,str]
+    ):
         self._log    = logging_
         self._config = config_
         self._serial = 0
         self._path   = {}
 
-    """
-    Path cache load 
-    """
     def load(self):
+        """
+        Path cache load 
+        """
         if not self._config['load']:
             return
         self._log.debug(
@@ -30,12 +38,12 @@ class PathesClass:
             self._path = json.load(file_)
         for i in self._path:
             if int(self._path[i]) >= self._serial:
-               self._serial = int(self._path[i])
+                self._serial = int(self._path[i])
 
-    """
-    Path cache check
-    """
     def check(self)->bool:
+        """
+        Path cache check
+        """
         _file_ = self._config['path']
         _error = False
         if not self._config['load']:
@@ -55,25 +63,45 @@ class PathesClass:
         self.load()
         return False
 
-    """
-    Path cache save
-    """
     def save(self):
+        """
+        Path cache save
+        """
         if not self._config['save']:
             return
         with open(
           self._config['path'],
           'w'
         ) as file_:
-           json.dump(self._path, file_)
+            json.dump(self._path, file_)
 
     def add(self, path_:str)->str:
+        """
+        add / generate a path id
+
+        :param: str : path_
+        :return: str
+        """
         if path_ not in self._path:
             self._serial = self._serial + 1
             self. _path[path_] = deepcopy(self._serial)
             self.save()
         return deepcopy(str(self._path[path_]))
+
     def get(self, path_:str)->str:
+        """
+        get a path id
+
+        :param: str : path_
+        :return: str
+        """
         return self.add(path_)
+
     def all(self):
+        """
+        get all path
+
+        :param: str : path_
+        :return: str
+        """
         return deepcopy(self._path)

@@ -1,10 +1,12 @@
-from arg import parser 
+"""
+cli admin args
+"""
 import json
+from arg import parser
 import pathes
-import database
 import log
 import conf
-
+import database
 
 parser.add_argument('-r', '--report',
   dest='report',
@@ -54,6 +56,10 @@ parser.add_argument("-tc", "--column",
 
 
 def reversPath (path_: str)->str:
+    """
+    :param: str
+    :return: str
+    """
     return path_.replace("_", "/")
 
 
@@ -88,7 +94,7 @@ if __name__ == "__main__":
         db = database.DatabasesClass(
           log.logging, _config)
         if args.path != '':
-            columns = db.columns(args.path) 
+            columns = db.columns(args.path)
             print(
               json.dumps(columns)
             )
@@ -96,7 +102,7 @@ if __name__ == "__main__":
         db = database.DatabasesClass(
           log.logging, _config)
         if args.path != '' and args.column != '':
-            columns = db.columnShow(args.path, args.column) 
+            columns = db.columnShow(args.path, args.column)
             print(
               json.dumps(columns)
             )

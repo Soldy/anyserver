@@ -1,12 +1,18 @@
-import os
+"""
+dbm database
+"""
 import json
 import dbm.gnu
-from copy import deepcopy 
 from pathesdbm import PathesDbmClass
 from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
 
 class DatabasesDbmClass:
+    """
+    database class
+    :param: logging :
+    :param: dict[str,str] :
+    """
     def __init__(self, logging_, config_):
         self._log     = logging_
         self._config  = config_
@@ -24,13 +30,13 @@ class DatabasesDbmClass:
         )
         self.check()
 
-    """
-    Dbm path file name
-
-    :param: str : the path name
-    :return: str: full path 
-    """
     def _fileName(self, path_: str)->str:
+        """
+        Dbm path file name
+
+        :param: str : the path name
+        :return: str: full path 
+        """
         return (
           self._config["dbm_dir"]+
           '/'+
@@ -38,25 +44,25 @@ class DatabasesDbmClass:
           '.dbm'
         )
 
-    """
-     Checking the file system
-     for initialization.
-    """
     def check(self):
+        """
+         Checking the file system
+         for initialization.
+        """
         return self._helper.checkDir(
           self._config["dbm_dir"]
         )
 
-    """
-    Db record post
-
-    :param: str : the record id in str
-    :return: int : result code 0 ok
-    """
     def post(self,
       path_: str,
       data_: dict[str, str]
     )->int:
+        """
+        Db record post
+
+        :param: str : the record id in str
+        :return: int : result code 0 ok
+        """
         path = self._helper.pathFix(path_)
         db = dbm.gnu.open(
           self._fileName(
@@ -88,12 +94,12 @@ class DatabasesDbmClass:
           )
         )
 
-    """
-    get All record
-
-    :param: str : path
-    """
     def _getAll(self, path_:str):
+        """
+        get All record
+
+        :param: str : path
+        """
         try:
             db = dbm.gnu.open(
               self._fileName(
@@ -112,12 +118,13 @@ class DatabasesDbmClass:
             key = db.nextkey(key)
         db.close()
         return out
-    """
-    get All record
 
-    :param: str : path
-    """
     def _getId(self, path_:str, ids_:list[str]):
+        """
+        get All record
+
+        :param: str : path
+        """
         try:
             out = []
             db = dbm.gnu.open(
@@ -138,16 +145,16 @@ class DatabasesDbmClass:
         except Exception:
             return []
 
-    """
-    get filter
-
-    :param: str : path
-    """
     def _getFilter(
       self,
       path_: str,
       filters_: dict[str,str]
     ):
+        """
+        get filter
+
+        :param: str : path
+        """
         try:
             db = dbm.gnu.open(
               self._fileName(
@@ -164,28 +171,26 @@ class DatabasesDbmClass:
             a = self._get(db,key)
             for b in filters_:
                 if b in a:
-                   for c in filters_[b]:
-                       if c in a[b]:
-                           out.append(a)
+                    for c in filters_[b]:
+                        if c in a[b]:
+                            out.append(a)
             key = db.nextkey(key)
         db.close()
         return out
-    """
-    get request manager
 
-    :param: str : the record id in str
-    """
     def get(
       self,
       path_: str,
       gets_: dict[str,str]
     ):
+        """
+        get request manager
+
+        :param: str : the record id in str
+        """
         path = self._helper.pathFix(path_)
         if 'id' in gets_:
             return self._getId(path, gets_['id'])
         if gets_ == {}:
             return self._getAll(path)
-        else:
-            return self._getFilter(path, gets_)
-
-
+        return self._getFilter(path, gets_)

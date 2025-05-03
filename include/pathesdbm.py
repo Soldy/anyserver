@@ -1,14 +1,15 @@
-import os
-import json
+"""
+dbm pathes class
+"""
 import dbm.gnu
-from sys import argv
-from copy import deepcopy 
 
-
-"""
-Multipath manager class.
-"""
 class PathesDbmClass:
+    """
+    Multipath manager class
+
+    :param: logging :
+    :param: dict[str,str] :
+    """
     def __init__(self, logging_, config_):
         self._log    = logging_
         self._config = config_
@@ -17,58 +18,59 @@ class PathesDbmClass:
           self._config['dbm_path'],
           'cs'
         )
-    """
-    Path dbm check
-    :return: bool : False
-    """
+
     def check(self)->bool:
+        """
+        Path dbm check
+        :return: bool : False
+        """
         return False
 
-    """
-    temp dummy save
-    """
     def save(self):
+        """
+        dummy save
+        """
         return
 
-    """
-    temp dummy load 
-    """
     def load(self):
-        return 
+        """
+        dummy load 
+        """
+        return
 
-    """
-    get a path id
-
-    :param: str : path_
-    :return: str
-    """
     def get(self, path_:str)->str:
+        """
+        get a path id
+
+        :param: str : path_
+        :return: str
+        """
         return str(int(
           self._db.get(path_, b'-1').decode("utf-8")
         ))
 
-    """
-    add / generate a path id
-
-    :param: str : path_
-    :return: str
-    """
     def add(self, path_:str)->str:
+        """
+        add / generate a path id
+
+        :param: str : path_
+        :return: str
+        """
         if self.get(path_) == '-1':
             self._serial = self._serial + 1
             self._db[path_] = str(self._serial)
         return self.get(path_)
 
-    """
-    get all path
-
-    :param: str : path_
-    :return: str
-    """
     def all(self):
+        """
+        get all path
+
+        :param: str : path_
+        :return: str
+        """
         out = {}
         key = self._db.firstkey()
         while key is not None:
-          out[key.decode('utf-8')] = self._db[key].decode('utf-8')
-          key = self._db.nextkey(key)
+            out[key.decode('utf-8')] = self._db[key].decode('utf-8')
+            key = self._db.nextkey(key)
         return out

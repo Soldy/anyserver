@@ -1,23 +1,27 @@
-from copy import deepcopy 
-from sys import argv
+"""
+json indexes class
+"""
 import os
 import json
+from copy import deepcopy
 
 
-"""
-Index class.
-"""
 class IndexesClass:
+    """
+    Index class.
+    :param: logging :
+    :param: dict[str,str] :
+    """
     def __init__(self, logging_, config_):
         self._log = logging_
         self._config = config_
         self._ids = {}
         self._index = {}
 
-    """
-    Index cache load 
-    """
     def load(self):
+        """
+        Index cache load
+        """
         if not self._config['load']:
             return
         self._log.debug(
@@ -32,12 +36,12 @@ class IndexesClass:
                 if int(i) > self._ids[path]:
                     self._ids[path] = int(i)
 
-    """
-    Index cache check
-
-    :return: bool
-    """
     def check(self)->bool:
+        """
+        Index cache check
+
+        :return: bool
+        """
         _file_ = self._config['index']
         _error = False
         if not self._config['load']:
@@ -54,58 +58,57 @@ class IndexesClass:
         self.load()
         return False
 
-    """
-    Index cache save
-    """
     def save(self):
+        """
+        Index cache save
+        """
         if not self._config['save']:
             return
-        _file_ = self._config['index']
-        with open(self._config['index'], 'w') as file_:
-            json.dump(self._index, file_)
+        file_name = self._config['index']
+        with open(file_name, 'w') as file_data:
+            json.dump(self._index, file_data)
 
-    """
-    add new index 
+    def __addIndex(self, path_:str, id_:str):
+        """
+        add new index 
 
-    :param: str
-    :param: str
-    """
-    def _addIndex(self, path_:str, id_:str):
+        :param: str
+        :param: str
+        """
         if path_ not in self._index:
             self._index[path_] = []
         if id_ not in self._index[path_]:
             self._index[path_].append(deepcopy(id_))
             self.save()
 
-    """
-    add new id
+    def __addId(self, path_:str):
+        """
+        add new id
 
-    :param: str
-    """
-    def _addId(self, path_:str):
+        :param: str
+        """
         if path_ not in self._ids:
             self._ids[path_] = 0
         self._ids[path_] = self._ids[path_] + 1
 
-    """
-    add public function
-
-    :param: str
-    :return: str
-    """
     def add(self, path_:str)->str:
-        self._addId(path_)
-        self._addIndex(path_, str(self._ids[path_]))
+        """
+        add public function
+
+        :param: str
+        :return: str
+        """
+        self.__addId(path_)
+        self.__addIndex(path_, str(self._ids[path_]))
         return str(self._ids[path_])
 
-
-    """
-    all index in path
-
-    :param: str
-    :return: list[str]
-    """
     def all(self, path_:str)->list[str]:
+        """
+        all index in path
+
+        :param: str
+        :return: list[str]
+        """
         if path_ not in self._index:
             return []
         return deepcopy(self._index[path_])
