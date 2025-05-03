@@ -118,22 +118,24 @@ class DatabasesDbmClass:
 
     :param: str : path
     """
-    def _getId(self, path_, id_:str):
+    def _getId(self, path_:str, ids_:list[str]):
         try:
+            out = []
             db = dbm.gnu.open(
               self._fileName(
                 path_
               ),
               'r'
             )
-            out = self._get(
-              db,
-              id_
-            )
+            for i in ids_:
+                dat = self._get(
+                  db,
+                  str(i)
+                )
+                if dat != {}:
+                    out.append(dat)
             db.close()
-            if out == {}:
-                return []
-            return [out]
+            return out
         except Exception:
             return []
 
