@@ -1163,14 +1163,12 @@ class Server(BaseHTTPRequestHandler):
             )
         )
     def do_GET(self):
-        if result == '{}':
-          return self._do_json_response(
-            self._db.get(
-              self._clearPath(),
-              self._getVariables()
-            )
+        return self._do_json_response(
+          self._db.get(
+            self._clearPath(),
+            self._getVariables()
           )
-        return self._do_json_response(result)
+        )
 
     def do_POST(self):
         length = int(self.headers['content-length'])
