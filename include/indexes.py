@@ -34,6 +34,8 @@ class IndexesClass:
 
     """
     Index cache check
+
+    :return: bool
     """
     def check(self)->bool:
         _file_ = self._config['index']
@@ -61,21 +63,49 @@ class IndexesClass:
         _file_ = self._config['index']
         with open(self._config['index'], 'w') as file_:
             json.dump(self._index, file_)
+
+    """
+    add new index 
+
+    :param: str
+    :param: str
+    """
     def _addIndex(self, path_:str, id_:str):
         if path_ not in self._index:
             self._index[path_] = []
         if id_ not in self._index[path_]:
             self._index[path_].append(deepcopy(id_))
             self.save()
+
+    """
+    add new id
+
+    :param: str
+    """
     def _addId(self, path_:str):
         if path_ not in self._ids:
             self._ids[path_] = 0
         self._ids[path_] = self._ids[path_] + 1
+
+    """
+    add public function
+
+    :param: str
+    :return: str
+    """
     def add(self, path_:str)->str:
         self._addId(path_)
         self._addIndex(path_, str(self._ids[path_]))
         return str(self._ids[path_])
-    def all(self, path_:str):
+
+
+    """
+    all index in path
+
+    :param: str
+    :return: list[str]
+    """
+    def all(self, path_:str)->list[str]:
         if path_ not in self._index:
             return []
         return deepcopy(self._index[path_])
