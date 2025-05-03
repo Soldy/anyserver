@@ -29,6 +29,18 @@ python3 anyserver.py -h
 ```
 
 
+### Data storage method
+Any server offers two types of data storage: JSON files and GNUDB.
+The JSON store saves data in small JSON files while keeping it in memory,
+ensuring a fast response time for testing purposes.
+On the other hand, GNUDB stores everything in its native format,
+making it ideal for larger data collections. Additionally, SQLITE support will be added in the future
+
+```
+python3 anyserver.py --store_type dbm --port 8999 --host localhost
+
+```
+
 ### Please remember
 This tool is intended for local use only. It has not undergone third-party security audits and should not be used in a live environment.
 
