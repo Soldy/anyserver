@@ -31,7 +31,7 @@ config processor
 
 :return: dict[str,str]
 """
-def start (args, logging_)->dict[str,str]:
+def confInit (args, logging_)->dict[str,str]:
     global _config
     if int(str(int(args.port))) != args.port:
        logging_.critical('invalid port')

@@ -98,7 +98,7 @@ def _httpServer(logging_, server_class=HTTPServer, handler_class=Server, port=80
     logging_.debug("httpd starting "+host+":"+str(port))
     httpd.serve_forever()
 
-def start(logging_, config_):
+def serverStart(logging_, config_):
     global _db
     global _forward
     global _logging

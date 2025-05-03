@@ -1,6 +1,5 @@
 import os
 import json
-import pathes
 import dbm.gnu
 from copy import deepcopy 
 from pathesdbm import PathesDbmClass

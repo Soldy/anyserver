@@ -1,20 +1,21 @@
-from arg import parser 
-import log
-import conf
-import server
+
+import logging
+from arg import parser
+from log import logStart
+from conf import confInit
+from server import serverStart
 
 
 
 if __name__ == "__main__":
    args = parser.parse_args()
-   _config = conf.start(
+   _config = confInit(
      args,
-     log.logging,
+     logging
    )
-   log.start(
-     _config
-   )
-   server.start(
-     log.logging,
+   serverStart(
+     logStart(
+       _config
+     ),
      _config
   )

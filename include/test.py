@@ -14,8 +14,8 @@ from databasehelp import DatabaseHelpClass
 from database import DatabasesClass
 from databasedbm import DatabasesDbmClass
 from conf import test as configTest
-from log import start as logStart
-from server import start as serverStart
+from log import logStart
+from server import serverStart
 import server
 from threading import Thread
 import multiprocessing
@@ -784,7 +784,7 @@ def test_serverStopWithLoadAndSave():
 def test_serverDbmStart():
     """ get request  """
     assert (procStart({'store_type':'dbm'}))
-    time.sleep(2)
+    time.sleep(1)
 
 @pytest.mark.dependency(depends=["test_serverDbmStart"])
 @pytest.mark.skip(reason='not implemented yet')
