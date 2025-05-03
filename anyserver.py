@@ -1000,8 +1000,8 @@ class DatabasesDbmClass:
           'cs'
         )
         _id = self._indexes.add(
-          self._patheses.get(
-            path
+          self._patheses.add(
+            path_
           )
         )
         db[_id] = json.dumps(
