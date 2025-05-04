@@ -13,7 +13,7 @@ from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
 from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
-from database import DatabasesClass
+from databasejson import DatabasesJsonClass
 from databasedbm import DatabasesDbmClass
 from server import serverStart
 import server
@@ -268,7 +268,7 @@ def test_databaseHelperDataHandler():
 
 def test_databaseNoSave():
     database = helperDefination(
-      DatabasesClass,
+      DatabasesJsonClass,
       {
         'load' : False,
         'save' : False
@@ -284,7 +284,7 @@ def test_databaseNoSave():
 
 def test_databaseSave():
     database = helperDefination(
-      DatabasesClass,
+      DatabasesJsonClass,
       {
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',
@@ -303,7 +303,7 @@ def test_databaseSave():
 
 def test_databaseSaveAndLoad():
     database = helperDefination(
-      DatabasesClass,
+      DatabasesJsonClass,
       {
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',

@@ -6,7 +6,7 @@ from urllib import parse
 from copy import deepcopy
 import json
 from databasedbm import DatabasesDbmClass
-from database import DatabasesClass
+from databasejson import DatabasesJsonClass
 
 class Server(BaseHTTPRequestHandler):
     """
@@ -107,7 +107,7 @@ def serverStart(logging_, config_):
     """
     db = ''
     if config_['store_type'] == 'json':
-        db = DatabasesClass(
+        db = DatabasesJsonClass(
           logging_,
           config_
         )

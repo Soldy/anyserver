@@ -9,7 +9,7 @@ from indexes import IndexesClass
 from databasehelp import DatabaseHelpClass
 
 
-class DatabasesClass:
+class DatabasesJsonClass:
     """
     database class
     :param: logging :
