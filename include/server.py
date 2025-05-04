@@ -5,7 +5,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 from copy import deepcopy
 import json
-from databasedbm import DatabasesDbmClass
+from database import DatabasesClass
 from databasejson import DatabasesJsonClass
 
 class Server(BaseHTTPRequestHandler):
@@ -105,17 +105,10 @@ def serverStart(logging_, config_):
     """
     server start
     """
-    db = ''
-    if config_['store_type'] == 'json':
-        db = DatabasesJsonClass(
-          logging_,
-          config_
-        )
-    else:
-        db = DatabasesDbmClass(
-          logging_,
-          config_
-        )
+    db = DatabasesClass(
+      logging_,
+      config_
+    )
     def ServerLayer(*args):
         return Server(logging_, db, *args)
     host=config_["host"]
