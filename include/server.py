@@ -8,20 +8,13 @@ import json
 from databasedbm import DatabasesDbmClass
 from database import DatabasesClass
 
-_db = ''
-_logging = ''
-
-
-
 class Server(BaseHTTPRequestHandler):
     """
     basehttprequest implementation
     """
-    def __init__(self, *args):
-        global _logging
-        global _db
-        self._logging = _logging
-        self._db= _db
+    def __init__(self, logging_, db_, *args):
+        self._logging = logging_
+        self._db= db_
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         """
@@ -107,36 +100,27 @@ class Server(BaseHTTPRequestHandler):
         return
 
 
-def _httpServer(
-  logging_,
-  server_class=HTTPServer,
-  handler_class=Server,
-  port=8008,
-  host="127.0.0.1"
-):
-    """
-    http server def
-    """
-    server_address = (host, port)
-    httpd = server_class(server_address, handler_class)
-    logging_.debug("httpd starting "+host+":"+str(port))
-    httpd.serve_forever()
 
 def serverStart(logging_, config_):
     """
     server start
     """
-    global _db
-    global _logging
+    db = ''
     if config_['store_type'] == 'json':
-        _db = DatabasesClass(
+        db = DatabasesClass(
           logging_,
           config_
         )
     else:
-        _db = DatabasesDbmClass(
+        db = DatabasesDbmClass(
           logging_,
           config_
         )
-    _logging = logging_
-    _httpServer(logging_, host=config_["host"], port=config_["port"])
+    def ServerLayer(*args):
+        return Server(logging_, db, *args)
+    host=config_["host"]
+    port=config_["port"]
+    server_address = (host, port)
+    httpd = HTTPServer(server_address, ServerLayer)
+    logging_.debug("httpd starting "+host+":"+str(port))
+    httpd.serve_forever()
