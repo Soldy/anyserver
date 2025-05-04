@@ -19,4 +19,5 @@ jobs:
     - run: sudo apt update
     - run: sudo apt install -y python3-pytest python3-pip python3-pytest-dependency pylint
     - run: pytest -v include/test.py
-    - run: pylint include/*.py --disable=W,C test.py
+    - run: rm include/test.py
+    - run: pylint include/*.py
