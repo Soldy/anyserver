@@ -64,7 +64,8 @@ This tool is intended for local use only. It has not undergone third-party secur
 
    I previously built several tools based on Node.js for this purpose,
  such as [statusBuffer](https://github.com/Soldy/statusBuffer), [predataBuffer](https://github.com/Soldy/preDataBuffer), and prodataBuffer.
- However, Node.js has changed significantly over time. Because of the lightweight nature of Node.js, the typescript, [the time](https://nodejs.org/en/blog/release) : code updates now take weeks to complete. Since the performance benefits of Node.js are no longer a [thing](https://peps.python.org/pep-0744/).
+ However, Node.js has changed significantly over time. Because of the lightweight nature of Node.js, the typescript, [the time](https://nodejs.org/en/blog/release) : code updates now take weeks to complete.
+ Since the performance benefits of Node.js are no longer as pronounced, I've found Python to be a more logical choice. 
  Python is preinstalled on most systems and offers various features that make it appealing for tool development,
  including support for writing [compressed files](https://docs.python.org/3.12/library/archiving.html), the [shelve](https://docs.python.org/3.12/library/shelve.html), [dbm](https://docs.python.org/3.12/library/dbm.html), and [SQLite](https://docs.python.org/3.12/library/sqlite3.html) ([I know I know](https://nodejs.org/docs/latest/api/sqlite.html)). Additionally, the MITM proxy is written in Python. For these reasons, creating a new tool in Python seems like a much more logical..
 
