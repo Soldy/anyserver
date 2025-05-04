@@ -6,7 +6,7 @@ from arg import parser
 import pathes
 import log
 import conf
-import database
+from databasejson import DatabasesJsonClass
 
 parser.add_argument('-r', '--report',
   dest='report',
@@ -73,7 +73,7 @@ if __name__ == "__main__":
       _config
     )
     if args.count:
-        db = database.DatabasesClass(
+        db = DatabasesJsonClass(
           log.logging, _config)
         if args.path == '':
             print(str(db.countAll()))
@@ -91,7 +91,7 @@ if __name__ == "__main__":
              reversPath(str(i))
             )
     if args.list_columns :
-        db = database.DatabasesClass(
+        db = DatabasesJsonClass(
           log.logging, _config)
         if args.path != '':
             columns = db.columns(args.path)
@@ -99,7 +99,7 @@ if __name__ == "__main__":
               json.dumps(columns)
             )
     if args.show_column :
-        db = database.DatabasesClass(
+        db = DatabasesJsonClass(
           log.logging, _config)
         if args.path != '' and args.column != '':
             columns = db.columnShow(args.path, args.column)
