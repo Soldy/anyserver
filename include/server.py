@@ -5,12 +5,10 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 from copy import deepcopy
 import json
-import forward
 from databasedbm import DatabasesDbmClass
 from database import DatabasesClass
 
 _db = ''
-_forward = ''
 _logging = ''
 
 
@@ -22,10 +20,8 @@ class Server(BaseHTTPRequestHandler):
     def __init__(self, *args):
         global _logging
         global _db
-        global _forward
         self._logging = _logging
         self._db= _db
-        self._forwarder = _forward
         BaseHTTPRequestHandler.__init__(self, *args)
     def _clearPath(self)->str:
         """
@@ -68,20 +64,12 @@ class Server(BaseHTTPRequestHandler):
         """
         get
         """
-        result = self._forwarder.forward(
-          self.path,
-          self.headers,
-          'GET',
-          '{}'
+        return self._do_json_response(
+          self._db.get(
+            self._clearPath(),
+            self._getVariables()
+          )
         )
-        if result == '{}':
-            return self._do_json_response(
-                self._db.get(
-                  self._clearPath(),
-                  self._getVariables()
-                )
-           )
-        return self._do_json_response(result)
 
     def do_POST(self):
         """
@@ -139,7 +127,6 @@ def serverStart(logging_, config_):
     server start
     """
     global _db
-    global _forward
     global _logging
     if config_['store_type'] == 'json':
         _db = DatabasesClass(
@@ -151,6 +138,5 @@ def serverStart(logging_, config_):
           logging_,
           config_
         )
-    _forward = forward.ForwarderClass(_db, logging_, config_)
     _logging = logging_
     _httpServer(logging_, host=config_["host"], port=config_["port"])
