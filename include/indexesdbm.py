@@ -29,18 +29,6 @@ class IndexesDbmClass:
         """
         return False
 
-    def save(self):
-        """
-        temp dummy save
-        """
-        return
-
-    def load(self):
-        """
-        temp dummy load 
-        """
-        return
-
     def get(self, path_:str)->dict[str,int|list[str]]:
         """
         get an index id in the path

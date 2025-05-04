@@ -18,7 +18,7 @@ class IndexesClass:
         self._ids = {}
         self._index = {}
 
-    def load(self):
+    def __loadIndex(self):
         """
         Index cache load
         """
@@ -42,31 +42,29 @@ class IndexesClass:
 
         :return: bool
         """
-        _file_ = self._config['index']
+        index_file = self._config['index']
         _error = False
-        if not self._config['load']:
+        if not self._config['load'] and not self._config['save']:
             return False
-        if not self._config['save']:
-            return False
-        if not os.path.exists(_file_):
+        if not os.path.exists(index_file):
             self._log.info('Creating index file')
-            with open(_file_, 'w') as file_:
+            with open(index_file, 'w') as file_:
                 json.dump({}, file_)
-        if not os.path.isfile(_file_):
+        if not os.path.isfile(index_file):
             self._log.critical('Index file error')
             return True
-        self.load()
+        self.__loadIndex()
         return False
 
-    def save(self):
+    def __saveIndex(self):
         """
         Index cache save
         """
         if not self._config['save']:
             return
         file_name = self._config['index']
-        with open(file_name, 'w') as file_data:
-            json.dump(self._index, file_data)
+        with open(file_name, 'w') as index_file:
+            json.dump(self._index, index_file)
 
     def __addIndex(self, path_:str, id_:str):
         """
@@ -79,7 +77,7 @@ class IndexesClass:
             self._index[path_] = []
         if id_ not in self._index[path_]:
             self._index[path_].append(deepcopy(id_))
-            self.save()
+            self.__saveIndex()
 
     def __addId(self, path_:str):
         """
