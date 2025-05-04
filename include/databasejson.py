@@ -11,7 +11,8 @@ from databasehelp import DatabaseHelpClass
 
 class DatabasesJsonClass:
     """
-    database class
+    database json class
+
     :param: logging :
     :param: dict[str,str] :
     """
@@ -58,6 +59,18 @@ class DatabasesJsonClass:
             _error = True
         if _error :
             sys.exit()
+
+    def checkPath(self, path_:str)->bool:
+        """
+         Checking path in db
+
+         :param: str:
+         :return: bool:
+        """
+        path = self._patheses.get(path_)
+        if path not in self._db:
+            return False
+        return True
 
     def _fileName(
       self,
@@ -215,33 +228,35 @@ class DatabasesJsonClass:
                 out.append(deepcopy(pack))
         return out
 
-    def _getAll(self, path_:str):
+    def getAll(self, path_:str):
         """
         get All record
 
         :param: str : path
         """
+        path = self._patheses.get(path_)
         return self._getCopy(
-          path_,
+          path,
           self._db[
-            path_
+            path
           ]
         )
 
-    def _getId(self, path_: str, ids_: list[str]):
+    def getId(self, path_: str, ids_: list[str]):
         """
         get records by id
 
         :param: str : path
         :param: list[str] : id list
         """
+        path = self._patheses.get(path_)
         out = []
         for i in ids_:
-            if str(i) in self._db[path_]:
+            if str(i) in self._db[path]:
                 out.append(str(i))
-        return self._getCopy(path_, out)
+        return self._getCopy(path, out)
 
-    def _getFilter(
+    def getFilter(
       self,
       path_: str,
       filters_: dict[str,str]
@@ -254,34 +269,14 @@ class DatabasesJsonClass:
         :param: dict[str, str] : filters
         """
         out = []
-        for a in self._db[path_]:
+        path = self._patheses.get(path_)
+        for a in self._db[path]:
             for b in filters_:
-                if b in self._db[path_][a]['data']:
+                if b in self._db[path][a]['data']:
                     for c in filters_[b]:
-                        if c in self._db[path_][a]['data'][b]:
+                        if c in self._db[path][a]['data'][b]:
                             out.append(str(a))
-        return self._getCopy(path_, out)
-
-    def get(
-      self,
-      path_: str,
-      gets_: dict[str,str]
-    ):
-        """
-        get request manager
-
-        :param: str : the record id in str
-        """
-        path = self._patheses.get(
-          self._helper.pathFix(path_)
-        )
-        if path not in self._db:
-            return {}
-        if 'id' in gets_:
-            return self._getId(path, gets_['id'])
-        if gets_ == {}:
-            return self._getAll(path)
-        return self._getFilter(path, gets_)
+        return self._getCopy(path, out)
 
 
     def _columnLen(self, column_:str|int)->int:

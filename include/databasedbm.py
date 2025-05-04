@@ -9,7 +9,8 @@ from databasehelp import DatabaseHelpClass
 
 class DatabasesDbmClass:
     """
-    database class
+    database dbm class
+
     :param: logging :
     :param: dict[str,str] :
     """
@@ -53,6 +54,25 @@ class DatabasesDbmClass:
           self._config["dbm_dir"]
         )
 
+    def checkPath(self, path_:str)->bool:
+        """
+         Checking path.dbm in dbdir
+
+         :param: str:
+         :return: bool:
+        """
+        try:
+            db = dbm.gnu.open(
+              self._fileName(
+                path_
+              ),
+              'r'
+            )
+            db.close()
+            return True
+        except Exception:
+            return False
+
     def post(self,
       path_: str,
       data_: dict[str, str]
@@ -84,7 +104,7 @@ class DatabasesDbmClass:
         db.close()
         return 0
 
-    def _get(self, db_, id_):
+    def __get(self, db_, id_):
         return self._helper.outdata(
           json.loads(
             db_.get(
@@ -94,7 +114,7 @@ class DatabasesDbmClass:
           )
         )
 
-    def _getAll(self, path_:str):
+    def getAll(self, path_:str):
         """
         get All record
 
@@ -113,13 +133,13 @@ class DatabasesDbmClass:
         key = db.firstkey()
         while key is not None:
             out.append(
-              self._get(db,key)
+              self.__get(db,key)
             )
             key = db.nextkey(key)
         db.close()
         return out
 
-    def _getId(self, path_:str, ids_:list[str]):
+    def getId(self, path_:str, ids_:list[str]):
         """
         get All record
 
@@ -134,7 +154,7 @@ class DatabasesDbmClass:
               'r'
             )
             for i in ids_:
-                dat = self._get(
+                dat = self.__get(
                   db,
                   str(i)
                 )
@@ -145,7 +165,7 @@ class DatabasesDbmClass:
         except Exception:
             return []
 
-    def _getFilter(
+    def getFilter(
       self,
       path_: str,
       filters_: dict[str,str]
@@ -154,6 +174,7 @@ class DatabasesDbmClass:
         get filter
 
         :param: str : path
+        :param: dict[str,str] : filters
         """
         try:
             db = dbm.gnu.open(
@@ -168,7 +189,7 @@ class DatabasesDbmClass:
         a = {}
         key = db.firstkey()
         while key is not None:
-            a = self._get(db,key)
+            a = self.__get(db,key)
             for b in filters_:
                 if b in a:
                     for c in filters_[b]:
@@ -177,20 +198,3 @@ class DatabasesDbmClass:
             key = db.nextkey(key)
         db.close()
         return out
-
-    def get(
-      self,
-      path_: str,
-      gets_: dict[str,str]
-    ):
-        """
-        get request manager
-
-        :param: str : the record id in str
-        """
-        path = self._helper.pathFix(path_)
-        if 'id' in gets_:
-            return self._getId(path, gets_['id'])
-        if gets_ == {}:
-            return self._getAll(path)
-        return self._getFilter(path, gets_)
