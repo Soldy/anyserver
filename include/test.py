@@ -13,8 +13,7 @@ from pathesdbm import PathesDbmClass
 from indexes import IndexesClass
 from indexesdbm import IndexesDbmClass
 from databasehelp import DatabaseHelpClass
-from databasejson import DatabasesJsonClass
-from databasedbm import DatabasesDbmClass
+from database import DatabasesClass
 from server import serverStart
 import server
 from threading import Thread
@@ -268,10 +267,11 @@ def test_databaseHelperDataHandler():
 
 def test_databaseNoSave():
     database = helperDefination(
-      DatabasesJsonClass,
+      DatabasesClass,
       {
-        'load' : False,
-        'save' : False
+        'store_type': 'json',
+        'load'      : False,
+        'save'      : False
     })
     assert(database.post('/',{'dummy':'data'}) == 0)
     assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
@@ -284,8 +284,9 @@ def test_databaseNoSave():
 
 def test_databaseSave():
     database = helperDefination(
-      DatabasesJsonClass,
+      DatabasesClass,
       {
+        'store_type': 'json',
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',
         'index'  : 'indexes_test.json',
@@ -303,8 +304,10 @@ def test_databaseSave():
 
 def test_databaseSaveAndLoad():
     database = helperDefination(
-      DatabasesJsonClass,
+      DatabasesClass,
       {
+
+        'store_type': 'json',
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',
         'index'  : 'indexes_test.json',
@@ -333,8 +336,10 @@ def test_databaseSaveAndLoad():
 def test_databaseDbm():
     cleanUp()
     database = helperDefination(
-      DatabasesDbmClass,
-      {}
+      DatabasesClass,
+      {
+        'store_type': 'dbm'
+      }
     )
     assert(database.post('/',{'dummy':'data'}) == 0)
     assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
@@ -347,8 +352,9 @@ def test_databaseDbm():
 
 def test_databaseDbmAgain():
     database = helperDefination(
-      DatabasesDbmClass,
+      DatabasesClass,
       {
+        'store_type': 'dbm',
         'db_dir' : 'db_test',
         'path'   : 'pathes_test.json',
         'index'  : 'indexes_test.json',
