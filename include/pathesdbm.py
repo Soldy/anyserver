@@ -26,18 +26,6 @@ class PathesDbmClass:
         """
         return False
 
-    def save(self):
-        """
-        dummy save
-        """
-        return
-
-    def load(self):
-        """
-        dummy load 
-        """
-        return
-
     def get(self, path_:str)->str:
         """
         get a path id

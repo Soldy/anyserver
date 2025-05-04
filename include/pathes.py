@@ -22,7 +22,7 @@ class PathesClass:
         self._serial = 0
         self._path   = {}
 
-    def load(self):
+    def __loadPath(self):
         """
         Path cache load 
         """
@@ -44,26 +44,24 @@ class PathesClass:
         """
         Path cache check
         """
-        _file_ = self._config['path']
+        path_file = self._config['path']
         _error = False
-        if not self._config['load']:
+        if not self._config['load'] and not self._config['save']:
             return False
-        if not self._config['save']:
-            return False
-        if not os.path.exists(_file_):
+        if not os.path.exists(path_file):
             self._log.info('Creating index file')
             with open(
-              _file_,
+              path_file,
               'w'
             ) as file_:
                 json.dump({}, file_)
-        if not os.path.isfile(_file_):
+        if not os.path.isfile(path_file):
             self._log.critical('Path file error')
             return True
-        self.load()
+        self.__loadPath()
         return False
 
-    def save(self):
+    def __savePath(self):
         """
         Path cache save
         """
@@ -72,8 +70,8 @@ class PathesClass:
         with open(
           self._config['path'],
           'w'
-        ) as file_:
-            json.dump(self._path, file_)
+        ) as path_file:
+            json.dump(self._path, path_file)
 
     def add(self, path_:str)->str:
         """
@@ -85,7 +83,7 @@ class PathesClass:
         if path_ not in self._path:
             self._serial = self._serial + 1
             self. _path[path_] = deepcopy(self._serial)
-            self.save()
+            self.__savePath()
         return deepcopy(str(self._path[path_]))
 
     def get(self, path_:str)->str:
