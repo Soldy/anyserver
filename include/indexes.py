@@ -68,7 +68,7 @@ class IndexesClass:
 
     def __addIndex(self, path_:str, id_:str):
         """
-        add new index 
+        add new index
 
         :param: str
         :param: str
