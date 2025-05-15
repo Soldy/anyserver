@@ -19,12 +19,12 @@ Any server is also useful for storing data collection gathered from various sour
 The server is available in two versions: a single-file version (server.py) and the complete source code in the "include" directory. It is recommended to use the single-file version with command line options.
 
 ```
-python3 anyserver.py --port 8999 --host localhost
+python3 -m restfullmonkey --port 8999 --host localhost
 
 ```
 
 ```
-python3 anyserver.py -h
+python3 -m restfullmonkey -h
 
 ```
 
