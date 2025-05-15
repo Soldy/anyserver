@@ -1,0 +1,71 @@
+[build-system]
+requires = ["flit_core >=3.11,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "restfullmonkey"
+version= "0.0.1"
+authors = [
+  { name="Soldy", email="4786022+Soldy@users.noreply.github.com" },
+]
+description = "Simple restfull mockup server"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Science/Research",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: POSIX :: AIX",
+    "Operating System :: POSIX :: BSD",
+    "Operating System :: POSIX :: BSD :: BSD/OS",
+    "Operating System :: POSIX :: BSD :: FreeBSD",
+    "Operating System :: POSIX :: BSD :: NetBSD",
+    "Operating System :: POSIX :: BSD :: OpenBSD",
+    "Operating System :: POSIX :: GNU Hurd",
+    "Operating System :: POSIX :: HP-UX",
+    "Operating System :: POSIX :: IRIX",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: POSIX :: Other",
+    "Operating System :: POSIX :: SCO",
+    "Operating System :: POSIX :: SunOS/Solaris",
+    "Operating System :: Unix",
+    "Operating System :: Other OS",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Programming Language :: SQL",
+    "Operating System :: OS Independent",
+    "Topic :: Database",
+    "Topic :: Database :: Database Engines/Servers",
+    "Topic :: Database :: Front-Ends",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Pre-processors",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Testing :: Mocking",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Networking :: Monitoring",
+    "Topic :: System :: Logging",
+    "Topic :: Utilities",
+    "Typing :: Typed"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Soldy/anyserver"
+"Bug Tracker" = "https://github.com/Soldy/anyserver/issues"
