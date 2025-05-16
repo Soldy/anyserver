@@ -19,5 +19,5 @@ jobs:
     - run: sudo apt update
     - run: sudo apt install -y python3-pytest python3-pip python3-pytest-dependency pylint
     - run: pytest -v restfullmonkey/test.py
-    - run: rm restfullmokey/test.py
+    - run: rm restfullmonkey/test.py
     - run: pylint --fail-under 5 restfullmonkey/*.py
