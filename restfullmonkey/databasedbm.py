@@ -3,9 +3,9 @@ dbm database
 """
 import json
 import dbm.gnu
-from pathesdbm import PathesDbmClass
-from indexesdbm import IndexesDbmClass
-from databasehelp import DatabaseHelpClass
+from restfullmonkey.pathesdbm import PathesDbmClass
+from restfullmonkey.indexesdbm import IndexesDbmClass
+from restfullmonkey.databasehelp import DatabaseHelpClass
 
 class DatabasesDbmClass:
     """

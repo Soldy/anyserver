@@ -2,11 +2,9 @@
 cli admin args
 """
 import json
-from arg import parser
-import pathes
-import log
-import conf
-from databasejson import DatabasesJsonClass
+from restfullmonkey import pathes, log, conf
+from restfullmonkey.arg import parser
+from restfullmonkey.databasejson import DatabasesJsonClass
 
 parser.add_argument('-r', '--report',
   dest='report',

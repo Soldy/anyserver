@@ -1,12 +1,12 @@
 """
 server management
 """
+import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 from copy import deepcopy
-import json
-from database import DatabasesClass
-from databasejson import DatabasesJsonClass
+from restfullmonkey.database import DatabasesClass
+from restfullmonkey.databasejson import DatabasesJsonClass
 
 class Server(BaseHTTPRequestHandler):
     """

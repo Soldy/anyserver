@@ -6,18 +6,18 @@ import os
 import time
 import pytest
 import requests
-from log import logStart
-from conf import test as configTest
-from pathes import PathesClass
-from pathesdbm import PathesDbmClass
-from indexes import IndexesClass
-from indexesdbm import IndexesDbmClass
-from databasehelp import DatabaseHelpClass
-from database import DatabasesClass
-from server import serverStart
-import server
 from threading import Thread
 import multiprocessing
+from restfullmonkey.log import logStart
+from restfullmonkey.conf import test as configTest
+from restfullmonkey.pathes import PathesClass
+from restfullmonkey.pathesdbm import PathesDbmClass
+from restfullmonkey.indexes import IndexesClass
+from restfullmonkey.indexesdbm import IndexesDbmClass
+from restfullmonkey.databasehelp import DatabaseHelpClass
+from restfullmonkey.database import DatabasesClass
+from restfullmonkey.server import serverStart
+#import .server
 
 _ob = {}
 def configStart(config_):

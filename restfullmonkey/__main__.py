@@ -2,10 +2,10 @@
 main start 
 """
 import logging
-from arg import parser
-from log import logStart
-from conf import confInit
-from server import serverStart
+from restfullmonkey.arg import parser
+from restfullmonkey.log import logStart
+from restfullmonkey.conf import confInit
+from restfullmonkey.server import serverStart
 
 
 

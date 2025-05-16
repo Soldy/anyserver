@@ -4,9 +4,9 @@ json database
 import sys
 import json
 from copy import deepcopy
-from pathes import PathesClass
-from indexes import IndexesClass
-from databasehelp import DatabaseHelpClass
+from restfullmonkey.pathes import PathesClass
+from restfullmonkey.indexes import IndexesClass
+from restfullmonkey.databasehelp import DatabaseHelpClass
 
 
 class DatabasesJsonClass:
