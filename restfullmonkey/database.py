@@ -50,7 +50,7 @@ class DatabasesClass:
         """
         path = self._helper.pathFix(path_)
         if not self._database.checkPath(path):
-             return {}
+            return {}
         if 'id' in gets_:
             return self._database.getId(path, gets_['id'])
         if gets_ == {}:
