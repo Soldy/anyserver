@@ -6,7 +6,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 from copy import deepcopy
 from restfullmonkey.database import DatabasesClass
-from restfullmonkey.databasejson import DatabasesJsonClass
 
 class Server(BaseHTTPRequestHandler):
     """
