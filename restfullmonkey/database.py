@@ -1,9 +1,9 @@
 """
 database manager
 """
-from databasehelp import DatabaseHelpClass
-from databasedbm import DatabasesDbmClass
-from databasejson import DatabasesJsonClass
+from restfullmonkey.databasehelp import DatabaseHelpClass
+from restfullmonkey.databasedbm import DatabasesDbmClass
+from restfullmonkey.databasejson import DatabasesJsonClass
 
 class DatabasesClass:
     """
