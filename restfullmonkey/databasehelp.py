@@ -3,6 +3,7 @@ database helper
 """
 import os
 import math
+import base64
 import datetime
 from copy import deepcopy
 
@@ -24,6 +25,30 @@ class DatabaseHelpClass:
         :return: str: full path 
         """
         return path_.replace("/", "_")
+
+    def b64Encode(self, string_:str)->str
+        """
+        base64 encode short
+
+        :param: str :
+        :return: str:
+        """
+        return base64.b64encode(
+           str.encode(
+             string_
+           )
+        )
+
+    def b64Decode(self, b64_string_:str)->str
+        """
+        base64 decode short
+
+        :param: str :
+        :return: str:
+        """
+        return base64.b64decode(
+          b64_string_
+        ).decode("utf-8")
 
     def checkDir(self, dir_:str)->bool:
         """
