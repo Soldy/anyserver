@@ -82,6 +82,11 @@ parser.add_argument("--log_level",
   metavar="LOG_LEVEL",
   default="50"
 )
+parser.add_argument("--disable_id",
+  dest="disable_id",
+  help="This option turns off the inclusion of the ID in the response.",
+  action='store_false'
+)
 parser.add_argument("--vv",
   dest="vv",
   help="Verbose log equal with --log_level 10",

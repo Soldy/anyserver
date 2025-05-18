@@ -20,7 +20,8 @@ class DatabasesJsonClass:
         self._log = logging_
         self._config = config_
         self._helper = DatabaseHelpClass(
-          self._log
+          self._log,
+          self._config
         )
         self._db = {}
         self._indexes = IndexesClass(
@@ -223,9 +224,7 @@ class DatabasesJsonClass:
         out = []
         for i in ids_:
             if i in self._db[path_]:
-                pack = deepcopy(self._db[path_][i]['data'])
-                pack['id'] = deepcopy(self._db[path_][i]['id'])
-                out.append(deepcopy(pack))
+                out.append(self._helper.outdata(self._db[path_][i]))
         return out
 
     def getAll(self, path_:str):

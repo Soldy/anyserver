@@ -23,6 +23,7 @@ def configDefault()->dict[str,str|int]:
         'log_level'  : 10,
         'load'       : True,
         'save'       : True,
+        'disable_id' : False,
         'dummy_test' : 'dummy'
     }
 
@@ -76,6 +77,8 @@ def confInit (args, logging_)->dict[str,str]:
         out['load'] = False
     if args.save is False:
         out['save'] = False
+    if args.disable_id is False:
+        out['disable_id'] = False
     if args.vv:
         out['log_level'] = 10
     return out

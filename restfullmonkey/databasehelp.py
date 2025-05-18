@@ -12,9 +12,11 @@ class DatabaseHelpClass:
     """
     database helper class
     :param: logging :
+    :param: dict[str,str] :
     """
-    def __init__(self, logging_):
+    def __init__(self, logging_, config_):
         self._log     = logging_
+        self._config  = config_
         self._checked = False
 
     def pathFix(self, path_:str)->str:
@@ -26,7 +28,7 @@ class DatabaseHelpClass:
         """
         return path_.replace("/", "_")
 
-    def b64Encode(self, string_:str)->str
+    def b64Encode(self, string_:str)->str:
         """
         base64 encode short
 
@@ -39,7 +41,7 @@ class DatabaseHelpClass:
            )
         )
 
-    def b64Decode(self, b64_string_:str)->str
+    def b64Decode(self, b64_string_:str)->str:
         """
         base64 decode short
 
@@ -155,5 +157,9 @@ class DatabaseHelpClass:
         if data_ == {}:
             return {}
         out       = deepcopy(data_['data'])
-        out['id'] = deepcopy(data_['id'])
+        if not self._config['disable_id']:
+            out['id'] = deepcopy(data_['id'])
+        else:
+            if 'id' in out:
+                del out['id']
         return out

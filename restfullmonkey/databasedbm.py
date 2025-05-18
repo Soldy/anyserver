@@ -27,7 +27,8 @@ class DatabasesDbmClass:
           self._config
         )
         self._helper = DatabaseHelpClass(
-          self._log
+          self._log,
+          self._config
         )
         self.check()
 

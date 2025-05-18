@@ -14,7 +14,8 @@ class DatabasesClass:
     """
     def __init__(self, logging_, config_):
         self._helper = DatabaseHelpClass(
-          logging_
+          logging_,
+          config_
         )
         if config_['store_type'] == 'json':
             self._database = DatabasesJsonClass(
