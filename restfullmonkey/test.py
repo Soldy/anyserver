@@ -242,14 +242,16 @@ def test_indexDbm():
 
 def test_databaseHelperPathFix():
     helper = DatabaseHelpClass(
-      logStart(configStart({}))
+      logStart(configStart({})),
+      configStart({})
     )
     assert(helper.pathFix('/') == '_')
     assert(helper.pathFix('/test') == '_test')
 
 def test_databaseHelperDataHandler():
     helper = DatabaseHelpClass(
-      logStart(configStart({}))
+      logStart(configStart({})),
+      configStart({})
     )
     data = helper.create(1,{'dummy':'data'})
     assert(data['id'] == 1)
@@ -279,6 +281,24 @@ def test_databaseNoSave():
       {'dummy': 'data', 'id': '1'},
     ] )
     assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
+    assert(database.get('/',{'id':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseNoSaveNoId():
+    database = helperDefination(
+      DatabasesClass,
+      {
+        'store_type': 'json',
+        'load'      : False,
+        'save'      : False,
+        'disable_id': True
+    })
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data'},
+    ] )
+    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data'}] )
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
 
@@ -378,6 +398,24 @@ def test_databaseDbmAgain():
     ])
     assert(database.get('/',{'id':'2'}) == [
       {'dummy': 'data plus', 'id': '2'}])
+    assert(database.get('/test', {}) == {} )
+
+def test_databaseDbmNoId():
+    cleanUp()
+    database = helperDefination(
+      DatabasesClass,
+      {
+        'store_type': 'dbm',
+        'disable_id': True
+      }
+    )
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data'},
+    ] )
+    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data'}] )
+    assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
 
 @pytest.mark.dependency()
