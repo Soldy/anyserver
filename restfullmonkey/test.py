@@ -284,6 +284,24 @@ def test_databaseNoSave():
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
 
+def test_databaseNoSaveIdName():
+    database = helperDefination(
+      DatabasesClass,
+      {
+        'store_type': 'json',
+        'load'      : False,
+        'save'      : False,
+        'id_name'   : 'newid'
+    })
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'newid': '1'},
+    ] )
+    assert(database.get('/',{'newid':'1'}) == [{'dummy': 'data', 'newid': '1'}] )
+    assert(database.get('/',{'newid':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
 def test_databaseNoSaveNoId():
     database = helperDefination(
       DatabasesClass,
