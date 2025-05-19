@@ -152,7 +152,6 @@ class DatabasesJsonClass:
         if path_ not in self._db :
             self._db[path_] = {}
         self._db[path_][id_] = {}
-        data_['id'] = deepcopy(id_)
         self._db[path_][id_]['data'] = deepcopy(data_)
         self._db[path_][id_]['id'] = deepcopy(id_)
         self.save(path_, id_)

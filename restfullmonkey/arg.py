@@ -87,6 +87,13 @@ parser.add_argument("--disable_id",
   help="This option turns off the inclusion of the ID in the response.",
   action='store_false'
 )
+parser.add_argument("--id_name",
+  type=str,
+  dest="id_name",
+  help="Costume ID name. That helps to avoid conflicting data with the original stored data.",
+  metavar="IDNAME",
+  default="id"
+)
 parser.add_argument("--vv",
   dest="vv",
   help="Verbose log equal with --log_level 10",

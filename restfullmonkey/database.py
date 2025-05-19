@@ -17,6 +17,7 @@ class DatabasesClass:
           logging_,
           config_
         )
+        self._config = config_
         if config_['store_type'] == 'json':
             self._database = DatabasesJsonClass(
               logging_,
@@ -52,8 +53,11 @@ class DatabasesClass:
         path = self._helper.pathFix(path_)
         if not self._database.checkPath(path):
             return {}
-        if 'id' in gets_:
-            return self._database.getId(path, gets_['id'])
+        if self._config['id_name'] in gets_:
+            return self._database.getId(
+              path,
+              gets_[self._config['id_name']]
+            )
         if gets_ == {}:
             return self._database.getAll(path)
         return self._database.getFilter(path, gets_)
