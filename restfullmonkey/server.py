@@ -85,6 +85,7 @@ class Server(BaseHTTPRequestHandler):
 #       post_data = json.loads(field)
 #       self._do_response(json.dumps({}))
 
+# pylint: disable=W0622
     def log_message(self, format, *args: list[str]):
         """
         log
@@ -97,6 +98,7 @@ class Server(BaseHTTPRequestHandler):
             out = out + str(i)
         self._logging.info(out)
         return
+# pylint: enable=W0622
 
 
 
