@@ -436,6 +436,24 @@ def test_databaseDbmNoId():
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
 
+def test_databaseDbmIdName():
+    cleanUp()
+    database = helperDefination(
+      DatabasesClass,
+      {
+        'store_type': 'dbm',
+        'id_name'   : 'newid'
+      }
+    )
+    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', 'newid': '1'},
+    ] )
+    assert(database.get('/',{'newid':'1'}) == [{'dummy': 'data', 'newid': '1'}] )
+    assert(database.get('/',{'newid':'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+
 @pytest.mark.dependency()
 def test_serverStart():
     """ get request  """
