@@ -6,12 +6,21 @@ This tool does not have any security checks in place. Do not use it for live sys
 
 ## AnyServer
 
-This is a lightweight, simple, and dependency-free mockup RESTful API server that can be used right out of the box.
-It is designed to assist developers in creating a RESTful frontend when the backend may not be available for testing or use.
-One of the standout features of this server is its easy integration with mitmproxy, although this functionality will not be documented at this time. 
-Any server is also useful for storing data collection gathered from various sources and can convert it into AXP. Can replicate certain functionalities without human intervention.
+  This is a lightweight, simple, and dependency-free mockup RESTful API server that can be used right out of the box.
+It is designed to assist developers in creating a RESTful frontend when the backend is unavailable for testing or use.
+One of the standout features of this server is its easy integration with mitmproxy, although this functionality will not be documented at this time.
+  Additionally, anyserver is good for storing data collected from various sources and can convert it into AXP.
+It is capable of replicating certain functionalities without human intervention.
+  The search function is implemented.
+However, please note that it may not perform well with large datasets.
+Searching in small test data collections of 2-3 megabytes will work fine, but handling 2-gigabyte datasets will take a huge amount of time.
 
 
+### Install
+
+```
+pip3 install restfullmonkey
+```
 
 
 ### Usage
@@ -36,8 +45,10 @@ ensuring a fast response time for testing purposes.
 On the other hand, GNUDB stores everything in its native format,
 making it ideal for larger data collections. Additionally, SQLITE support will be added in the future
 
+
+#### dbm support
 ```
-python3 anyserver.py --store_type dbm --port 8999 --host localhost
+python3 restfullmonkey --store_type dbm --port 8999 --host localhost
 
 ```
 
@@ -57,6 +68,13 @@ This tool is intended for local use only. It has not undergone third-party secur
  + [jsonplaceholder - https://jsonplaceholder.typicode.com/](https://jsonplaceholder.typicode.com/)
  + [WireMock - https://wiremock.org/](https://wiremock.org/)
 
+### Future
+
+The project began as a simple hobby that I expected to take only two or three days. However, I quickly realized this tool was much more useful than I thought.
+Most of the data my system collects is unorganized, so consolidating all this information into a single, burnable, and portable format offers numerous benefits.
+I have already implemented support for DBM to handle more data, and I currently store 30 gigabytes of data in this way. Additionally, I plan to add data hashing soon. 
+The next step will involve ensuring that SQLite supports. 256 TB limit is a significant amount of data storage. 
+I also aim to develop a method for converting data from one type of storage to another. Looking ahead, I will be removing single-file support in the next release, as it will be replaced by a different solution.
 
 ## FAQ
 
