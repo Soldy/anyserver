@@ -3,7 +3,7 @@ main start
 """
 import logging
 from restfullmonkey.arg import parser
-from restfullmonkey.log import logStart
+from restfullmonkey.log import logInit
 from restfullmonkey.conf import confInit
 from restfullmonkey.server import serverStart
 
