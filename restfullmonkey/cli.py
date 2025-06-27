@@ -63,11 +63,11 @@ def reversPath (path_: str)->str:
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    _config = conf.start(
+    _config = conf.confInit(
       args,
       log.logging,
     )
-    log.start(
+    log.logInit(
       _config
     )
     if args.count:

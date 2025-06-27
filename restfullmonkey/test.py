@@ -8,7 +8,7 @@ import pytest
 import requests
 from threading import Thread
 import multiprocessing
-from restfullmonkey.log import logStart
+from restfullmonkey.log import logInit
 from restfullmonkey.conf import test as configTest
 from restfullmonkey.pathes import PathesClass
 from restfullmonkey.pathesdbm import PathesDbmClass
@@ -37,7 +37,7 @@ _config = configStart({})
 
 _proc = multiprocessing.Process(
    target=serverStart, args=[
-     logStart(_config),
+     logInit(_config),
      _config
 ])
 _auth_key = ''
@@ -94,7 +94,7 @@ def procStart(config_: dict[str,str])->bool:
     _config = configStart(config_)
     _proc = multiprocessing.Process(
       target=serverStart, args=[
-        logStart(_config),
+        logInit(_config),
         _config
     ])
     _proc.start()
@@ -118,7 +118,7 @@ def procTerminate():
 def helperDefination(class_, config_):
     config = configStart(config_)
     helper = class_(
-      logStart(config),
+      logInit(config),
       config
     )
     helper.check()
@@ -242,7 +242,7 @@ def test_indexDbm():
 
 def test_databaseHelperPathFix():
     helper = DatabaseHelpClass(
-      logStart(configStart({})),
+      logInit(configStart({})),
       configStart({})
     )
     assert(helper.pathFix('/') == '_')
@@ -250,7 +250,7 @@ def test_databaseHelperPathFix():
 
 def test_databaseHelperDataHandler():
     helper = DatabaseHelpClass(
-      logStart(configStart({})),
+      logInit(configStart({})),
       configStart({})
     )
     data = helper.create(1,{'dummy':'data'})

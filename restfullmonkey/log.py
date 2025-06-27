@@ -3,7 +3,7 @@ log setup
 """
 import logging
 
-def logStart (config_: dict[str,str])->logging:
+def logInit (config_: dict[str,str])->logging:
     """
     log init
 

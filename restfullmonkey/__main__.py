@@ -16,7 +16,7 @@ if __name__ == "__main__":
       logging
     )
     serverStart(
-      logStart(
+      logInit(
         _config
       ),
       _config
