@@ -154,9 +154,13 @@ class DatabaseHelpClass:
         :param: dict[str, any]:
         :return: dict[str, any]:
         """
+        out = {}
         if data_ == {}:
             return {}
-        out       = deepcopy(data_['data'])
+        if isinstance(data_['data'], dict) :
+            out = deepcopy(data_['data'])
+        else:
+            out['data'] = deepcopy(data_['data'])
         if not self._config['disable_id']:
             out[self._config['id_name']] = deepcopy(data_['id'])
         else:
