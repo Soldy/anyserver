@@ -26,6 +26,9 @@ class Server(BaseHTTPRequestHandler):
         """
         :return: dict[str,str]
         """
+
+        if hasattr(self, 'query_data'):
+            return parse.parse_qs(self.query_data)
         if '?' not in self.path:
             return {}
         start = self.path.index('?')+1
