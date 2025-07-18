@@ -162,7 +162,9 @@ class DatabaseHelpClass:
         else:
             out['data'] = deepcopy(data_['data'])
         if not self._config['disable_id']:
-            out[self._config['id_name']] = deepcopy(data_['id'])
+            out[
+              self._config['id_name']
+            ] = deepcopy(data_['id'])
         else:
             if self._config['id_name'] in out:
                 del out[self._config['id_name']]
