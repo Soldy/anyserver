@@ -1542,9 +1542,93 @@ def test_simpleTestRouteGetByIdDbmAgainIdName():
 @pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
 def test_simpleTestRoutePostDbmAgainIdName():
     """ post test route request  """
-    data = {'test2': 'dorol sit amet'}
+    data = {"test": "lorem ipsum", "newid": "1"};
     _response = requests.post(
       'http://localhost:8008/test/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostDbmAgainIdName():
+    """ get test route request  """
+    _response = requests.get(
+      'http://localhost:8008/test/',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == 
+      '[{"test": "lorem ipsum", "newid": "1"}]'
+    )
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostDbmAgainIdNameTwo():
+    """ post test route request  """
+    data = [{"test": "lorem ipsum"},{"test2": "dorol sit amet"}];
+    _response = requests.post(
+      'http://localhost:8008/list_test',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetAfterPostDbmAgainIdName():
+    """ get test route request  """
+    time.sleep(1)
+    _response = requests.get(
+      'http://localhost:8008/list_test',
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{}')
+#      '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "3"}'
+
+#   )
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetByIdAfterPostDbmAgainIdName():
+    """ get test by id request  """
+    _response = requests.get(
+      'http://localhost:8008/list_test?newid=3'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "3"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRoutePostDbmAgainIdBreakingList():
+    """ post test route request  """
+    data = ['test0', 'test1', 'test2', 'test3']
+    _response = requests.post(
+      'http://localhost:8008/list_test/',
       json = data
     )
     assert (_response.status_code == 200)
@@ -1557,15 +1641,28 @@ def test_simpleTestRoutePostDbmAgainIdName():
 
 @pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
 @pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
-def test_simpleTestRouteGetAfterPostDbmAgainIdName():
-    """ get test route request  """
+def test_simpleTestRouteGetByIdAfterPostDbmAgainIdBreakingListIdRaceCondition():
+    """ get test by id request  """
     _response = requests.get(
-      'http://localhost:8008/test/',
+      'http://localhost:8008/list_test/'
     )
     assert (_response.status_code == 200)
-    assert (_response.text == 
-      '[{"test": "lorem ipsum", "newid": "1"}, {"test2": "dorol sit amet", "newid": "2"}]'
+    assert (_response.text == '[{"data": ["test0", "test1", "test2", "test3"], "newid": "1"}]')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
     )
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+@pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
+def test_simpleTestRouteGetByIdAfterPostDbmAgainIdBreakingListId():
+    """ get test by id request  """
+    time.sleep(1)
+    _response = requests.get(
+      'http://localhost:8008/list_test/'
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '[{"data": ["test0", "test1", "test2", "test3"], "newid": "1"}]')
     assert (
       _response.headers['content-type']
       ==
@@ -1574,13 +1671,13 @@ def test_simpleTestRouteGetAfterPostDbmAgainIdName():
 
 @pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
 @pytest.mark.skipif(not test_serverStartDbmAgainIdName, reason='anyserver start failed no reson to test')
-def test_simpleTestRouteGetByIdAfterPostDbmAgainIdName():
+def test_simpleTestRouteGetByIdAfterPostDbmAgainIdBreakingListAll():
     """ get test by id request  """
     _response = requests.get(
-      'http://localhost:8008/test/?newid=1'
+      'http://localhost:8008/list_test'
     )
     assert (_response.status_code == 200)
-    assert (_response.text == '[{"test": "lorem ipsum", "newid": "1"}]')
+    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "3"}]')
     assert (
       _response.headers['content-type']
       ==
