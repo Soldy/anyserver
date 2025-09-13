@@ -266,6 +266,29 @@ def test_databaseHelperDataHandler():
     assert(data['id'] == data_c['id'])
 
 
+def test_databaseLoop():
+    database = helperDefination(
+      DatabasesClass,
+      {
+        'store_type': 'loop'
+    })
+    assert(database.post('/',{'dummy':'data'}) == {
+      'method' : 'POST',
+      'path'   : '/',
+      'data'   : {
+        'dummy' : 'data'
+      }
+    })
+    assert(database.get('/',{}) == {
+      'method' : 'GET',
+      'path'   : '/',
+      'data'   : {}
+    })
+    assert(database.get('/',{'id':1}) == {
+      'method' : 'GET',
+      'path'   : '/',
+      'data'   : {'id':1}
+    })
 
 def test_databaseNoSave():
     database = helperDefination(
@@ -1692,5 +1715,52 @@ def test_serverStopDbmAgainIdName():
 
 
 
+##########################
+
+@pytest.mark.dependency()
+def test_serverStartLoopAgainIdName():
+    """ get request  """
+    assert (procStart({
+      'store_type' : 'loop'
+    }))
+    time.sleep(1)
+
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+def test_simpleTestRoutePostLoopAgainIdName():
+    """ post test route request  """
+    data = {"test": "lorem ipsum", "newid": "1"};
+    _response = requests.post(
+      'http://localhost:8008/test/',
+      json = data
+    )
+    assert (_response.status_code == 200)
+    assert (_response.text == '{"method": "POST", "path": "/test/", "data": {"test": "lorem ipsum", "newid": "1"}}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+@pytest.mark.dependency(depends=["test_serverStartDbmAgainIdName"])
+def test_keyTestLoopAgainIdName():
+    """ get request  """
+    headers = {"AnyServer": "auth-test"}
+    _response = requestGet('/',headers)
+    assert (_response.status_code == 200)
+    assert (_response.text == '{"method": "GET", "path": "/", "data": {}}')
+    assert (
+      _response.headers['content-type']
+      ==
+      'application/json; charset=utf8'
+    )
+
+@pytest.mark.dependency(depends=["test_serverStartDbmIdName"])
+@pytest.mark.skipif(not test_serverStartDbmIdName, reason='anyserver start failed no reson to test')
+def test_serverStopLoopIdName():
+    """ start server  """
+    assert procTerminate().is_alive() is False
+
 def test_cleanUp():
     cleanUp()
+
+
+

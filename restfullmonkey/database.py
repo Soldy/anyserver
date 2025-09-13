@@ -39,7 +39,10 @@ class DatabasesClass:
         :param: str : the record id in str
         :return: int : result code 0 ok
         """
-        return self._database.post(path_,data_)
+        out = self._database.post(path_,data_)
+        if out == 0:
+            return {}
+        return out
     def get(
       self,
       path_: str,

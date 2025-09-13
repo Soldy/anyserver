@@ -73,11 +73,11 @@ class Server(BaseHTTPRequestHandler):
         length = int(self.headers['content-length'])
         field = self.rfile.read(length).decode()
         post_data = json.loads(field)
-        self._db.post(
+        out = self._db.post(
           self._clearPath(),
           post_data
         )
-        self._do_response(json.dumps({}))
+        self._do_response(json.dumps(out))
 
     def do_PATCH(self):
         """
