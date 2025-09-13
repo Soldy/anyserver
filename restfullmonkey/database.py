@@ -4,6 +4,7 @@ database manager
 from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.databasedbm import DatabasesDbmClass
 from restfullmonkey.databasejson import DatabasesJsonClass
+from restfullmonkey.databaseloop import DatabasesLoopClass
 
 class DatabasesClass:
     """
@@ -20,6 +21,11 @@ class DatabasesClass:
         self._config = config_
         if config_['store_type'] == 'json':
             self._database = DatabasesJsonClass(
+              logging_,
+              config_
+            )
+        elif config_['store_type'] == 'loop':
+            self._database = DatabasesLoopClass(
               logging_,
               config_
             )
@@ -53,6 +59,11 @@ class DatabasesClass:
 
         :param: str : the record id in str
         """
+        if self._config['store_type'] == 'loop':
+            return self._database.get(
+              path_,
+              gets_
+            )
         path = self._helper.pathFix(path_)
         if not self._database.checkPath(path):
             return {}

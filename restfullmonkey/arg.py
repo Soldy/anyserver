@@ -20,7 +20,7 @@ parser.add_argument("-l", "--host",
 parser.add_argument(
   "--store_type",
   dest="store_type",
-  choices=["json", "dbm"],
+  choices=["json", "dbm", "loop"],
   default="json"
 )
 parser.add_argument("--db_dir",

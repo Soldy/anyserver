@@ -41,6 +41,8 @@ def confInit (args, logging_)->dict[str,str]:
     """
     config processor
 
+    :param: args
+    :param: logging
     :return: dict[str,str]
     """
 
