@@ -275,7 +275,7 @@ def test_databaseNoSave():
         'load'      : False,
         'save'      : False
     })
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'id': '1'},
@@ -293,7 +293,7 @@ def test_databaseNoSaveIdName():
         'save'      : False,
         'id_name'   : 'newid'
     })
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'newid': '1'},
@@ -311,7 +311,7 @@ def test_databaseNoSaveNoId():
         'save'      : False,
         'disable_id': True
     })
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data'},
@@ -331,7 +331,7 @@ def test_databaseSave():
         'load' : False,
         'save' : True
     })
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'id': '1'},
@@ -355,7 +355,7 @@ def test_databaseSaveAndLoad():
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/',{'id':'1'}) == [
       {'dummy': 'data', 'id': '1'}])
-    assert(database.post('/',{'dummy':'data plus'}) == 0)
+    assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'id': '1'},
       {'dummy': 'data plus', 'id': '2'}
@@ -384,7 +384,7 @@ def test_databaseSaveIdName():
         'load'    : False,
         'save'    : True
     })
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'newid': '1'},
@@ -409,7 +409,7 @@ def test_databaseSaveAndLoadIdName():
     assert(database.get('/',{'newid':'0'}) == [] )
     assert(database.get('/',{'newid':'1'}) == [
       {'dummy': 'data', 'newid': '1'}])
-    assert(database.post('/',{'dummy':'data plus'}) == 0)
+    assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'newid': '1'},
       {'dummy': 'data plus', 'newid': '2'}
@@ -433,7 +433,7 @@ def test_databaseDbm():
         'store_type': 'dbm'
       }
     )
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'id': '1'},
@@ -456,7 +456,7 @@ def test_databaseDbmAgain():
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/',{'id':'1'}) == [
       {'dummy': 'data', 'id': '1'}])
-    assert(database.post('/',{'dummy':'data plus'}) == 0)
+    assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'id': '1'},
       {'dummy': 'data plus', 'id': '2'}
@@ -481,7 +481,7 @@ def test_databaseDbmNoId():
         'disable_id': True
       }
     )
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data'},
@@ -499,7 +499,7 @@ def test_databaseDbmIdName():
         'id_name'   : 'newid'
       }
     )
-    assert(database.post('/',{'dummy':'data'}) == 0)
+    assert(database.post('/',{'dummy':'data'}) == {})
     assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'newid': '1'},
