@@ -231,6 +231,7 @@ class DatabasesJsonClass:
         get All record
 
         :param: str : path
+        :return: dict[str,any]
         """
         path = self._patheses.get(path_)
         return self._getCopy(
@@ -246,6 +247,7 @@ class DatabasesJsonClass:
 
         :param: str : path
         :param: list[str] : id list
+        :return: dict[str,any]
         """
         path = self._patheses.get(path_)
         out = []
@@ -263,8 +265,8 @@ class DatabasesJsonClass:
         get elements by filter
 
         :param: str : path
-        :param: dict[str,str]
-        :param: dict[str, str] : filters
+        :param: dict[str,str] : filters
+        :return: dict[str,any]
         """
         out = []
         path = self._patheses.get(path_)

@@ -120,6 +120,7 @@ class DatabasesDbmClass:
         get All record
 
         :param: str : path
+        :return: dict[str,any]
         """
         try:
             db = dbm.gnu.open(
@@ -142,9 +143,11 @@ class DatabasesDbmClass:
 
     def getId(self, path_:str, ids_:list[str]):
         """
-        get All record
+        get record by Id
 
         :param: str : path
+        :param: str|list[str] : ids
+        :return: dict[str,any]
         """
         try:
             out = []
@@ -176,6 +179,7 @@ class DatabasesDbmClass:
 
         :param: str : path
         :param: dict[str,str] : filters
+        :return: dict[str,any]
         """
         try:
             db = dbm.gnu.open(
