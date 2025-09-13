@@ -1,7 +1,6 @@
 """
 dummy database
 """
-import json
 from restfullmonkey.databasehelp import DatabaseHelpClass
 
 class DatabasesLoopClass:
@@ -65,12 +64,8 @@ class DatabasesLoopClass:
         return self.looping('GET', path_, gets_)
 
     def check(self):
-        return
-    def checkPath(self, path_:str)->bool:
         """
          Checking path in db
 
-         :param: str:
-         :return: bool:
         """
-        return True
+        return
