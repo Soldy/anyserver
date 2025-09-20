@@ -65,11 +65,11 @@ def confInit (args, logging_)->dict[str,str]:
     if args.log_level < 10:
         logging_.critical('invalid log level low number')
         sys.exit(2)
-
-    out['port'] = int(args.port)
+    if hasattr(args, 'host'):
+        out['host'] = args.host
+        out['port'] = int(args.port)
     out['log_level'] = int(args.log_level)
     out['store_type'] = args.store_type
-    out['host'] = args.host
     out['db_dir'] = args.db_dir
     out['dbm_dir'] = args.dbm_dir
     out['index'] = args.index_file

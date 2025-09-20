@@ -4,25 +4,28 @@ arg definations
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--port",
-  type=int,
-  dest="port",
-  help="listen port",
-  metavar="PORT",
-  default="8008")
-parser.add_argument("-l", "--host",
-  type=str,
-  dest="host",
-  help="listen host",
-  metavar="HOST",
-  default="localhost"
-)
-parser.add_argument(
-  "--store_type",
-  dest="store_type",
-  choices=["json", "dbm", "loop"],
-  default="json"
-)
+def argServer():
+    parser.add_argument("--port",
+      type=int,
+      dest="port",
+      help="listen port",
+      metavar="PORT",
+      default="8008"
+    )
+    parser.add_argument("-l", "--host",
+      type=str,
+      dest="host",
+      help="listen host",
+      metavar="HOST",
+      default="localhost"
+    )
+    parser.add_argument(
+      "--store_type",
+      dest="store_type",
+      choices=["json", "dbm", "loop"],
+      default="json"
+    )
+
 parser.add_argument("--db_dir",
   type=str,
   dest="db_dir",

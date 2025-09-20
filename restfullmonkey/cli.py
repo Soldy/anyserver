@@ -6,6 +6,13 @@ from restfullmonkey import pathes, log, conf
 from restfullmonkey.arg import parser
 from restfullmonkey.databasejson import DatabasesJsonClass
 
+parser.add_argument(
+  "--store_type",
+  dest="store_type",
+  choices=["json", "dbm"],
+  default="json"
+)
+
 parser.add_argument('-r', '--report',
   dest='report',
   help="short report",
@@ -16,7 +23,6 @@ parser.add_argument('-c', '--count',
   help="count the records",
   action='store_true'
 )
-
 parser.add_argument("-lp", "--list-paths",
   dest="list_paths",
   help="list all paths",
