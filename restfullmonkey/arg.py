@@ -5,6 +5,10 @@ import argparse
 
 parser = argparse.ArgumentParser()
 def argServer():
+    """
+    server specific args
+
+    """
     parser.add_argument("--port",
       type=int,
       dest="port",
