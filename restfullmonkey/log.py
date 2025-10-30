@@ -19,7 +19,7 @@ def logInit (config_: dict[str,str])->logging:
     return logging
 
 
-class LogDBMClass
+class LogDBMClass:
     """
     log dbm class
 
@@ -29,11 +29,10 @@ class LogDBMClass
         self._log_file = str(log_file_)
     def addEvent(
       self,
-      event_ dict[str, str]
+      event_ : dict[str, str]
     )->int:
         """
         Simple event register
-        
         :param: dict[str, str]:
         """
         stamp = time.time()
@@ -42,7 +41,8 @@ class LogDBMClass
           'event' : event_
         }
         db = dbm.gnu.open(
-          self._log_file
+          self._log_file,
+          'cs'
         )
         db[str(stamp)] = json.dumps(log)
         db.close()
