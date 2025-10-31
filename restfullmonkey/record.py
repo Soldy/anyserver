@@ -5,7 +5,7 @@ import json
 import time
 import dbm.gnu
 
-class RecordDBMClass
+class RecordDBMClass:
     """
     log dbm class
 
@@ -31,14 +31,15 @@ class RecordDBMClass
         lista = []
         try:
             db = dbm.gnu.open(
-              self._index_file
+              self._index_file,
               'r'
             )
             lista = json.loads(
               db.get(
-              id_,
+                id_,
                 b'[]'
               ).decode("utf-8")
+            )
             db.close()
             return lista
         except Exception:
@@ -57,15 +58,16 @@ class RecordDBMClass
         out = []
         try:
             db = dbm.gnu.open(
-              self._index_file
+              self._index_file,
               'r'
             )
             for i in self._getIndex(id_):
                 out.append(json.loads(
                   db.get(
-                  id_,
-                  b'{}'
-                ).decode("utf-8")
+                    i,
+                    b'{}'
+                  ).decode("utf-8")
+               ))
             db.close()
             return out
         except Exception:
@@ -91,9 +93,9 @@ class RecordDBMClass
         db.close()
         return 0
 
-    def _addRecord(
+    def addRecord(
       self,
-      record_ dict[str, str]
+      record_ :dict[str, str]
     )->float:
         """
         Simple event register
@@ -103,7 +105,7 @@ class RecordDBMClass
         stamp = time.time()
         log = {
           'time'  : str(stamp),
-          'event' : event_
+          'event' :record_
         }
         db = dbm.gnu.open(
           self._record_file,
