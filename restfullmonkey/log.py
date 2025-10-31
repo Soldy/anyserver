@@ -47,3 +47,15 @@ class LogDBMClass:
         db[str(stamp)] = json.dumps(log)
         db.close()
         return 0
+    def addEvents(
+      self,
+      events_ : dict[dict[str, str]]
+    )->int:
+        """
+        Multiple event register
+
+        :param: dict[dict[str, str]]:
+        """
+        for event in events_:
+            self.addEvent(event)
+        return 0
