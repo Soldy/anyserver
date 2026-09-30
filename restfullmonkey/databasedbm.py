@@ -80,12 +80,19 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :param: str : the path name
         :return: dbm.gnu:
         """
-        return dbm.gnu.open(
-          self._fileName(
-            path_
-          ),
-          'r'
-        )
+        db : dbm.gnu | None  = None
+        try:
+            db = dbm.gnu.open(
+              self._fileName(
+                path_
+              ),
+              'r'
+            )
+        except Exception:
+            self._log.error(
+              traceback.format_exc()
+            )
+        return db
 
     def check(self):
         """
@@ -176,13 +183,8 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :return: list[dict[str,any]]
         """
         out = []
-        try:
-            db : dbm.gnu = self._dbOpenRead(path_)
-        except Exception:
-            self._log.error(
-              traceback.format_exc()
-            )
-        else:
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
             key = db.firstkey()
             while key is not None:
                 out.append(
@@ -190,8 +192,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                 )
                 key = db.nextkey(key)
             db.close()
-        finally:
-            return out
+        return out
 
     def getId(self, 
       path_:str, 
@@ -205,13 +206,8 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :return: list[dict[str,any]]
         """
         out : list[dict[str,any]] = []
-        try:
-            db : dbm.gnu = self._dbOpenRead(path_)
-        except Exception:
-            self._log.error(
-              traceback.format_exc()
-            )
-        else:
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
             for i in ids_:
                 dat = self.__get(
                   db,
@@ -220,8 +216,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                 if dat != {}:
                     out.append(dat)
             db.close()
-        finally:
-            return out
+        return out
 
     def getFilter(
       self,
@@ -251,13 +246,8 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         if isinstance(filters_, str):
             return out
-        try:
-            db : dbm.gnu = self._dbOpenRead(path_)
-        except Exception:
-            self._log.error(
-              traceback.format_exc()
-            )
-        else:
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
             record : dict[str,any] = {}
             key : str = db.firstkey()
             while key is not None:
@@ -274,5 +264,4 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                            break
                 key = db.nextkey(key)
             db.close()
-        finally:
-            return out
+        return out
