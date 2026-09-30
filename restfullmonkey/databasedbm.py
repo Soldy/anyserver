@@ -1,23 +1,17 @@
 """
 dbm database
-"""
-import os
-import json
-"""
 We don’t want to support the full DBM, just the GNU. 
 NDBM has undocumented limitations that can end in unexpected errors.
 GNU works just fine with BSD and with Linux.
 If someone using windows that not our problem. 
 """
+import os
+import json
 import dbm.gnu
 import traceback
 import logging
-
-from typing import Optional, List, Dict, Any
-
 from restfullmonkey.pathesdbm import PathesDbmClass
 from restfullmonkey.indexesdbm import IndexesDbmClass
-from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 class DatabasesDbmClass(DatabasesAbstractClass):
@@ -70,9 +64,9 @@ class DatabasesDbmClass(DatabasesAbstractClass):
          but if opening fails,
          that probably means the file doesn't exist yet.
           This is  an expected possibility.
-         We don't want to create the file for reading 
-         if the path doesn't exist yet. 
-         Just come back with an empty response. 
+         We don't want to create the file for reading
+         if the path doesn't exist yet.
+         Just come back with an empty response.
 
          This DB opening method is temporary.
          But for ‘with’ we have to improve the error handling first
@@ -128,14 +122,13 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :param: str : the record id in str
         :return: int : result code 0 ok >0 db error
         """
+        db : dbm.gnu | None = None
         try:
-            """
-              We need the cs in here no matter what most of the AI -s said. 
-              We close the DB, and if we handle this,
-              with 'c' without 's', it can end in data loss.
-              DO NOT CHANGE THE ‘cs’ to ‘c’. 
-              Can improve the performance but with a price. 
-            """
+           #  We need the cs in here no matter what most of the AI -s said.
+           #  We close the DB, and if we handle this,
+           #  with 'c' without 's', it can end in data loss
+           #  DO NOT CHANGE THE ‘cs’ to ‘c’
+           #  Can improve the performance but with a price.
             db : dbm.gnu = dbm.gnu.open(
               self._fileName(
                 path_
@@ -146,8 +139,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             self._log.error(
               traceback.format_exc()
             )
-            return 1
-        else:
+        if db is not None:
             _id : str = self._indexes.add(
               self._patheses.add(
                 path_
@@ -161,8 +153,10 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             )
             db.close()
             return 0
+        return 1
 
-    def __get(self, 
+    def __get(
+      self,
       db_ : dbm.gnu,
       id_ : str
     ):
@@ -175,7 +169,10 @@ class DatabasesDbmClass(DatabasesAbstractClass):
           )
         )
 
-    def getAll(self, path_:str)->list[dict[str,any]]:
+    def getAll(
+      self,
+      path_ : str
+    )->list[dict[str,any]]:
         """
         get All record
 
@@ -194,9 +191,10 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             db.close()
         return out
 
-    def getId(self, 
-      path_:str, 
-      ids_:list[str]
+    def getId(
+      self,
+      path_ : str,
+      ids_ : list[str]
     )->list[dict[str,any]]:
         """
         get record by Id
@@ -229,9 +227,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :param: str : path
         :param: dict[str,str] : filters
         :return: list[dict[str,any]]
-        """
-        out : list[dict[str,any]] = []
-        """
+
         Copilot complains that if the filter is a string,
         it should not work properly on the keys.
         Yes, that's true.
@@ -244,6 +240,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         But not too much; we don't call an extra try;
         just an if and return and say good bye.
         """
+        out : list[dict[str,any]] = []
         if isinstance(filters_, str):
             return out
         db : dbm.gnu | None = self._dbOpenRead(path_)
@@ -254,14 +251,15 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                 record = self.__get(db,key)
                 find_it : bool = False
                 for filter_key in filters_.keys():
-                    if filter_key in record:
-                        for filter_val in filters_[filter_key]:
-                            if filter_val in record[filter_key]:
-                                out.append(record)
-                                find_it = True
-                                break
-                        if find_it is True:
-                           break
+                    if filter_key not in record:
+                        continue
+                    for filter_val in filters_[filter_key]:
+                        if filter_val in record[filter_key]:
+                            out.append(record)
+                            find_it = True
+                            break
+                    if find_it is True:
+                        break
                 key = db.nextkey(key)
             db.close()
         return out

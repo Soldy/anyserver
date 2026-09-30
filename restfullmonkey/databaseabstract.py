@@ -1,4 +1,6 @@
-
+"""
+database abstract
+"""
 import logging
 
 from restfullmonkey.databasehelp import DatabaseHelpClass
@@ -22,3 +24,14 @@ class DatabasesAbstractClass:
           self._config
         )
 
+    def check(self):
+        """
+         Checking path in db
+
+        """
+        return
+    def countAll(self)->int:
+        """
+        :return: int : count all records
+        """
+        return 0
