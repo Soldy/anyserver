@@ -37,8 +37,7 @@ class PathesClass:
         ) as file_:
             self._path = json.load(file_)
         for i in self._path:
-            if int(self._path[i]) >= self._serial:
-                self._serial = int(self._path[i])
+            self._serial = max(self._serial, int(self._path[i]))
 
     def check(self)->bool:
         """

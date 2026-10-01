@@ -86,7 +86,7 @@ if __name__ == "__main__":
     if args.list_paths :
         pathes = pathes.PathesClass(
           log.logging, _config)
-        pathes.load()
+        pathes.check()
         list_path = pathes.all()
         for i in list_path:
             print(
