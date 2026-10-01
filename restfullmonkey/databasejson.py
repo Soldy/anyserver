@@ -10,7 +10,6 @@ from copy import deepcopy
 
 from restfullmonkey.pathes import PathesClass
 from restfullmonkey.indexes import IndexesClass
-from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 
@@ -222,9 +221,10 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :return: list[dict[str,any]] : result element copy
         """
         out = []
+        db_path = self._db.get(path_, {})
         for i in ids_:
-            if i in self._db[path_]:
-                out.append(self._helper.outdata(self._db[path_][i]))
+            if i in db_path:
+                out.append(self._helper.outdata(db_path[i]))
         return out
 
     def getAll(self, path_:str):
@@ -239,7 +239,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
           path,
           self._db[
             path
-          ]
+          ].keys()
         )
 
     def getId(self, path_: str, ids_: list[str]):
@@ -269,21 +269,15 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :param: dict[str,str] : filters
         :return: dict[str,any]
         """
-        out = set()
+        out = []
         path = self._patheses.get(path_)
         for row in self._db[path]:
-            find_it : bool = False
-            for filter_key in filters_.keys():
-                if filter_key not in self._db[path][row]['data']:
-                    continue
-                for filter_val in filters_[filter_key]:
-                    if filter_val in self._db[path][row]['data'][filter_key]:
-                        out.add(str(row))
-                        find_it = True
-                        break
-                if find_it is True:
-                    break
-        return self._getCopy(path, list(out))
+            if self.filterCheck(
+               self._db[path][row]['data'],
+               filters_
+            ):
+                out.append(str(row))
+        return self._getCopy(path, out)
 
     def columns(
       self,
@@ -349,6 +343,6 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :return: int : count all records
         """
         out = 0
-        for a in self._db.items():
-            out = out + len(a)
+        for a in self._patheses.all():
+            out = out + self.count(a)
         return out

@@ -99,7 +99,12 @@ class DatabasesDbmClass(DatabasesAbstractClass):
 
     def checkPath(self, path_:str)->bool:
         """
-         Checking path.dbm in dbdir
+         Check path tries to open the db file.
+         The path in this case is not the file system path;
+         it is the RESTful API URL path.
+         It's false if the file open failed for any reason.
+         Does not matter the reason yet.
+         That should be implemented later. 
 
          :param: str:
          :return: bool:
@@ -219,13 +224,13 @@ class DatabasesDbmClass(DatabasesAbstractClass):
     def getFilter(
       self,
       path_: str,
-      filters_: dict[str,str]
+      filters_: dict[str, list[str]]
     )->list[dict[str,any]]:
         """
         get filter
 
         :param: str : path
-        :param: dict[str,str] : filters
+        :param: dict[str, list[str]] : filters
         :return: list[dict[str,any]]
 
         Copilot complains that if the filter is a string,
@@ -249,17 +254,11 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             key : str = db.firstkey()
             while key is not None:
                 record = self.__get(db,key)
-                find_it : bool = False
-                for filter_key in filters_.keys():
-                    if filter_key not in record:
-                        continue
-                    for filter_val in filters_[filter_key]:
-                        if filter_val in record[filter_key]:
-                            out.append(record)
-                            find_it = True
-                            break
-                    if find_it is True:
-                        break
+                if self.filterCheck(
+                   record,
+                   filters_
+                ):
+                    out.append(record)
                 key = db.nextkey(key)
             db.close()
         return out
@@ -291,6 +290,9 @@ class DatabasesDbmClass(DatabasesAbstractClass):
       path_ : str
     )->int:
         """
+        Rarely used function.
+        Only implemented for admin reasons.
+        The HTTP server never calls that function. 
 
         :param: str :  path name 
         :return: int : count records in path
@@ -307,6 +309,10 @@ class DatabasesDbmClass(DatabasesAbstractClass):
 
     def countAll(self)->int:
         """
+        Rarely used function.
+        Only implemented for admin reasons.
+        The HTTP server never calls that function. 
+
         :return: int : count all records
         """
         out : int = 0

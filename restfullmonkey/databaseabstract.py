@@ -24,37 +24,60 @@ class DatabasesAbstractClass:
           self._config
         )
 
+    def filterCheck(
+      self,
+      row_ : dict[str, str|int|float],
+      filters_: dict[str, list[str]]
+    )->bool:
+        """
+        The search filter always uses OR logic,
+        not AND logic. 
+        If any comparison is true comes back true.
+        This is not a powerful search and is not built
+        for a live server.
+        Enough for a development server. Pointless to do more.
+
+        :param: dict[str, str|int|float]
+        :param: dict[str, list[str]] : filters
+        :return: bool
+        """
+        for filter_key in filters_:
+            if filter_key not in row_:
+                continue
+            for filter_val in filters_[filter_key]:
+                if filter_val.lower() in str(row_[filter_key]).lower():
+                    return True
+        return False
+
     def _columnLen(self, column_:str|int)->int:
         """
 
         :param: str|int :  column name
         :return: dict[str,dict[str, int|list[str]]] :
         """
-        if isinstance(column_, int):
-            return column_
-        if isinstance(column_, float):
-            return column_
-        return len(column_)
+        if isinstance(column_, str):
+            return len(column_)
+        return column_
 
     def columDetails(
       self,
       details_ : dict[str, dict[str, set[str] | int]],
-      row : dict[str, str|int|float]
-    )->dict[dict[str, set[str]|int]]:
+      row_ : dict[str, str|int|float]
+    )->dict[str, dict[str, set[str]|int]]:
         """
         :param: dict[str, dict[str, set[str] | int]]
         :param: dict[str, str|int|float]
-        :return: dict[dict[str, set[str]|int]]]
+        :return: dict[str, dict[str, set[str]|int]]
         """
-        for p in row:
+        for p in row_:
             if p not in details_:
                 details_[p] = self.columDetailCreate(
-                  row[p]
+                  row_[p]
                 )
             else:
                 details_[p] = self.columDetailUpdate(
                   details_[p],
-                  row[p]
+                  row_[p]
                 )
         return details_
 
@@ -67,7 +90,7 @@ class DatabasesAbstractClass:
         :param: str|int :  column name
         :return: dict[str,dict[str, int|list[str]]] :
         """
-        types  = set([str(type(field_).__name__)])
+        types  = {type(field_).__name__}
         length = self._columnLen(field_)
         str_length = len(str(field_))
 
@@ -92,12 +115,15 @@ class DatabasesAbstractClass:
         types  = str(type(field_).__name__)
         length = self._columnLen(field_)
         str_length = len(str(field_))
-        details['type'].add(types)
-        details['max'] = max([details['max'], int(length)])
-        details['min'] = min([details['min'], length])
-        details['str_max'] = max([details['str_max'], int(str_length)])
-        details['str_min'] = min([details['str_min'], str_length])
-        return details
+        details_['type'].add(types)
+        # int for copy
+        details_['max'] = max(details_['max'], int(length))
+        details_['min'] = min(details_['min'], length)
+        # swalow copy fine here created above so thats int always.
+        details_['str_max'] = max(details_['str_max'], int(str_length))
+        details_['str_min'] = min(details_['str_min'], str_length)
+        # str_length created in this function int are not needed
+        return details_
 
     def check(self):
         """

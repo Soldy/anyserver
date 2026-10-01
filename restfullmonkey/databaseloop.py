@@ -1,9 +1,7 @@
 """
 dummy database
 """
-import logging
 
-from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 class DatabasesLoopClass(DatabasesAbstractClass):
@@ -13,26 +11,23 @@ class DatabasesLoopClass(DatabasesAbstractClass):
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(
-      self,
-      logging_ : logging,
-      config_ : dict[str,str]
-    ):
-        super().__init__(logging_, config_)
 
     def looping(
       self,
       path_ : str,
-      data_ : dict[str,str]|list[str] = {},
+      data_ : dict[str,str]|list[str]|None = None,
       method_ : str = 'GET'
     )->dict[str, str]:
         """
         loop response data generator
 
         :param: str : path
-        :param: dict[str,str] : filters
+        :param: dict[str,str]|list[str] : data
+        :param: str : method
         :return: dict[str,any]
         """
+        if data_ is None :
+            data_ = {}
         return ({
           'method' : method_,
           'path'   : path_,
@@ -102,10 +97,3 @@ class DatabasesLoopClass(DatabasesAbstractClass):
         :return: dict[str,any]
         """
         return self.looping(path_, gets_)
-
-    def check(self):
-        """
-         Checking path in db
-
-        """
-        return
