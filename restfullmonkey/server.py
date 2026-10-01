@@ -5,6 +5,7 @@ import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib import parse
 from copy import deepcopy
+from restfullmonkey.log import logInit
 from restfullmonkey.database import DatabasesClass
 
 class Server(BaseHTTPRequestHandler):
@@ -105,10 +106,13 @@ class Server(BaseHTTPRequestHandler):
 
 
 
-def serverStart(logging_, config_):
+def serverStart(config_):
     """
     server start
     """
+    logging_ = logInit(
+      config_
+    )
     db = DatabasesClass(
       logging_,
       config_

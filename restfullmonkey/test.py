@@ -37,7 +37,6 @@ _config = configStart({})
 
 _proc = multiprocessing.Process(
    target=serverStart, args=[
-     logInit(_config),
      _config
 ])
 _auth_key = ''
@@ -94,7 +93,6 @@ def procStart(config_: dict[str,str])->bool:
     _config = configStart(config_)
     _proc = multiprocessing.Process(
       target=serverStart, args=[
-        logInit(_config),
         _config
     ])
     _proc.start()
@@ -489,6 +487,9 @@ def test_databaseDbmAgain():
       {'dummy': 'data plus', 'id': '2'}
     ])
     assert(database.get('/',{'dummy':['data plus']}) == [
+      {'dummy': 'data plus', 'id': '2'}
+    ])
+    assert(database.get('/',{'dummy':['data plus'],'id':['2']}) == [
       {'dummy': 'data plus', 'id': '2'}
     ])
     assert(database.get('/',{'id':'2'}) == [
