@@ -263,3 +263,53 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                 key = db.nextkey(key)
             db.close()
         return out
+
+    def columns(
+      self,
+      path_:str
+    )->dict[str,dict[str, int|list[str]]]:
+        """
+
+        :param: str :  path name 
+        :return: dict[str,dict[str, int|list[str]]] :
+        """
+        out = {}
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
+            key : str = db.firstkey()
+            while key is not None:
+                out = self.columDetails(
+                  out,
+                  self.__get(db,key)
+                )
+                key = db.nextkey(key)
+            db.close()
+        return out
+
+    def count(
+      self,
+      path_ : str
+    )->int:
+        """
+
+        :param: str :  path name 
+        :return: int : count records in path
+        """
+        out : int = 0
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
+            key : str = db.firstkey()
+            while key is not None:
+                out = out + 1
+                key = db.nextkey(key)
+            db.close()
+        return out
+
+    def countAll(self)->int:
+        """
+        :return: int : count all records
+        """
+        out : int = 0
+        for a in self._patheses.all():
+            out = out + self.count(a)
+        return out

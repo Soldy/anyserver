@@ -1,28 +1,32 @@
 """
 json database
 """
+import os
 import sys
 import json
+import logging
+
 from copy import deepcopy
+
 from restfullmonkey.pathes import PathesClass
 from restfullmonkey.indexes import IndexesClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
+from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 
-class DatabasesJsonClass:
+class DatabasesJsonClass(DatabasesAbstractClass):
     """
     database json class
 
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(self, logging_, config_):
-        self._log = logging_
-        self._config = config_
-        self._helper = DatabaseHelpClass(
-          self._log,
-          self._config
-        )
+    def __init__(
+      self,
+      logging_ : logging,
+      config_ : dict[str,str]
+    ):
+        super().__init__(logging_, config_)
         self._db = {}
         self._indexes = IndexesClass(
           self._log,
@@ -85,14 +89,11 @@ class DatabasesJsonClass:
         :param: str : the record id in str
         :return: str: full path
         """
-        return (
-          self._config["db_dir"]+
-          '/'+
-          path_+
-          '_'+
-          str(id_)+
-          '.json'
+        return os.path.join(
+          self._config["db_dir"],
+          (path_+'_'+str(id_)+'.json')
         )
+
     def load(self, path_: str, id_: str):
         """
         Db record load
@@ -268,28 +269,21 @@ class DatabasesJsonClass:
         :param: dict[str,str] : filters
         :return: dict[str,any]
         """
-        out = []
+        out = set()
         path = self._patheses.get(path_)
-        for a in self._db[path]:
-            for b in filters_:
-                if b in self._db[path][a]['data']:
-                    for c in filters_[b]:
-                        if c in self._db[path][a]['data'][b]:
-                            out.append(str(a))
-        return self._getCopy(path, out)
-
-
-    def _columnLen(self, column_:str|int)->int:
-        """
-
-        :param: str|int :  column name
-        :return: dict[str,dict[str, int|list[str]]] :
-        """
-        if isinstance(column_, int):
-            return column_
-        if isinstance(column_, float):
-            return column_
-        return len(column_)
+        for row in self._db[path]:
+            find_it : bool = False
+            for filter_key in filters_.keys():
+                if filter_key not in self._db[path][row]['data']:
+                    continue
+                for filter_val in filters_[filter_key]:
+                    if filter_val in self._db[path][row]['data'][filter_key]:
+                        out.add(str(row))
+                        find_it = True
+                        break
+                if find_it is True:
+                    break
+        return self._getCopy(path, list(out))
 
     def columns(
       self,
@@ -307,29 +301,10 @@ class DatabasesJsonClass:
         if path not in self._db:
             return out
         for i in self._db[path]:
-            for p in self._db[path][i]['data']:
-                if p not in out:
-                    out[p] = {
-                      "type" : [str(type(self._db[path][i]['data'][p]).__name__)],
-                      "min"  : self._columnLen(self._db[path][i]['data'][p]),
-                      "max"  : self._columnLen(self._db[path][i]['data'][p]),
-                      "str_min" : len(str(self._db[path][i]['data'][p])),
-                      "str_max" : len(str(self._db[path][i]['data'][p]))
-                    }
-                else:
-                    _type    = str(type(self._db[path][i]['data'][p]).__name__)
-                    _len     = self._columnLen(self._db[path][i]['data'][p])
-                    _str_len =  len(str(self._db[path][i]['data'][p]))
-                    if _type not in out[p]['type']:
-                        out[p]['type'].append(_type)
-                    if  out[p]['min'] > _len:
-                        out[p]['min'] = _len
-                    if  out[p]['max'] < _len:
-                        out[p]['max'] = _len
-                    if  out[p]['str_min'] > _str_len:
-                        out[p]['str_min'] = _str_len
-                    if  out[p]['str_max'] < _str_len:
-                        out[p]['str_max'] = _str_len
+            out = self.columDetails(
+              out,
+              self._db[path][i]['data']
+            )
         return out
 
     def columnShow(
