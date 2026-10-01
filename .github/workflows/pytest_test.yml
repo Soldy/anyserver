@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
     - run: |
         python -m pip install --upgrade pip
-        pip install pytest pylint requests
-    - run: pytest -v restfullmonkey/test.py
+        pip install pytest pytest-cov pylint requests
+    - run: pytest -v restfullmonkey/test.py --cov=restfullmonkey --cov-report=term
     - run: rm restfullmonkey/test.py
     - run: pylint restfullmonkey/*.py
