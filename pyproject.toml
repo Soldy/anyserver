@@ -69,3 +69,5 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/Soldy/anyserver"
 "Bug Tracker" = "https://github.com/Soldy/anyserver/issues"
+[tool.pytest.ini_options]
+  markers = ["dependency", "skip"]
