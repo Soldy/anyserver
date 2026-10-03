@@ -52,7 +52,7 @@ class DatabasesClass:
     def get(
       self,
       path_: str,
-      gets_: dict[str,str]
+      gets_: dict[str,str]|dict[str,list[str]]
     ):
         """
         get request manager
@@ -74,7 +74,10 @@ class DatabasesClass:
             )
         if gets_ == {}:
             return self._database.getAll(path)
-        return self._database.getFilter(path, gets_)
+        return self._database.getFilter(
+          path,
+          self._helper.filtersPreparation(gets_)
+        )
     def check(self):
         """
          Checking the file system

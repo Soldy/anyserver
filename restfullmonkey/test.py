@@ -6,6 +6,7 @@ import os
 import time
 import pytest
 import requests
+from copy import deepcopy
 from threading import Thread
 import multiprocessing
 from restfullmonkey.log import logInit
@@ -262,6 +263,13 @@ def test_databaseHelperDataHandler():
     assert(data['changed_at'] is not data_c['changed_at'])
     assert(data['created_at'] == data_c['created_at'])
     assert(data['id'] == data_c['id'])
+    
+    filter_a = {'a':['test1','test2'],'b':['test3','test4']}
+    filter_a_result = deepcopy(filter_a)
+    filter_b = {'a':'test1','b':['test3','test4']}
+    filter_b_result = {'a':['test1'],'b':['test3','test4']}
+    assert(helper.filtersPreparation(filter_a) == filter_a_result)
+    assert(helper.filtersPreparation(filter_b) == filter_b_result)
 
 
 def test_databaseLoop():

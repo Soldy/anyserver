@@ -169,3 +169,17 @@ class DatabaseHelpClass:
             if self._config['id_name'] in out:
                 del out[self._config['id_name']]
         return out
+    def filtersPreparation(
+      self,
+      filters_: dict[str,str|list[str]]
+    )->dict[str,list[str]]:
+        """
+        search filter preparator
+
+        :param: dict[str, str|list[str]]:
+        :return: dict[str, list[str]]:
+        """
+        for i in filters_:
+            if isinstance(filters_[i], str):
+                filters_[i] = [filters_[i]]
+        return filters_
