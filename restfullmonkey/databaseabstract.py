@@ -3,6 +3,7 @@ database abstract
 """
 import logging
 
+from collections.abc import Iterable
 from restfullmonkey.databasehelp import DatabaseHelpClass
 
 class DatabasesAbstractClass:
@@ -69,6 +70,11 @@ class DatabasesAbstractClass:
         :param: dict[str, str|int|float]
         :return: dict[str, dict[str, set[str]|int]]
         """
+        if not isinstance(row_, Iterable):
+           details_['0'] = self.columDetailCreate(
+             row_
+           )
+           return details_
         for p in row_:
             if p not in details_:
                 details_[p] = self.columDetailCreate(
@@ -124,6 +130,22 @@ class DatabasesAbstractClass:
         details_['str_min'] = min(details_['str_min'], str_length)
         # str_length created in this function int are not needed
         return details_
+
+    def columDetailsToList(
+      self,
+      details_ : dict[str, dict[str, set[str]|int]]
+    )->list[str]:
+        """
+        at the moment same as details_.keys() 
+        latter that change
+
+        :param: dict[str, dict[str, set[str]|int]]
+        :return: list[str]
+        """
+        out = []
+        for p in details_:
+            out.append(p)
+        return out
 
     def check(self):
         """
