@@ -265,11 +265,13 @@ class DatabasesDbmClass(DatabasesAbstractClass):
 
     def columns(
       self,
-      path_:str
+      path_:str,
+      migration_ : bool = False
     )->dict[str,dict[str, int|list[str]]]:
         """
 
         :param: str :  path name 
+        :param: bool
         :return: dict[str,dict[str, int|list[str]]] :
         """
         out = {}
@@ -277,10 +279,18 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         if db is not None:
             key : str = db.firstkey()
             while key is not None:
-                out = self.columDetails(
-                  out,
-                  self.__get(db,key)
-                )
+                if migration_ is True:
+                    out = self.columDetails(
+                      out,
+                      self._migrationRowFix(
+                        self.__get(db,key)
+                      )
+                    )
+                else:
+                    out = self.columDetails(
+                      out,
+                      self.__get(db,key)
+                    )
                 key = db.nextkey(key)
             db.close()
         return out
@@ -292,7 +302,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         Rarely used function.
         Only implemented for admin reasons.
-        The HTTP server never calls that function. 
+        The HTTP server never calls that function.
 
         :param: str :  path name 
         :return: int : count records in path
@@ -311,7 +321,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         Rarely used function.
         Only implemented for admin reasons.
-        The HTTP server never calls that function. 
+        The HTTP server never calls that function
 
         :return: int : count all records
         """
