@@ -84,3 +84,13 @@ class DatabasesClass:
          for initialization.
         """
         return self._database.check()
+
+    def migration(
+      self,
+      path_ : str,
+      file_name_ : str,
+      type_ : str,
+    )->bool:
+        if type_ == 'csv':
+            return self._database.migrationToCsv(path_,file_name_)
+        return False
