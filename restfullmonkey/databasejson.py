@@ -3,6 +3,7 @@ json database
 """
 import os
 import sys
+import csv
 import json
 import logging
 
@@ -281,7 +282,8 @@ class DatabasesJsonClass(DatabasesAbstractClass):
 
     def columns(
       self,
-      path_:str
+      path_:str,
+      migration_ : bool = False 
     )->dict[str,dict[str, int|list[str]]]:
         """
 
@@ -292,13 +294,21 @@ class DatabasesJsonClass(DatabasesAbstractClass):
           self._helper.pathFix(path_)
         )
         out = {}
-        if path not in self._db:
+        if path not in self._db.keys():
             return out
         for i in self._db[path]:
-            out = self.columDetails(
-              out,
-              self._db[path][i]['data']
-            )
+            if migration_ is True:
+                out = self.columDetails(
+                  out,
+                  self._migrationRowFix(
+                    self._db[path][i]['data']
+                  )
+                )
+            else:
+                out = self.columDetails(
+                  out,
+                  self._db[path][i]['data']
+                )
         return out
 
     def columnShow(
@@ -346,3 +356,32 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         for a in self._patheses.all():
             out = out + self.count(a)
         return out
+
+    def migrationToCsv(
+      self,
+      path_ : str,
+      output_file_ : str
+    )->bool:
+        path = self._patheses.get(
+          self._helper.pathFix(path_)
+        )
+        if path not in self._db:
+            return False
+        file_name = (output_file_+'.csv')
+        with open(file_name, 'w', newline='') as csvfile:
+            writer = csv.DictWriter(
+              csvfile,
+              fieldnames=(
+                self.columns(path_,True)
+              )
+            )
+            writer.writeheader()
+            for i in self._db[path]:
+                writer.writerow(
+                  self._migrationRowFix(
+                    self._db[path][i]['data']
+                  )
+                )
+            return True
+        return False
+
