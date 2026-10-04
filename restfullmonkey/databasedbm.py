@@ -313,7 +313,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             while key is not None:
                 row = self.__get(db,key)
                 if column_ in row:
-                   out[key] = row[column_]
+                    out[key] = row[column_]
                 key = db.nextkey(key)
         return out
 

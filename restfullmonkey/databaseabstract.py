@@ -144,7 +144,7 @@ class DatabasesAbstractClass:
         :return: dict[str, set[str] | int]
         """
         types = list(
-          set(detals['type']).add(
+          set(details_['type']).add(
             str(type(field_).__name__)
           )
         )
