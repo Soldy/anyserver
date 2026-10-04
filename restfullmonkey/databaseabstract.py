@@ -50,6 +50,31 @@ class DatabasesAbstractClass:
                     return True
         return False
 
+    def _migrationRowFix(
+      self,
+      row_:str|int|list[str|int|float]|dict[str, str|int|float]
+    )->dict[str, str]:
+        """
+         fix the mixed input format to standard output
+
+        :param: str|int :  column name
+        :return: dict[str,dict[str, int|list[str]]] :
+        """
+        out = {}
+        if isinstance(row_, dict):
+            for i in row_:
+                out[str(i)] = str(row_[i]) # will extend if row a list
+
+        if isinstance(row_, str):
+            out[str(0)] = str(row_)
+        if isinstance(row_, int):
+            out[str(0)] = str(row_) # will extend if row a list
+        if isinstance(row_, list):
+            for i in range(row_):
+               out[str(i)] = str(row_[i])
+        return out
+
+
     def _columnLen(self, column_:str|int)->int:
         """
 
@@ -70,7 +95,7 @@ class DatabasesAbstractClass:
         :param: dict[str, str|int|float]
         :return: dict[str, dict[str, set[str]|int]]
         """
-        if not isinstance(row_, Iterable):
+        if not isinstance(row_, Iterable) or isinstance(row_, str):
            details_['0'] = self.columDetailCreate(
              row_
            )
