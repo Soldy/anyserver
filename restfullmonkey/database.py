@@ -89,8 +89,15 @@ class DatabasesClass:
       self,
       path_ : str,
       file_name_ : str,
-      type_ : str,
+      type_ : str = 'csv'
     )->bool:
+        """
+
+        :param: str
+        :param: str
+        :param: str
+        :return: bool
+        """
         if type_ == 'csv':
             return self._database.migrationToCsv(path_,file_name_)
         return False

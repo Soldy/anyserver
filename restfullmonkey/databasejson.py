@@ -283,18 +283,19 @@ class DatabasesJsonClass(DatabasesAbstractClass):
     def columns(
       self,
       path_:str,
-      migration_ : bool = False 
+      migration_ : bool = False
     )->dict[str,dict[str, int|list[str]]]:
         """
 
         :param: str :  path name 
+        :param: bool
         :return: dict[str,dict[str, int|list[str]]] :
         """
         path = self._patheses.get(
           self._helper.pathFix(path_)
         )
         out = {}
-        if path not in self._db.keys():
+        if path not in self._db:
             return out
         for i in self._db[path]:
             if migration_ is True:
@@ -362,12 +363,18 @@ class DatabasesJsonClass(DatabasesAbstractClass):
       path_ : str,
       output_file_ : str
     )->bool:
+        """
+
+        :param: str
+        :param: str
+        :return: bool
+        """
         path = self._patheses.get(
           self._helper.pathFix(path_)
         )
         if path not in self._db:
             return False
-        file_name = (output_file_+'.csv')
+        file_name = output_file_+'.csv'
         with open(file_name, 'w', newline='') as csvfile:
             writer = csv.DictWriter(
               csvfile,
@@ -384,4 +391,3 @@ class DatabasesJsonClass(DatabasesAbstractClass):
                 )
             return True
         return False
-

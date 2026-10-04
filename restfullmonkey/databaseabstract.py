@@ -71,7 +71,7 @@ class DatabasesAbstractClass:
             out[str(0)] = str(row_) # will extend if row a list
         if isinstance(row_, list):
             for i in range(row_):
-               out[str(i)] = str(row_[i])
+                out[str(i)] = str(row_[i])
         return out
 
 
@@ -96,10 +96,10 @@ class DatabasesAbstractClass:
         :return: dict[str, dict[str, set[str]|int]]
         """
         if not isinstance(row_, Iterable) or isinstance(row_, str):
-           details_['0'] = self.columDetailCreate(
-             row_
-           )
-           return details_
+            details_['0'] = self.columDetailCreate(
+              row_
+            )
+            return details_
         for p in row_:
             if p not in details_:
                 details_[p] = self.columDetailCreate(
