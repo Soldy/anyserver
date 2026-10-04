@@ -298,18 +298,18 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         if path not in self._db:
             return out
         for i in self._db[path]:
+            row = {}
             if migration_ is True:
-                out = self.columDetails(
-                  out,
-                  self._migrationRowFix(
-                    self._db[path][i]['data']
-                  )
-                )
-            else:
-                out = self.columDetails(
-                  out,
+                row = self._migrationRowFix(
                   self._db[path][i]['data']
                 )
+            else:
+                row = self._db[path][i]['data']
+            row[self._config['id_name']] = i
+            out = self.columDetails(
+              out,
+              row
+            )
         return out
 
     def columnShow(

@@ -104,6 +104,34 @@ def procStart(config_: dict[str,str])->bool:
     time.sleep(0.1)
     return _proc.is_alive()
 
+def simpleDumyTest(
+  database,
+  id_name : str = 'id'
+):
+    assert(database.post('/',{'dummy':'data'}) == {})
+    assert(database.get('/',{}) == [{'dummy': 'data', id_name: '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', id_name: '1'},
+    ] )
+    assert(database.get('/',{id_name:'1'}) == [{'dummy': 'data', id_name: '1'}] )
+    assert(database.get('/',{id_name:'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+    assert(database.columns('/') == {
+      'dummy':{
+        'max': 4,
+        'min': 4,
+        'str_max': 4,
+        'str_min': 4,
+        'type' : ['str']
+      },
+      id_name:{
+        'max': 1,
+        'min': 1,
+        'str_max': 1,
+        'str_min': 1,
+        'type' : ['str']
+    }})
+
 def procTerminate():
     """
     standard multi process server stop
@@ -365,14 +393,7 @@ def test_databaseSave():
         'load' : False,
         'save' : True
     })
-    assert(database.post('/',{'dummy':'data'}) == {})
-    assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
-    assert(database.get('/',{'dummy':['data']}) == [
-      {'dummy': 'data', 'id': '1'},
-    ] )
-    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
-    assert(database.get('/',{'id':'0'}) == [] )
-    assert(database.get('/test', {}) == {} )
+    simpleDumyTest(database)
     assert(database.migration('/','migration_test', 'csv') == True)
 
 def test_databaseSaveAndLoad():
@@ -419,14 +440,7 @@ def test_databaseSaveIdName():
         'load'    : False,
         'save'    : True
     })
-    assert(database.post('/',{'dummy':'data'}) == {})
-    assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
-    assert(database.get('/',{'dummy':['data']}) == [
-      {'dummy': 'data', 'newid': '1'},
-    ] )
-    assert(database.get('/',{'newid':'1'}) == [{'dummy': 'data', 'newid': '1'}] )
-    assert(database.get('/',{'newid':'0'}) == [] )
-    assert(database.get('/test', {}) == {} )
+    simpleDumyTest(database,'newid')
 
 def test_databaseSaveAndLoadIdName():
     database = helperDefination(
@@ -468,14 +482,7 @@ def test_databaseDbm():
         'store_type': 'dbm'
       }
     )
-    assert(database.post('/',{'dummy':'data'}) == {})
-    assert(database.get('/',{}) == [{'dummy': 'data', 'id': '1'}] )
-    assert(database.get('/',{'dummy':['data']}) == [
-      {'dummy': 'data', 'id': '1'},
-    ] )
-    assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
-    assert(database.get('/',{'id':'0'}) == [] )
-    assert(database.get('/test', {}) == {} )
+    simpleDumyTest(database)
 
 def test_databaseDbmAgain():
     database = helperDefination(
@@ -537,14 +544,7 @@ def test_databaseDbmIdName():
         'id_name'   : 'newid'
       }
     )
-    assert(database.post('/',{'dummy':'data'}) == {})
-    assert(database.get('/',{}) == [{'dummy': 'data', 'newid': '1'}] )
-    assert(database.get('/',{'dummy':['data']}) == [
-      {'dummy': 'data', 'newid': '1'},
-    ] )
-    assert(database.get('/',{'newid':'1'}) == [{'dummy': 'data', 'newid': '1'}] )
-    assert(database.get('/',{'newid':'0'}) == [] )
-    assert(database.get('/test', {}) == {} )
+    simpleDumyTest(database,'newid')
 
 @pytest.mark.dependency()
 def test_serverStart():

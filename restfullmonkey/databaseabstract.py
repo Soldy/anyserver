@@ -121,7 +121,7 @@ class DatabasesAbstractClass:
         :param: str|int :  column name
         :return: dict[str,dict[str, int|list[str]]] :
         """
-        types  = {type(field_).__name__}
+        types  = [type(field_).__name__]
         length = self._columnLen(field_)
         str_length = len(str(field_))
 
@@ -143,7 +143,11 @@ class DatabasesAbstractClass:
         :param: str| int | float
         :return: dict[str, set[str] | int]
         """
-        types  = str(type(field_).__name__)
+        types = list(
+          set(detals['type']).add(
+            str(type(field_).__name__)
+          )
+        )
         length = self._columnLen(field_)
         str_length = len(str(field_))
         details_['type'].add(types)

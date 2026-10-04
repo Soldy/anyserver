@@ -295,6 +295,28 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             db.close()
         return out
 
+    def columnShow(
+        self,
+        path_:str,
+        column_:str
+    )->dict[str,any]:
+        """
+
+        :param: str :  path name
+        :param: str :  column name
+        :return: dict[str, any] :
+        """
+        out = {}
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
+            key : str = db.firstkey()
+            while key is not None:
+                row = self.__get(db,key)
+                if column_ in row:
+                   out[key] = row[column_]
+                key = db.nextkey(key)
+        return out
+
     def count(
       self,
       path_ : str

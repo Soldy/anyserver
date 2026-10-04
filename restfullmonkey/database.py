@@ -85,6 +85,19 @@ class DatabasesClass:
         """
         return self._database.check()
 
+    def columns(
+      self,
+      path_ : str
+    )->dict[str,dict[str, int|list[str]]]:
+        """
+         Columns reference
+         for initialization.
+        
+        :param: str :  path name 
+        :return: dict[str,dict[str, int|list[str]]] :
+        """
+        return self._database.columns(path_)
+
     def migration(
       self,
       path_ : str,
