@@ -313,6 +313,7 @@ def test_databaseNoSave():
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
 
+
 def test_databaseNoSaveIdName():
     database = helperDefination(
       DatabasesClass,
@@ -368,6 +369,7 @@ def test_databaseSave():
     assert(database.get('/',{'id':'1'}) == [{'dummy': 'data', 'id': '1'}] )
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/test', {}) == {} )
+    assert(database.migration('/','migration_test', 'csv') == True)
 
 def test_databaseSaveAndLoad():
     database = helperDefination(
