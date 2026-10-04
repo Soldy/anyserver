@@ -82,6 +82,10 @@ def cleanUp():
         os.remove('indexes_test.dbm')
     except Exception:
         print()
+    try:
+        os.remove('migration_test.csv')
+    except Exception:
+        print()
 
 def procStart(config_: dict[str,str])->bool:
     """
