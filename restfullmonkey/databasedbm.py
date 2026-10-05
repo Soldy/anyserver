@@ -185,14 +185,20 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :return: list[dict[str,any]]
         """
         out = []
+        indexes = self._indexes.get(
+          self._patheses.add(
+            path_
+          )
+        )
         db : dbm.gnu | None = self._dbOpenRead(path_)
         if db is not None:
             key = db.firstkey()
-            while key is not None:
-                out.append(
-                  self.__get(db,key)
-                )
-                key = db.nextkey(key)
+            for key in indexes['index']:
+                record = self.__get(db,key)
+                if record != {}:
+                    out.append(
+                      record
+                    )
             db.close()
         return out
 
@@ -248,18 +254,21 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         out : list[dict[str,any]] = []
         if isinstance(filters_, str):
             return out
+        indexes = self._indexes.get(
+          self._patheses.add(
+            path_
+          )
+        )
         db : dbm.gnu | None = self._dbOpenRead(path_)
         if db is not None:
             record : dict[str,any] = {}
-            key : str = db.firstkey()
-            while key is not None:
+            for key in indexes['index']:
                 record = self.__get(db,key)
                 if self.filterCheck(
                    record,
                    filters_
                 ):
                     out.append(record)
-                key = db.nextkey(key)
             db.close()
         return out
 
@@ -275,10 +284,14 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :return: dict[str,dict[str, int|list[str]]] :
         """
         out = {}
+        indexes = self._indexes.get(
+          self._patheses.get(
+            path_
+          )
+        )
         db : dbm.gnu | None = self._dbOpenRead(path_)
         if db is not None:
-            key : str = db.firstkey()
-            while key is not None:
+            for key in indexes['index']:
                 if migration_ is True:
                     out = self.columDetails(
                       out,
@@ -291,7 +304,6 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                       out,
                       self.__get(db,key)
                     )
-                key = db.nextkey(key)
             db.close()
         return out
 

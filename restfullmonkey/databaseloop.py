@@ -94,6 +94,21 @@ class DatabasesLoopClass(DatabasesAbstractClass):
         just loop back all
 
         :param: str : path
+        :param: dict[str,str]
         :return: dict[str,any]
         """
         return self.looping(path_, gets_)
+
+    def checkPath(
+      self,
+      path_: str
+    )->bool:
+        """
+        just loop back all
+
+        :param: str : path
+        :return: bool
+        """
+        if isinstance(path_, str):
+            return True
+        return True

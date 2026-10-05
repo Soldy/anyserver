@@ -143,14 +143,11 @@ class DatabasesAbstractClass:
         :param: str| int | float
         :return: dict[str, set[str] | int]
         """
-        types = list(
-          set(details_['type']).add(
-            str(type(field_).__name__)
-          )
-        )
+        types = set(details_['type'])
+        types.add(str(type(field_).__name__))
         length = self._columnLen(field_)
         str_length = len(str(field_))
-        details_['type'].add(types)
+        details_['type'] = list(types)
         # int for copy
         details_['max'] = max(details_['max'], int(length))
         details_['min'] = min(details_['min'], length)

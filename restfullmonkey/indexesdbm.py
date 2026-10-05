@@ -55,6 +55,7 @@ class IndexesDbmClass:
         current['index'].append(
           str(current['serial'])
         )
+        self._index[path_] = deepcopy(current)
         self._db[path_] = json.dumps(current)
         return str(current['serial'])
 
@@ -66,3 +67,12 @@ class IndexesDbmClass:
         :return: str
         """
         return deepcopy(self.get(path_)['index'])
+
+    def full(self):
+        """
+        get all indexes
+
+        :param: str : path_
+        :return: str
+        """
+        return self._index

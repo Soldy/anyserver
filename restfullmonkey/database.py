@@ -34,6 +34,33 @@ class DatabasesClass:
               logging_,
               config_
             )
+    def pathFix(
+      self,
+      path_ : str
+    )->str:
+        """
+        fix path if 
+
+        :param: str : the record id in str
+        :return: str : result code 0 ok
+        """
+        if self._config['store_type'] == 'loop':
+            return path_
+        return self._helper.pathFix(path_)
+
+    def filtersPreparation(
+      self,
+      gets_ : dict[str, any]
+    )->dict[str,str]:
+        """
+        fix path if 
+
+        :param: str : the record id in str
+        :return: str : result code 0 ok
+        """
+        if self._config['store_type'] == 'loop':
+            return gets_
+        return self._helper.filtersPreparation(gets_)
 
     def post(self,
       path_: str,
@@ -45,10 +72,12 @@ class DatabasesClass:
         :param: str : the record id in str
         :return: int : result code 0 ok
         """
-        out = self._database.post(path_,data_)
+        path = self.pathFix(path_)
+        out = self._database.post(path,data_)
         if out == 0:
             return {}
         return out
+
     def get(
       self,
       path_: str,
@@ -59,15 +88,10 @@ class DatabasesClass:
 
         :param: str : the record id in str
         """
-        if self._config['store_type'] == 'loop':
-            return self._database.get(
-              path_,
-              gets_
-            )
-        path = self._helper.pathFix(path_)
+        path = self.pathFix(path_)
         if not self._database.checkPath(path):
             return {}
-        if self._config['id_name'] in gets_:
+        if self._config['id_name'] in gets_ and self._config['store_type'] != 'loop':
             return self._database.getId(
               path,
               gets_[self._config['id_name']]
@@ -76,7 +100,7 @@ class DatabasesClass:
             return self._database.getAll(path)
         return self._database.getFilter(
           path,
-          self._helper.filtersPreparation(gets_)
+          self.filtersPreparation(gets_)
         )
     def check(self):
         """
@@ -92,11 +116,40 @@ class DatabasesClass:
         """
          Columns reference
          for initialization.
-        
+
         :param: str :  path name 
         :return: dict[str,dict[str, int|list[str]]] :
         """
-        return self._database.columns(path_)
+        return self._database.columns(
+          self.pathFix(path_)
+        )
+
+    def count(
+      self,
+      path_ : str
+    )->int:
+        """
+         Columns reference
+         for initialization.
+
+        :param: str :  path name 
+        :return: int :
+        """
+        return self._database.count(
+          self.pathFix(path_)
+        )
+
+    def countAll(
+      self,
+    )->dict[str, int]:
+        """
+         Columns reference
+         for initialization.
+
+        :return: dict[str,int] :
+        """
+        return self._database.countAll()
+
 
     def migration(
       self,
@@ -111,6 +164,7 @@ class DatabasesClass:
         :param: str
         :return: bool
         """
+        path = self.pathFix(path_)
         if type_ == 'csv':
-            return self._database.migrationToCsv(path_,file_name_)
+            return self._database.migrationToCsv(path,file_name_)
         return False

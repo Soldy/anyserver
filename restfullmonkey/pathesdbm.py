@@ -14,6 +14,7 @@ class PathesDbmClass:
         self._log    = logging_
         self._config = config_
         self._serial = 0
+        self._patheses = {}
         self._db     = dbm.gnu.open(
           self._config['dbm_path'],
           'cs'
@@ -47,6 +48,7 @@ class PathesDbmClass:
         if self.get(path_) == '-1':
             self._serial = self._serial + 1
             self._db[path_] = str(self._serial)
+
         return self.get(path_)
 
     def all(self):
