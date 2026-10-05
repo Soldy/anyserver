@@ -131,6 +131,8 @@ def simpleDumyTest(
         'str_min': 1,
         'type' : ['str']
     }})
+    assert(database.post('/',{'dummy':'yummi'}) == {})
+    assert(database.count('/') == 2)
 
 def procTerminate():
     """
@@ -414,17 +416,18 @@ def test_databaseSaveAndLoad():
     assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'id': '1'},
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'yummi', 'id': '2'},
+      {'dummy': 'data plus', 'id': '3'}
     ])
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'id': '1'},
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'data plus', 'id': '3'}
     ])
     assert(database.get('/',{'dummy':['data plus']}) == [
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'data plus', 'id': '3'}
     ])
-    assert(database.get('/',{'id':'2'}) == [
-      {'dummy': 'data plus', 'id': '2'}])
+    assert(database.get('/',{'id':'3'}) == [
+      {'dummy': 'data plus', 'id': '3'}])
     assert(database.get('/test', {}) == {} )
 
 def test_databaseSaveIdName():
@@ -461,17 +464,18 @@ def test_databaseSaveAndLoadIdName():
     assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'newid': '1'},
-      {'dummy': 'data plus', 'newid': '2'}
+      {'dummy': 'yummi', 'newid': '2'},
+      {'dummy': 'data plus', 'newid': '3'}
     ])
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'newid': '1'},
-      {'dummy': 'data plus', 'newid': '2'}
+      {'dummy': 'data plus', 'newid': '3'}
     ])
     assert(database.get('/',{'dummy':['data plus']}) == [
-      {'dummy': 'data plus', 'newid': '2'}
+      {'dummy': 'data plus', 'newid': '3'}
     ])
-    assert(database.get('/',{'newid':'2'}) == [
-      {'dummy': 'data plus', 'newid': '2'}])
+    assert(database.get('/',{'newid':'3'}) == [
+      {'dummy': 'data plus', 'newid': '3'}])
     assert(database.get('/test', {}) == {} )
 
 def test_databaseDbm():
@@ -495,26 +499,28 @@ def test_databaseDbmAgain():
         'load' : True,
         'save' : True
     })
+   # simpleDumyTest(database)
     assert(database.get('/',{'id':'0'}) == [] )
     assert(database.get('/',{'id':'1'}) == [
       {'dummy': 'data', 'id': '1'}])
     assert(database.post('/',{'dummy':'data plus'}) == {})
     assert(database.get('/',{}) == [
       {'dummy': 'data', 'id': '1'},
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'yummi', 'id': '2'},
+      {'dummy': 'data plus', 'id': '3'}
     ])
     assert(database.get('/',{'dummy':['data']}) == [
       {'dummy': 'data', 'id': '1'},
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'data plus', 'id': '3'}
     ])
     assert(database.get('/',{'dummy':['data plus']}) == [
-      {'dummy': 'data plus', 'id': '2'}
+      {'dummy': 'data plus', 'id': '3'}
     ])
-    assert(database.get('/',{'dummy':['data plus'],'id':['2']}) == [
-      {'dummy': 'data plus', 'id': '2'}
+    assert(database.get('/',{'dummy':['data plus'],'id':['3']}) == [
+      {'dummy': 'data plus', 'id': '3'}
     ])
-    assert(database.get('/',{'id':'2'}) == [
-      {'dummy': 'data plus', 'id': '2'}])
+    assert(database.get('/',{'id':'3'}) == [
+      {'dummy': 'data plus', 'id': '3'}])
     assert(database.get('/test', {}) == {} )
 
 def test_databaseDbmNoId():
