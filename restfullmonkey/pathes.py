@@ -4,8 +4,9 @@ Json pathes class
 import os
 import json
 from copy import deepcopy
+from pathesabstract import PathesAbstractClass
 
-class PathesClass:
+class PathesClass(PathesAbstractClass):
     """
     Multipath manager class
 
@@ -17,10 +18,7 @@ class PathesClass:
       logging_,
       config_: dict[str,str]
     ):
-        self._log    = logging_
-        self._config = config_
-        self._serial = 0
-        self._path   = {}
+        super().__init__(logging_, config_)
 
     def __loadPath(self):
         """
@@ -44,8 +42,7 @@ class PathesClass:
         Path cache check
         """
         path_file = self._config['path']
-        _error = False
-        if not self._config['load'] and not self._config['save']:
+        if not self._config['load']:
             return False
         if not os.path.exists(path_file):
             self._log.info('Creating index file')
@@ -55,7 +52,7 @@ class PathesClass:
             ) as file_:
                 json.dump({}, file_)
         if not os.path.isfile(path_file):
-            self._log.critical('Path file error')
+            raise FileNotFoundError('Path file not exist')
             return True
         self.__loadPath()
         return False
@@ -79,26 +76,8 @@ class PathesClass:
         :param: str : path_
         :return: str
         """
-        if path_ not in self._path:
-            self._serial = self._serial + 1
-            self. _path[path_] = deepcopy(self._serial)
+        before = int(self._serial)
+        path = super().add(path_)
+        if before != self._serial:
             self.__savePath()
-        return deepcopy(str(self._path[path_]))
-
-    def get(self, path_:str)->str:
-        """
-        get a path id
-
-        :param: str : path_
-        :return: str
-        """
-        return self.add(path_)
-
-    def all(self):
-        """
-        get all path
-
-        :param: str : path_
-        :return: str
-        """
-        return deepcopy(self._path)
+        return path

@@ -2,8 +2,9 @@
 dbm pathes class
 """
 import dbm.gnu
+from pathesabstract import PathesAbstractClass
 
-class PathesDbmClass:
+class PathesDbmClass(PathesAbstractClass):
     """
     Multipath manager class
 
@@ -11,14 +12,8 @@ class PathesDbmClass:
     :param: dict[str,str] :
     """
     def __init__(self, logging_, config_):
-        self._log    = logging_
-        self._config = config_
-        self._serial = 0
-        self._patheses = {}
-        self._db     = dbm.gnu.open(
-          self._config['dbm_path'],
-          'cs'
-        )
+        super().__init__(logging_, config_)
+        self.load()
 
     def check(self)->bool:
         """
@@ -27,17 +22,6 @@ class PathesDbmClass:
         """
         return False
 
-    def get(self, path_:str)->str:
-        """
-        get a path id
-
-        :param: str : path_
-        :return: str
-        """
-        return str(int(
-          self._db.get(path_, b'-1').decode("utf-8")
-        ))
-
     def add(self, path_:str)->str:
         """
         add / generate a path id
@@ -45,22 +29,28 @@ class PathesDbmClass:
         :param: str : path_
         :return: str
         """
-        if self.get(path_) == '-1':
-            self._serial = self._serial + 1
-            self._db[path_] = str(self._serial)
+        path = super().add(path_)
+        with dbm.gnu.open(
+          self._config['dbm_path'],
+          'cs'
+        ) as db:
+            db[path_] = str(path)
+        return path
 
-        return self.get(path_)
-
-    def all(self):
+    def load(self)->None:
         """
         get all path
 
-        :param: str : path_
-        :return: str
+        :return: None
         """
-        out = {}
-        key = self._db.firstkey()
-        while key is not None:
-            out[key.decode('utf-8')] = self._db[key].decode('utf-8')
-            key = self._db.nextkey(key)
-        return out
+        with dbm.gnu.open(
+          self._config['dbm_path'],
+          'cs'
+        ) as db:
+            key = db.firstkey()
+            while key is not None:
+                k = key.decode('utf-8')
+                self._path[k] = db[key].decode('utf-8')
+                if int(self._path[k]) > self._serial:
+                    self._serial = int(self._path[k])
+                key = db.nextkey(key)
