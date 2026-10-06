@@ -218,17 +218,16 @@ def test_pathDbm():
       PathesDbmClass,
       configStart({})
     )
-    assert(pathes.all() == {})
-    assert(pathes.get('_') == '-1')
+    assert(pathes.all() == {'_' : '1'})
     assert(pathes.add('_') == '1' )
     assert(pathes.add('_') == '1' )
     assert(pathes.get('_') == '1')
     assert(pathes.all() == {'_': '1'})
-    assert(pathes.get('test') == '-1')
-    assert(pathes.add('test') == '2')
+    assert(pathes.get('test') == '2')
+    assert(pathes.add('test1') == '3')
     assert(pathes.add('test') == '2')
     assert(pathes.get('test') == '2')
-    assert(pathes.all() == {'_': '1','test':'2'})
+    assert(pathes.all() == {'_': '1','test':'2', 'test1':'3'})
 
 def test_indexNoSave():
     indexes = helperDefination(
@@ -1655,10 +1654,10 @@ def test_simpleTestRouteGetAfterPostDbmAgainIdName():
 def test_simpleTestRouteGetByIdAfterPostDbmAgainIdName():
     """ get test by id request  """
     _response = requests.get(
-      'http://localhost:8008/list_test?newid=3'
+      'http://localhost:8008/list_test?newid=1'
     )
     assert (_response.status_code == 200)
-    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "3"}]')
+    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "1"}]')
     assert (
       _response.headers['content-type']
       ==
@@ -1721,7 +1720,7 @@ def test_simpleTestRouteGetByIdAfterPostDbmAgainIdBreakingListAll():
       'http://localhost:8008/list_test'
     )
     assert (_response.status_code == 200)
-    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "3"}]')
+    assert (_response.text == '[{"data": [{"test": "lorem ipsum"}, {"test2": "dorol sit amet"}], "newid": "1"}]')
     assert (
       _response.headers['content-type']
       ==
