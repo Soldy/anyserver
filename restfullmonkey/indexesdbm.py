@@ -4,19 +4,17 @@ dbm indexes
 import json
 import dbm.gnu
 from copy import deepcopy
+from restfullmonkey.indexesabstract import IndexesAbstractClass
 
 
-class IndexesDbmClass:
+class IndexesDbmClass(IndexesAbstractClass):
     """
     Index class.
     :param: logging :
     :param: dict[str,str] :
     """
     def __init__(self, logging_, config_: str):
-        self._log    = logging_
-        self._config = config_
-        self._ids    = {}
-        self._index  = {}
+        super().__init__(logging_, config_)
         self._db     = dbm.gnu.open(
           self._config['dbm_index'],
           'cs'
@@ -55,7 +53,6 @@ class IndexesDbmClass:
         current['index'].append(
           str(current['serial'])
         )
-        self._index[path_] = deepcopy(current)
         self._db[path_] = json.dumps(current)
         return str(current['serial'])
 
