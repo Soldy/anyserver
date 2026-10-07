@@ -65,11 +65,15 @@ class IndexesDbmClass(IndexesAbstractClass):
         """
         return deepcopy(self.get(path_)['index'])
 
-    def full(self):
+    def full(self)->dict[str, [dict[str, int|str|list[int|str]]]]:
         """
         get all indexes
 
-        :param: str : path_
-        :return: str
+        :return:  dict[str, [dict[str, int|str|list[int|str]]]
         """
-        return self._index
+        out : dict[str, [dict[str, int|str|list[int|str]]]] = {}
+        key = self._db.firstkey()
+        while key is not None:
+            out[key] = self.get(key)
+            key = self._db.nextkey(key)
+        return out

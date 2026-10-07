@@ -69,3 +69,22 @@ class IndexesAbstractClass:
         self._addId(path_)
         self._addIndex(path_, str(self._serials[path_]))
         return str(self._serials[path_])
+
+    def all(self, path_:str)->list[str]:
+        """
+        all index in path
+
+        :param: str
+        :return: list[str]
+        """
+        if path_ not in self._index:
+            return []
+        return deepcopy(self._index[path_])
+
+    def full(self)->dict[str, [dict[str, int|str|list[int|str]]]]:
+        """
+        get all indexes
+
+        :return:  dict[str, [dict[str, int|str|list[int|str]]]]
+        """
+        return deepcopy(self._index)
