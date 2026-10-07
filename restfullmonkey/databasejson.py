@@ -340,22 +340,21 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :param: str :  path name 
         :return: int : count records in path
         """
-        out = 0
         path = self._patheses.get(
           self._helper.pathFix(path_)
         )
         if path in self._db:
-            out = out + len(self._db[path])
-        return out
+            return len(self._db[path].keys())
+        return 0
 
 
-    def countAll(self)->int:
+    def countAll(self)->dict[str,int]:
         """
         :return: int : count all records
         """
-        out = 0
+        out = {}
         for a in self._patheses.all():
-            out = out + self.count(a)
+            out[a] =  self.count(a)
         return out
 
     def migrationToCsv(
