@@ -58,3 +58,14 @@ class IndexesAbstractClass:
           'index'  : deepcopy(self._index[path_])
 
         }
+
+    def add(self, path_:str)->str:
+        """
+        add public function
+
+        :param: str
+        :return: str
+        """
+        self._addId(path_)
+        self._addIndex(path_, str(self._serials[path_]))
+        return str(self._serials[path_])

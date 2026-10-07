@@ -71,8 +71,7 @@ class IndexesClass(IndexesAbstractClass):
         before = -1
         if path_ in self._serials:
             before = int(self._serials[path_])
-        self._addId(path_)
-        self._addIndex(path_, str(self._serials[path_]))
+        super().add(path_)
         if before != self._serials[path_]:
             self._saveIndex()
         return str(self._serials[path_])
