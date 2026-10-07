@@ -1,4 +1,6 @@
-
+"""
+pathes apbstract
+"""
 from copy import deepcopy
 
 class PathesAbstractClass:
@@ -8,7 +10,11 @@ class PathesAbstractClass:
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(self, logging_, config_):
+    def __init__(
+      self,
+      logging_,
+      config_
+    ):
         self._log    = logging_
         self._config = config_
         self._serial = 0
@@ -28,12 +34,24 @@ class PathesAbstractClass:
       self,
       path_ : str
     )->str:
-       return str(self._path[path_])
+        """
+        get a single path from cache
+
+        :param: str : path_
+        :return: str
+        """
+        return str(self._path[path_])
 
     def _addToCahe(
       self,
       path_ : str
     )->str:
+        """
+        add a single path to cache
+
+        :param: str : path_
+        :return: str
+        """
         if path_ not in self._path:
             self._serial = self._serial + 1
             self. _path[path_] = str(self._serial)

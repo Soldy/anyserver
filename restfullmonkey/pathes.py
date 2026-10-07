@@ -3,24 +3,16 @@ Json pathes class
 """
 import os
 import json
-from copy import deepcopy
-from pathesabstract import PathesAbstractClass
+from restfullmonkey.pathesabstract import PathesAbstractClass
 
 class PathesClass(PathesAbstractClass):
     """
-    Multipath manager class
+    Multipath manager for json store
 
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(
-      self,
-      logging_,
-      config_: dict[str,str]
-    ):
-        super().__init__(logging_, config_)
-
-    def __loadPath(self):
+    def _load(self):
         """
         Path cache load 
         """
@@ -40,6 +32,8 @@ class PathesClass(PathesAbstractClass):
     def check(self)->bool:
         """
         Path cache check
+
+        :return: bool
         """
         path_file = self._config['path']
         if not self._config['load']:
@@ -52,9 +46,9 @@ class PathesClass(PathesAbstractClass):
             ) as file_:
                 json.dump({}, file_)
         if not os.path.isfile(path_file):
-            raise FileNotFoundError('Path file not exist')
+            self._log.info('Path file not exist')
             return True
-        self.__loadPath()
+        self._load()
         return False
 
     def __savePath(self):

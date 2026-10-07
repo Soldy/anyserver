@@ -2,24 +2,21 @@
 dbm pathes class
 """
 import dbm.gnu
-from pathesabstract import PathesAbstractClass
+from restfullmonkey.pathesabstract import PathesAbstractClass
 
 class PathesDbmClass(PathesAbstractClass):
     """
-    Multipath manager class
+    Multipath manager for dbm
 
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(self, logging_, config_):
-        super().__init__(logging_, config_)
-        self.load()
-
     def check(self)->bool:
         """
         Path dbm check
         :return: bool : False
         """
+        self._load()
         return False
 
     def add(self, path_:str)->str:
@@ -37,7 +34,7 @@ class PathesDbmClass(PathesAbstractClass):
             db[path_] = str(path)
         return path
 
-    def load(self)->None:
+    def _load(self)->None:
         """
         get all path
 
@@ -51,6 +48,5 @@ class PathesDbmClass(PathesAbstractClass):
             while key is not None:
                 k = key.decode('utf-8')
                 self._path[k] = db[key].decode('utf-8')
-                if int(self._path[k]) > self._serial:
-                    self._serial = int(self._path[k])
+                self._serial = (int(self._path[k]), self._serial)
                 key = db.nextkey(key)
