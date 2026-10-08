@@ -87,4 +87,10 @@ class IndexesAbstractClass:
 
         :return:  dict[str, [dict[str, int|str|list[int|str]]]]
         """
-        return deepcopy(self._index)
+        out : dict[str, [dict[str, int|str|list[int|str]]]] = {}
+        for i in self._serials:
+            out[str(i)] = {
+              'serial' : int(self._serials[i]),
+              'index'  : deepcopy(self._index[i])
+            }
+        return out
