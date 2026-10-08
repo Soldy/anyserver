@@ -221,6 +221,10 @@ def simpleIndexTest(
     assert(indexes.add('_') == '2')
     assert(indexes.add('test') == '2')
     assert(indexes.all('_') == ['1', '2'])
+    assert(indexes.full() == {
+      '_': {'index': ['1', '2'], 'serial': 2},
+      'test': {'index': ['1', '2'], 'serial': 2}
+    })
     return indexes
 
 
