@@ -186,8 +186,8 @@ def simplePathTest(
       config_
     )
     assert(pathes.all() == {'_' : '1'})
-    assert(pathes.add('_') == '1' )
-    assert(pathes.add('_') == '1' )
+    assert(pathes.get('_') == '1' )
+    assert(pathes.get('_') == '1' )
     assert(pathes.get('_') == '1')
     assert(pathes.all() == {'_': '1'})
     assert(pathes.get('test') == '2')
@@ -195,9 +195,9 @@ def simplePathTest(
       '_': '1',
       'test':'2'
     })
-    assert(pathes.add('test1') == '3')
-    assert(pathes.add('test2') == '4')
-    assert(pathes.add('test') == '2')
+    assert(pathes.get('test1') == '3')
+    assert(pathes.get('test2') == '4')
+    assert(pathes.get('test') == '2')
     assert(pathes.get('test') == '2')
     assert(pathes.all() == {
       '_': '1',
@@ -262,7 +262,7 @@ def test_pathSaveAndLoad():
       PathesClass,
       configStart({'load':True,'save' : True})
     )
-    assert(pathes.add('test3') == '5')
+    assert(pathes.get('test3') == '5')
     assert(pathes.all() == {
       '_': '1',
       'test':'2',
