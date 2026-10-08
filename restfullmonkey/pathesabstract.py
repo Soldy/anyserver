@@ -57,7 +57,7 @@ class PathesAbstractClass:
             self. _path[path_] = str(self._serial)
         return str(self._path[path_])
 
-    def add(
+    def get(
       self,
       path_ : str
     )->str:
@@ -68,18 +68,6 @@ class PathesAbstractClass:
         :return: str
         """
         return self._addToCahe(path_)
-
-    def get(
-      self,
-      path_ : str
-    )->str:
-        """
-        get a path
-
-        :param: str : path_
-        :return: str
-        """
-        return self.add(path_)
 
     def all(self)->dict[str,str]:
         """

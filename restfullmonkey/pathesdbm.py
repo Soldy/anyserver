@@ -19,14 +19,14 @@ class PathesDbmClass(PathesAbstractClass):
         self._load()
         return False
 
-    def add(self, path_:str)->str:
+    def get(self, path_:str)->str:
         """
         add / generate a path id
 
         :param: str : path_
         :return: str
         """
-        path = super().add(path_)
+        path = super().get(path_)
         with dbm.gnu.open(
           self._config['dbm_path'],
           'cs'

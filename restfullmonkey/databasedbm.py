@@ -146,7 +146,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
             )
         if db is not None:
             _id : str = self._indexes.add(
-              self._patheses.add(
+              self._patheses.get(
                 path_
               )
             )
@@ -186,7 +186,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         out = []
         indexes = self._indexes.get(
-          self._patheses.add(
+          self._patheses.get(
             path_
           )
         )
@@ -255,7 +255,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         if isinstance(filters_, str):
             return out
         indexes = self._indexes.get(
-          self._patheses.add(
+          self._patheses.get(
             path_
           )
         )

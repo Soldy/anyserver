@@ -63,15 +63,15 @@ class PathesClass(PathesAbstractClass):
         ) as path_file:
             json.dump(self._path, path_file)
 
-    def add(self, path_:str)->str:
+    def get(self, path_:str)->str:
         """
-        add / generate a path id
+        get or add, generate a path id
 
         :param: str : path_
         :return: str
         """
         before = int(self._serial)
-        path = super().add(path_)
+        path = super().get(path_)
         if before != self._serial:
             self.__savePath()
         return path
