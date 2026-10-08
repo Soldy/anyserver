@@ -104,36 +104,6 @@ def procStart(config_: dict[str,str])->bool:
     time.sleep(0.1)
     return _proc.is_alive()
 
-def simpleDumyTest(
-  database,
-  id_name : str = 'id'
-):
-    assert(database.post('/',{'dummy':'data'}) == {})
-    assert(database.get('/',{}) == [{'dummy': 'data', id_name: '1'}] )
-    assert(database.get('/',{'dummy':['data']}) == [
-      {'dummy': 'data', id_name: '1'},
-    ] )
-    assert(database.get('/',{id_name:'1'}) == [{'dummy': 'data', id_name: '1'}] )
-    assert(database.get('/',{id_name:'0'}) == [] )
-    assert(database.get('/test', {}) == {} )
-    assert(database.columns('/') == {
-      'dummy':{
-        'max': 4,
-        'min': 4,
-        'str_max': 4,
-        'str_min': 4,
-        'type' : ['str']
-      },
-      id_name:{
-        'max': 1,
-        'min': 1,
-        'str_max': 1,
-        'str_min': 1,
-        'type' : ['str']
-    }})
-    assert(database.post('/',{'dummy':'yummi'}) == {})
-    assert(database.count('/') == 2)
-
 def procTerminate():
     """
     standard multi process server stop
@@ -169,54 +139,51 @@ def requestGet(route_, headers_):
       headers = authGet(headers_)
     )
 
-def test_config():
-    config = configTest({
-      'load' : False,
-      'save' : True
-    })
-    assert (config['load'] == False)
-    assert (config['save'] == True)
-    assert (config['dummy_test'] == 'dummy')
+def simpleDumyTest(
+  database,
+  id_name : str = 'id'
+):
+    assert(database.post('/',{'dummy':'data'}) == {})
+    assert(database.get('/',{}) == [{'dummy': 'data', id_name: '1'}] )
+    assert(database.get('/',{'dummy':['data']}) == [
+      {'dummy': 'data', id_name: '1'},
+    ] )
+    assert(database.get('/',{id_name:'1'}) == [{'dummy': 'data', id_name: '1'}] )
+    assert(database.get('/',{id_name:'0'}) == [] )
+    assert(database.get('/test', {}) == {} )
+    assert(database.columns('/') == {
+      'dummy':{
+        'max': 4,
+        'min': 4,
+        'str_max': 4,
+        'str_min': 4,
+        'type' : ['str']
+      },
+      id_name:{
+        'max': 1,
+        'min': 1,
+        'str_max': 1,
+        'str_min': 1,
+        'type' : ['str']
+    }})
+    assert(database.post('/',{'dummy':'yummi'}) == {})
+    assert(database.count('/') == 2)
 
+def simpleConfigTest(
+  config_
+):
+    config = configTest(config_)
+    for i in config_:
+        assert (config[i] == config_[i])
+    return config
 
-def test_configAgain():
-    config = configTest({
-      'load' : True,
-      'save' : False,
-      'dummy_test' : 'd2ummy'
-    })
-    assert (config['load'] == True)
-    assert (config['save'] == False)
-    assert (config['dummy_test'] == 'd2ummy')
-
-def test_pathNoSave():
+def simplePathTest(
+  class_,
+  config_
+):
     pathes = helperDefination(
-      PathesClass,
-      configStart({})
-    )
-    assert(pathes.add('_') == '1')
-    assert(pathes.add('test') == '2')
-
-def test_pathSave():
-    pathes = helperDefination(
-      PathesClass,
-      configStart({'save' : True})
-    )
-    assert(pathes.add('_') == '1')
-    assert(pathes.add('test') == '2')
-
-
-def test_pathSaveAndLoad():
-    pathes = helperDefination(
-      PathesClass,
-      configStart({'load':True,'save' : True})
-    )
-    assert(pathes.add('test2') == '3')
-
-def test_pathDbm():
-    pathes = helperDefination(
-      PathesDbmClass,
-      configStart({})
+      class_,
+      config_
     )
     assert(pathes.all() == {'_' : '1'})
     assert(pathes.add('_') == '1' )
@@ -224,30 +191,99 @@ def test_pathDbm():
     assert(pathes.get('_') == '1')
     assert(pathes.all() == {'_': '1'})
     assert(pathes.get('test') == '2')
+    assert(pathes.all() == {
+      '_': '1',
+      'test':'2'
+    })
     assert(pathes.add('test1') == '3')
+    assert(pathes.add('test2') == '4')
     assert(pathes.add('test') == '2')
     assert(pathes.get('test') == '2')
-    assert(pathes.all() == {'_': '1','test':'2', 'test1':'3'})
+    assert(pathes.all() == {
+      '_': '1',
+      'test':'2',
+      'test1':'3',
+      'test2':'4'
+    })
+    return pathes
+
+def simpleIndexTest(
+  class_,
+  config_
+):
+    indexes = helperDefination(
+      class_,
+      config_
+    )
+    assert(indexes.all('_') == [])
+    assert(indexes.add('_') == '1')
+    assert(indexes.add('test') == '1')
+    assert(indexes.add('_') == '2')
+    assert(indexes.add('test') == '2')
+    assert(indexes.all('_') == ['1', '2'])
+    return indexes
+
+
+
+def test_config():
+    config = simpleConfigTest({
+      'load' : False,
+      'save' : True
+    })
+    assert (config['dummy_test'] == 'dummy')
+
+
+def test_configAgain():
+    config = simpleConfigTest({
+      'load' : True,
+      'save' : False,
+      'dummy_test' : 'd2ummy'
+    })
+
+def test_pathNoSave():
+    pathes = simplePathTest(
+      PathesClass,
+      configStart({})
+    )
+
+def test_pathSave():
+    pathes = simplePathTest(
+      PathesClass,
+      configStart({'save' : True})
+    )
+
+
+def test_pathSaveAndLoad():
+    pathes = helperDefination(
+      PathesClass,
+      configStart({'load':True,'save' : True})
+    )
+    assert(pathes.add('test3') == '5')
+    assert(pathes.all() == {
+      '_': '1',
+      'test':'2',
+      'test1':'3',
+      'test2':'4',
+      'test3':'5'
+    })
+
+def test_pathDbm():
+    pathes = simplePathTest(
+      PathesDbmClass,
+      configStart({})
+    )
 
 def test_indexNoSave():
-    indexes = helperDefination(
+    indexes = simpleIndexTest(
       IndexesClass,
       configStart({})
     )
-    assert(indexes.add('_') == '1')
-    assert(indexes.add('test') == '1')
-    assert(indexes.add('_') == '2')
-    assert(indexes.add('test') == '2')
 
 def test_indexSave():
-    indexes = helperDefination(
+    indexes = simpleIndexTest(
       IndexesClass,
       configStart({'save' : True})
     )
-    assert(indexes.add('_') == '1')
-    assert(indexes.add('test') == '1')
-    assert(indexes.add('_') == '2')
-    assert(indexes.add('test') == '2')
 
 def test_indexSaveAndLoad():
     indexes = helperDefination(
@@ -261,16 +297,10 @@ def test_indexSaveAndLoad():
     assert(indexes.add('test') == '4')
 
 def test_indexDbm():
-    indexes = helperDefination(
+    indexes = simpleIndexTest(
       IndexesDbmClass,
       configStart({})
     )
-    assert(indexes.all('_') == [])
-    assert(indexes.add('_') == '1')
-    assert(indexes.add('test') == '1')
-    assert(indexes.add('_') == '2')
-    assert(indexes.add('test') == '2')
-    assert(indexes.all('_') == ['1', '2'])
 
 def test_databaseHelperPathFix():
     helper = DatabaseHelpClass(
