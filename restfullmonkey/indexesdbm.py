@@ -74,6 +74,6 @@ class IndexesDbmClass(IndexesAbstractClass):
         out : dict[str, [dict[str, int|str|list[int|str]]]] = {}
         key = self._db.firstkey()
         while key is not None:
-            out[key] = self.get(key)
+            out[key.decode('utf-8')] = self.get(key)
             key = self._db.nextkey(key)
         return out
