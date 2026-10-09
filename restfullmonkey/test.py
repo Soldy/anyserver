@@ -11,9 +11,9 @@ from threading import Thread
 import multiprocessing
 from restfullmonkey.log import logInit
 from restfullmonkey.conf import test as configTest
-from restfullmonkey.pathes import PathesClass
+from restfullmonkey.pathesjson import PathesClass
 from restfullmonkey.pathesdbm import PathesDbmClass
-from restfullmonkey.indexes import IndexesClass
+from restfullmonkey.indexesjson import IndexesClass
 from restfullmonkey.indexesdbm import IndexesDbmClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.database import DatabasesClass

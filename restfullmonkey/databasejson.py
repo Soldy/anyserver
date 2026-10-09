@@ -9,8 +9,8 @@ import logging
 
 from copy import deepcopy
 
-from restfullmonkey.pathes import PathesClass
-from restfullmonkey.indexes import IndexesClass
+from restfullmonkey.pathesjson import PathesClass
+from restfullmonkey.indexesjson import IndexesClass
 from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 
