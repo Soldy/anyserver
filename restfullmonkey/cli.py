@@ -2,9 +2,12 @@
 cli admin args
 """
 import json
-from restfullmonkey import pathes, log, conf
+from restfullmonkey import log, conf
 from restfullmonkey.arg import parser
-from restfullmonkey.databasejson import DatabasesJsonClass
+from restfullmonkey.database import DatabasesClass
+from restfullmonkey.pathesjson import PathesJsonClass
+from restfullmonkey.pathesdbm import PathesDbmClass
+from restfullmonkey.databasehelp import DatabaseHelpClass
 
 parser.add_argument(
   "--store_type",
@@ -58,14 +61,27 @@ parser.add_argument("-tc", "--column",
   default=""
 )
 
+parser.add_argument("-csv", "--tocsv",
+  type=str,
+  dest="csv",
+  help="csv",
+  metavar="CSV",
+  default=""
+)
 
-def reversPath (path_: str)->str:
+def pathesInit(conf_)->callable:
     """
-    :param: str
-    :return: str
-    """
-    return path_.replace("_", "/")
+    pathes init
 
+    :return: callable
+    """
+    if conf_['store_type'] == 'json' :
+        return PathesJsonClass(
+          log.logging, conf_
+        )
+    return PathesDbmClass(
+      log.logging, conf_
+    )
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -76,37 +92,38 @@ if __name__ == "__main__":
     log.logInit(
       _config
     )
+    helper = DatabaseHelpClass(
+      log.logging,
+      _config
+    )
+    db : callable = DatabasesClass(
+      log.logging, _config
+    )
     if args.count:
-        db = DatabasesJsonClass(
-          log.logging, _config)
         if args.path == '':
             print(str(db.countAll()))
         else :
             print(str(db.count(args.path)))
     if args.list_paths :
-        pathes = pathes.PathesClass(
-          log.logging, _config)
+        pathes : callable = pathesInit(_config)
         pathes.check()
         list_path = pathes.all()
         for i in list_path:
             print(
               str(list_path[i])+
               " - "+
-             reversPath(str(i))
+             helper.pathFixReverse(str(i))
             )
     if args.list_columns :
-        db = DatabasesJsonClass(
-          log.logging, _config)
         if args.path != '':
-            columns = db.columns(args.path)
-            print(
-              json.dumps(columns)
+            columns = db.columns(
+                args.path
             )
+            print(json.dumps(columns))
     if args.show_column :
-        db = DatabasesJsonClass(
-          log.logging, _config)
         if args.path != '' and args.column != '':
-            columns = db.columnShow(args.path, args.column)
-            print(
-              json.dumps(columns)
+            columns = db.columnShow(
+              args.path,
+              args.column
             )
+            print(json.dumps(columns))
