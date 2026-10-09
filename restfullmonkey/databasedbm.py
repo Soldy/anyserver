@@ -64,7 +64,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         return os.path.join(
           self._config['dbm_dir'],
-          (self._helper.pathFix(path_)+'.dbm')
+          (path_+'.dbm')
         )
     def _dbOpenRead(self, path_:str)->dbm.gnu:
         """

@@ -170,11 +170,11 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :return: int : result code 0 ok
         """
         path = self._patheses.get(
-          self._helper.pathFix(path_)
+          path_
         )
         _id = self._indexes.add(
           self._patheses.get(
-            self._helper.pathFix(path_)
+            path_
           )
         )
         self._set(path, _id, data_)
@@ -197,7 +197,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :return: int : result code 0 ok
         """
         path = self._patheses.get(
-          self._helper.pathFix(path_)
+          path_
         )
         if 'id' not in data_:
             return 1
@@ -292,7 +292,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :return: dict[str,dict[str, int|list[str]]] :
         """
         path = self._patheses.get(
-          self._helper.pathFix(path_)
+          path_
         )
         out = {}
         if path not in self._db:
@@ -323,9 +323,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :param: str :  column name
         :return: dict[str, any] :
         """
-        path = self._patheses.get(
-          self._helper.pathFix(path_)
-        )
+        path = self._patheses.get(path_)
         out = {}
         if path not in self._db:
             return out
@@ -340,9 +338,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :param: str :  path name 
         :return: int : count records in path
         """
-        path = self._patheses.get(
-          self._helper.pathFix(path_)
-        )
+        path = self._patheses.get(path_)
         if path in self._db:
             return len(self._db[path].keys())
         return 0
@@ -368,9 +364,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         :param: str
         :return: bool
         """
-        path = self._patheses.get(
-          self._helper.pathFix(path_)
-        )
+        path = self._patheses.get(path_)
         if path not in self._db:
             return False
         file_name = output_file_+'.csv'
