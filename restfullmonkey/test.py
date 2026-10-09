@@ -312,7 +312,9 @@ def test_databaseHelperPathFix():
       configStart({})
     )
     assert(helper.pathFix('/') == '_')
+    assert(helper.pathFixReverse(helper.pathFix('/_')) == '/_')
     assert(helper.pathFix('/test') == '_test')
+    assert(helper.pathFixReverse(helper.pathFix('/test_test')) == '/test_test')
 
 def test_databaseHelperDataHandler():
     helper = DatabaseHelpClass(

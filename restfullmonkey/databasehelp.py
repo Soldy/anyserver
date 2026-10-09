@@ -19,6 +19,18 @@ class DatabaseHelpClass:
         self._config  = config_
         self._checked = False
 
+    def pathFixReverse(self, path_:str)->str:
+        """
+        path name fix reverse
+
+        :param: str : the record id in str
+        :return: str: full path 
+        """
+        return (
+          path_.replace("_", "/").replace("''", "_")
+        )
+
+
     def pathFix(self, path_:str)->str:
         """
         path name fix
@@ -26,7 +38,9 @@ class DatabaseHelpClass:
         :param: str : the record id in str
         :return: str: full path 
         """
-        return path_.replace("/", "_")
+        return (
+          path_.replace("_", "''").replace("/", "_")
+        )
 
     def b64Encode(self, string_:str)->str:
         """
