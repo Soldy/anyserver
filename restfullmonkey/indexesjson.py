@@ -6,7 +6,7 @@ import json
 from restfullmonkey.indexesabstract import IndexesAbstractClass
 
 
-class IndexesClass(IndexesAbstractClass):
+class IndexesJsonClass(IndexesAbstractClass):
     """
     Index class.
     :param: logging :

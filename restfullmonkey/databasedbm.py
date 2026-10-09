@@ -37,6 +37,14 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         )
         self.check()
 
+    def type(self)->str:
+        """
+        return with the db type
+
+        :return: str
+        """
+        return "dbm"
+
     def _fileName(self, path_: str)->str:
         """
         Dbm path file name

@@ -9,8 +9,8 @@ import logging
 
 from copy import deepcopy
 
-from restfullmonkey.pathesjson import PathesClass
-from restfullmonkey.indexesjson import IndexesClass
+from restfullmonkey.pathesjson import PathesJsonClass
+from restfullmonkey.indexesjson import IndexesJsonClass
 from restfullmonkey.databaseabstract import DatabasesAbstractClass
 
 
@@ -28,11 +28,11 @@ class DatabasesJsonClass(DatabasesAbstractClass):
     ):
         super().__init__(logging_, config_)
         self._db = {}
-        self._indexes = IndexesClass(
+        self._indexes = IndexesJsonClass(
           self._log,
           self._config
         )
-        self._patheses = PathesClass(
+        self._patheses = PathesJsonClass(
           self._log,
           self._config
         )

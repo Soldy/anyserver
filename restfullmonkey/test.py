@@ -11,9 +11,9 @@ from threading import Thread
 import multiprocessing
 from restfullmonkey.log import logInit
 from restfullmonkey.conf import test as configTest
-from restfullmonkey.pathesjson import PathesClass
+from restfullmonkey.pathesjson import PathesJsonClass
 from restfullmonkey.pathesdbm import PathesDbmClass
-from restfullmonkey.indexesjson import IndexesClass
+from restfullmonkey.indexesjson import IndexesJsonClass
 from restfullmonkey.indexesdbm import IndexesDbmClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.database import DatabasesClass
@@ -246,20 +246,20 @@ def test_configAgain():
 
 def test_pathNoSave():
     pathes = simplePathTest(
-      PathesClass,
+      PathesJsonClass,
       configStart({})
     )
 
 def test_pathSave():
     pathes = simplePathTest(
-      PathesClass,
+      PathesJsonClass,
       configStart({'save' : True})
     )
 
 
 def test_pathSaveAndLoad():
     pathes = helperDefination(
-      PathesClass,
+      PathesJsonClass,
       configStart({'load':True,'save' : True})
     )
     assert(pathes.get('test3') == '5')
@@ -279,19 +279,19 @@ def test_pathDbm():
 
 def test_indexNoSave():
     indexes = simpleIndexTest(
-      IndexesClass,
+      IndexesJsonClass,
       configStart({})
     )
 
 def test_indexSave():
     indexes = simpleIndexTest(
-      IndexesClass,
+      IndexesJsonClass,
       configStart({'save' : True})
     )
 
 def test_indexSaveAndLoad():
     indexes = helperDefination(
-      IndexesClass,
+      IndexesJsonClass,
       configStart({'load':True,'save' : True})
     )
     assert(indexes.all('_') == ['1', '2'])

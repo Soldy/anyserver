@@ -5,7 +5,7 @@ import os
 import json
 from restfullmonkey.pathesabstract import PathesAbstractClass
 
-class PathesClass(PathesAbstractClass):
+class PathesJsonClass(PathesAbstractClass):
     """
     Multipath manager for json store
 
