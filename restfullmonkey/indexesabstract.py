@@ -48,7 +48,7 @@ class IndexesAbstractClass:
         :param: str : path_
         :return: dict[str,int|list[str]]
         """
-        if path_ in self._index:
+        if path_ not in self._index:
             return {
               'serial' : 0,
               'index'  : []
@@ -89,8 +89,6 @@ class IndexesAbstractClass:
         """
         out : dict[str, [dict[str, int|str|list[int|str]]]] = {}
         for i in self._serials:
-            out[str(i)] = {
-              'serial' : int(self._serials[i]),
-              'index'  : deepcopy(self._index[i])
-            }
+            path = str(i)
+            out[path] = self.get(path)
         return out
