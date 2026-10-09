@@ -124,6 +124,24 @@ class DatabasesClass:
           self.pathFix(path_)
         )
 
+    def columnShow(
+      self,
+      path_ : str,
+      column_ : str
+    )->dict[str,dict[str, int|list[str]]]:
+        """
+         Sho a column.
+
+        :param: str :  path name 
+        :param: str :  column name 
+        :return: dict[str,dict[str, int|list[str]]] :
+        """
+        return self._database.columnShow(
+          self.pathFix(path_),
+          column_
+        )
+
+
     def count(
       self,
       path_ : str
