@@ -83,7 +83,9 @@ class DatabasesAbstractClass:
         """
         if isinstance(column_, str):
             return len(column_)
-        return column_
+        if isinstance(column_, int):
+            return column_
+        return len(str(column_))
 
     def columDetails(
       self,
