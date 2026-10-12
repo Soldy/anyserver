@@ -1,13 +1,8 @@
 """
 cli admin args
 """
-import json
-from restfullmonkey import log, conf
+from restfullmonkey.command import  CommandClass
 from restfullmonkey.arg import parser
-from restfullmonkey.database import DatabasesClass
-from restfullmonkey.pathesjson import PathesJsonClass
-from restfullmonkey.pathesdbm import PathesDbmClass
-from restfullmonkey.databasehelp import DatabaseHelpClass
 
 parser.add_argument(
   "--store_type",
@@ -69,61 +64,25 @@ parser.add_argument("-csv", "--tocsv",
   default=""
 )
 
-def pathesInit(conf_)->callable:
-    """
-    pathes init
-
-    :return: callable
-    """
-    if conf_['store_type'] == 'json' :
-        return PathesJsonClass(
-          log.logging, conf_
-        )
-    return PathesDbmClass(
-      log.logging, conf_
-    )
 
 if __name__ == "__main__":
-    args = parser.parse_args()
-    _config = conf.confInit(
-      args,
-      log.logging,
-    )
-    log.logInit(
-      _config
-    )
-    helper = DatabaseHelpClass(
-      log.logging,
-      _config
-    )
-    db : callable = DatabasesClass(
-      log.logging, _config
-    )
+    command = CommandClass()
+    args = command.args()
     if args.count:
         if args.path == '':
-            print(str(db.countAll()))
-        else :
-            print(str(db.count(args.path)))
-    if args.list_paths :
-        pathes : callable = pathesInit(_config)
-        pathes.check()
-        list_path = pathes.all()
-        for i in list_path:
-            print(
-              str(list_path[i])+
-              " - "+
-             helper.pathFixReverse(str(i))
-            )
-    if args.list_columns :
+            command.countAll()
+        else:
+            command.count(args.path)
+    elif args.list_paths :
+        command.pathList()
+    elif args.list_columns :
         if args.path != '':
-            columns = db.columns(
-                args.path
+            command.columnsList(
+              args.path
             )
-            print(json.dumps(columns))
-    if args.show_column :
+    elif args.show_column :
         if args.path != '' and args.column != '':
-            columns = db.columnShow(
+            command.columnShow(
               args.path,
               args.column
             )
-            print(json.dumps(columns))

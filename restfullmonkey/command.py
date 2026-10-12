@@ -1,8 +1,10 @@
 """
 command class
 """
+from argparse import Namespace
 import json
-from restfullmonkey import log
+from restfullmonkey import log, conf
+from restfullmonkey.arg import parser
 from restfullmonkey.database import DatabasesClass
 from restfullmonkey.pathesjson import PathesJsonClass
 from restfullmonkey.pathesdbm import PathesDbmClass
@@ -13,20 +15,28 @@ class CommandClass:
     """
     cli and menu command class
 
-    :param: dict[str, str]
     """
-    def __init__(
-      self,
-      config_ : dict[str, str|int]
-    ):
-        self._config = config_
+    def __init__(self):
+        self._args = parser.parse_args()
+        self._config = conf.confInit(
+          self._args,
+          log.logging,
+        )
         self._helper = DatabaseHelpClass(
           log.logging,
-          config_
+          self._config
         )
         self._db : callable = DatabasesClass(
-          log.logging, config_
+          log.logging, self._config
         )
+
+    def args(self)->Namespace:
+        """
+        pathes init
+
+        :return: Namespace
+        """
+        return self._args
 
     def pathesInit(self, conf_)->callable:
         """
