@@ -29,6 +29,7 @@ class CommandClass:
         self._db : callable = DatabasesClass(
           log.logging, self._config
         )
+        self._print : callable = print
 
     def args(self)->Namespace:
         """
@@ -37,6 +38,15 @@ class CommandClass:
         :return: Namespace
         """
         return self._args
+
+    def setPrint(self, print_ : callable)->None:
+        """
+        pathes init
+
+        :param: callable
+        :return: None
+        """
+        self._print = print_
 
     def pathesInit(self, conf_)->callable:
         """
@@ -59,7 +69,7 @@ class CommandClass:
         :param: any
         :return: None
         """
-        print(output_)
+        self._print(output_)
 
     def countAll(self):
         """
