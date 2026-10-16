@@ -42,7 +42,10 @@ class OutFormat:
         """
 #pylint: disable=W0719
         if format_ not in ['json', 'text']:
-            raise Exception('Wrong api output format')
+            raise Exception(
+              'Wrong api output format: \n'+
+              str(traceback.format_exc())
+            )
         self._format : str = str(format_)
 #pylint: enable=W0719
 
