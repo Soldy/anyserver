@@ -3,13 +3,7 @@ cli admin args
 """
 from restfullmonkey.command import  CommandClass
 from restfullmonkey.arg import parser
-
-parser.add_argument(
-  "--store_type",
-  dest="store_type",
-  choices=["json", "dbm"],
-  default="json"
-)
+from restfullmonkey.outformat import OutFormat
 
 parser.add_argument('-r', '--report',
   dest='report',
@@ -68,21 +62,32 @@ parser.add_argument("-csv", "--tocsv",
 if __name__ == "__main__":
     command = CommandClass()
     args = command.args()
+    outFormat = OutFormat(args.text_format)
     if args.count:
         if args.path == '':
-            command.countAll()
+            outFormat.print(
+              command.countAll()
+            )
         else:
-            command.count(args.path)
+            outFormat.print(
+              command.count(args.path)
+            )
     elif args.list_paths :
-        command.pathList()
+        outFormat.print(
+          command.pathList()
+        )
     elif args.list_columns :
         if args.path != '':
-            command.columnsList(
-              args.path
+            outFormat.print(
+              command.columnsList(
+                args.path
+              )
             )
     elif args.show_column :
         if args.path != '' and args.column != '':
-            command.columnShow(
-              args.path,
-              args.column
+            outFormat.print(
+              command.columnShow(
+                args.path,
+                args.column
+              )
             )

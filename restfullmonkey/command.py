@@ -2,7 +2,6 @@
 command class
 """
 from argparse import Namespace
-import json
 from restfullmonkey import log, conf
 from restfullmonkey.arg import parser
 from restfullmonkey.database import DatabasesClass
@@ -29,7 +28,7 @@ class CommandClass:
         self._db : callable = DatabasesClass(
           log.logging, self._config
         )
-        self._print : callable = print
+        self._scr : any = None
 
     def args(self)->Namespace:
         """
@@ -38,15 +37,6 @@ class CommandClass:
         :return: Namespace
         """
         return self._args
-
-    def setPrint(self, print_ : callable)->None:
-        """
-        pathes init
-
-        :param: callable
-        :return: None
-        """
-        self._print = print_
 
     def pathesInit(self, conf_)->callable:
         """
@@ -62,33 +52,24 @@ class CommandClass:
           log.logging, conf_
         )
 
-    def print(self, output_ : any):
-        """
-        simple print layer
-
-        :param: any
-        :return: None
-        """
-        self._print(output_)
-
-    def countAll(self):
+    def countAll(self)->None:
         """
         count all path
 
         :return: None
         """
-        self.print(str(self._db.countAll()))
+        return str(self._db.countAll())
 
-    def count(self, path_ : str):
+    def count(self, path_ : str)->None:
         """
         count a path
 
         :param: str
         :return: None
         """
-        self.print(str(self._db.count(path_)))
+        return str(self._db.count(path_))
 
-    def columnsList(self, path_ :str):
+    def columnsList(self, path_ :str)->None:
         """
         list of columns 
 
@@ -98,9 +79,9 @@ class CommandClass:
         columns = self._db.columns(
           path_
         )
-        print(json.dumps(columns))
+        return columns
 
-    def columnShow(self, path_ : str, column_ : str):
+    def columnShow(self, path_ : str, column_ : str)->None:
         """
         show a column 
 
@@ -112,9 +93,9 @@ class CommandClass:
           path_,
           column_
         )
-        print(json.dumps(columns))
+        return columns
 
-    def pathList(self):
+    def pathList(self)->None:
         """
         show a column 
 
@@ -126,7 +107,7 @@ class CommandClass:
         out = []
         for i in list_path:
             out.append({
-              'id' : self._helper.pathFixReverse(str(i)),
-              'path' : list_path[i]
+              'id' : list_path[i],
+              'path' : self._helper.pathFixReverse(str(i))
             })
-        self.print(out)
+        return out

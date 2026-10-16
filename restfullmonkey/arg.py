@@ -23,12 +23,28 @@ def argServer():
       metavar="HOST",
       default="localhost"
     )
-    parser.add_argument(
-      "--store_type",
-      dest="store_type",
-      choices=["json", "dbm", "loop"],
-      default="json"
-    )
+
+parser.add_argument(
+  "--store_type",
+  dest="store_type",
+  choices=["json", "dbm", "loop"],
+  default="json"
+)
+
+parser.add_argument(
+  "--text_format",
+  dest="text_format",
+  help="terminal output format json or text",
+  choices=["json", "text"],
+  default="text"
+)
+
+parser.add_argument("-q",
+  "--oneshot",
+  dest="oneshot",
+  help="quit after the first action",
+  action='store_true'
+)
 
 parser.add_argument("--db_dir",
   type=str,
