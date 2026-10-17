@@ -27,6 +27,17 @@ parser.add_argument("-lc", "--list-columns",
   action='store_true'
 )
 
+parser.add_argument("-ifd", "--index-from-db",
+  dest="index_database",
+  help="index form database",
+  action='store_true'
+)
+parser.add_argument("-idx", "--index",
+  dest="index_full",
+  help="index from index file",
+  action='store_true'
+)
+
 parser.add_argument("-sc", "--show-colum",
   dest="show_column",
   help="show column in a path",
@@ -75,6 +86,18 @@ if __name__ == "__main__":
     elif args.list_paths :
         outFormat.print(
           command.pathList()
+        )
+    elif args.index_database:
+        outFormat.print(
+          command.indexListFromDB(
+            args.path
+          )
+        )
+    elif args.index_full:
+        outFormat.print(
+          command.indexList(
+            args.path
+          )
         )
     elif args.list_columns :
         if args.path != '':
