@@ -168,6 +168,8 @@ def simpleDumyTest(
     }})
     assert(database.post('/',{'dummy':'yummi'}) == {})
     assert(database.count('/') == 2)
+    assert(database.indexAll('/') == database.indexList('/'))
+    assert(database.indexAll('/') == ['1','2'])
 
 def simpleConfigTest(
   config_

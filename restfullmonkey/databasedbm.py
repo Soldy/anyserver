@@ -371,3 +371,23 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         for a in self._patheses.all():
             out = out + self.count(a)
         return out
+
+    def indexList(
+      self,
+      path_: str
+    )->list[str]:
+        """
+        for special cases we need a reverse index scan
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        out = []
+        db : dbm.gnu | None = self._dbOpenRead(path_)
+        if db is not None:
+            key : str = db.firstkey()
+            while key is not None:
+                out.append(str(key.decode('utf-8')))
+                key = db.nextkey(key)
+            db.close()
+        return sorted(out)

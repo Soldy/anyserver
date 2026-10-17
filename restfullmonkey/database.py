@@ -168,6 +168,33 @@ class DatabasesClass:
         """
         return self._database.countAll()
 
+    def indexList(
+      self,
+      path_: str,
+    )->list[str]:
+        """
+        for special cases we need a reverse index scan
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        return self._database.indexList(
+          self.pathFix(path_),
+        )
+
+    def indexAll(
+      self,
+      path_: str,
+    )->list[str]:
+        """
+        for special cases we need a reverse index scan
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        return self._database.indexAll(
+          self.pathFix(path_)
+        )
 
     def migration(
       self,

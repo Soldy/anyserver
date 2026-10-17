@@ -31,8 +31,10 @@ def main(stdscr):
     looping = True
     while looping:
         selected = menuCurses(stdscr, [
-          "Path list",
-          "Column list",
+          "Path List",
+          "Column List",
+          "Index List",
+          "Index List from db",
           "Count all",
           "Exit"
         ])
@@ -40,13 +42,29 @@ def main(stdscr):
             outFormat.print(
               command.pathList()
             )
-        elif selected == 2:
+        elif selected == 4:
             outFormat.print(
               command.countAll()
             )
         elif selected == 1:
             outFormat.print(
               command.columnsList(
+                pathListMenu(
+                  command.pathList(),
+                )
+              )
+            )
+        elif selected == 2:
+            outFormat.print(
+              command.indexList(
+                pathListMenu(
+                  command.pathList(),
+                )
+              )
+            )
+        elif selected == 3:
+            outFormat.print(
+              command.indexListFromDB(
                 pathListMenu(
                   command.pathList(),
                 )

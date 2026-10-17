@@ -7,6 +7,8 @@ from restfullmonkey.arg import parser
 from restfullmonkey.database import DatabasesClass
 from restfullmonkey.pathesjson import PathesJsonClass
 from restfullmonkey.pathesdbm import PathesDbmClass
+from restfullmonkey.indexesjson import IndexesJsonClass
+from restfullmonkey.indexesdbm import IndexesDbmClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 
 
@@ -49,6 +51,20 @@ class CommandClass:
               log.logging, conf_
             )
         return PathesDbmClass(
+          log.logging, conf_
+        )
+
+    def indexesInit(self, conf_)->callable:
+        """
+        indexes init
+
+        :return: callable
+        """
+        if conf_['store_type'] == 'json' :
+            return IndexesJsonClass(
+              log.logging, conf_
+            )
+        return IndexesDbmClass(
           log.logging, conf_
         )
 
@@ -111,3 +127,29 @@ class CommandClass:
               'path' : self._helper.pathFixReverse(str(i))
             })
         return out
+
+
+    def indexListFromDB(
+      self,
+      path_: str
+    )->None:
+        """
+        generate indexlist from db file
+
+        :param: str
+        :return: None
+        """
+
+        return self._db.indexList(path_)
+
+    def indexList(
+      self,
+      path_: str
+    )->None:
+        """
+        get indexlist
+
+        :param: str
+        :return: None
+        """
+        return self._db.indexAll(path_)

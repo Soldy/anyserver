@@ -4,6 +4,8 @@ database abstract
 import logging
 
 from collections.abc import Iterable
+from restfullmonkey.indexesabstract import IndexesAbstractClass
+from restfullmonkey.pathesabstract import PathesAbstractClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 
 class DatabasesAbstractClass:
@@ -19,8 +21,16 @@ class DatabasesAbstractClass:
       config_ : dict[str,str]
     ):
         self._log : logging = logging_
-        self._config  = config_
+        self._config : dict[str, str]  = config_
         self._helper : DatabaseHelpClass = DatabaseHelpClass(
+          self._log,
+          self._config
+        )
+        self._indexes : IndexesAbstractClass = IndexesAbstractClass(
+          self._log,
+          self._config
+        )
+        self._patheses : PathesAbstractClass = PathesAbstractClass(
           self._log,
           self._config
         )
@@ -181,8 +191,25 @@ class DatabasesAbstractClass:
 
         """
         return
+
     def countAll(self)->int:
         """
         :return: int : count all records
         """
         return 0
+
+    def indexAll(
+      self,
+      path_: str
+    )->list[str]:
+        """
+        indexAll transaction
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        return self._indexes.all(
+          self._patheses.get(
+            path_
+          )
+        )

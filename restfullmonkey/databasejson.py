@@ -353,6 +353,24 @@ class DatabasesJsonClass(DatabasesAbstractClass):
             out[a] =  self.count(a)
         return out
 
+    def indexList(
+        self,
+        path_: str
+    )->list[str]:
+        """
+        for special cases we need a reverse index scan
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        out = []
+        path = self._patheses.get(path_)
+        if path not in self._db:
+            return out
+        for i in self._db[path]:
+            out.append(str(i))
+        return sorted(out)
+
     def migrationToCsv(
       self,
       path_ : str,
