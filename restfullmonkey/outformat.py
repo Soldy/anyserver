@@ -2,6 +2,7 @@
 command line output format
 """
 import json
+import traceback
 from restfullmonkey.menucurses import printCurses, tableMake
 
 
