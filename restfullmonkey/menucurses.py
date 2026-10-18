@@ -25,7 +25,11 @@ def tableMake(rows):
             row_checked.append(copy.deepcopy(newrow))
         rows = row_checked
     # Use dictionary keys as column nameso
-    columns = list(rows[0].keys())
+    if isinstance(rows[0], dict):
+        columns = list(rows[0].keys())
+    else:
+        # temp solution works but ugly
+        return "\n".join(str(row)+' ' for row in rows)
 
 
     # Calculate width for each column
@@ -88,7 +92,7 @@ def printCurses(scr_, text_: str)->None:
             looping = False
         elif key == curses.KEY_DOWN:
             if length > (start_pos + height - 2):
-               start_pos = start_pos + 1
+                start_pos = start_pos + 1
         elif key == curses.KEY_UP:
             if start_pos > 0:
                 start_pos = start_pos - 1
