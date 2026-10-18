@@ -64,18 +64,34 @@ def printCurses(scr_, text_: str)->None:
     :param: str:
     :return: None:
     """
-    scr_.clear()
-    lines = str(text_).splitlines()
-# wip code part
-# pylint: disable=C0200
-# pylint: disable=W0612
+    looping : bool = True
+    start_pos : int = 0
+    lines : list[str] = str(text_).splitlines()
+    length : int = len(lines)
+    height : int
+    width : int
     height, width = scr_.getmaxyx()
-    for i in range(len(lines)):
-        scr_.addnstr(i, 0, lines[i], width - 1)
-# pylint: enable=C0200
-# pylint: enable=W0612
-    scr_.refresh()
-    scr_.getch()
+    height = height - 1
+    def printRender():
+        end : int = int(height)
+        scr_.clear()
+        if (start_pos + height - 2) > length:
+            end = length - start_pos
+        for i in range(end):
+            scr_.addnstr(i, 0, lines[i+start_pos], width - 1)
+        scr_.addnstr(height, 10, 'Press space key to continue', width - 1)
+        scr_.refresh()
+    while looping:
+        printRender()
+        key = scr_.getch()
+        if key == ord(" "):
+            looping = False
+        elif key == curses.KEY_DOWN:
+            if length > (start_pos + height - 2):
+               start_pos = start_pos + 1
+        elif key == curses.KEY_UP:
+            if start_pos > 0:
+                start_pos = start_pos - 1
 
 def menuCurses(scr_, items)->int:
     """
