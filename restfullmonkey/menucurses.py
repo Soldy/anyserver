@@ -6,9 +6,14 @@ Simplified curses menu
 import curses
 import copy
 
-def tableMake(rows):
+def tableMake(
+  rows : list[str|dict[str,str|int|float]]|dict[str,dict[str,str|int|float]]
+)->str:
     """
     Convert a list of dictionaries into a formatted text table.
+
+    :param: list[str|dict[str,str|int|float]]|dict[str,dict[str,str|int|float]]
+    :return: str
     """
 
     if not rows:
