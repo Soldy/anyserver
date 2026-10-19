@@ -85,25 +85,32 @@ class CommandClass:
         """
         return str(self._db.count(path_))
 
-    def columnsList(self, path_ :str)->None:
+    def columnsList(
+      self,
+      path_ :str
+    )->list[str]:
         """
         list of columns 
 
         :param: str
-        :return: None
+        :return: list[str]
         """
         columns = self._db.columns(
           path_
         )
         return columns
 
-    def columnShow(self, path_ : str, column_ : str)->None:
+    def columnShow(
+      self,
+      path_ : str,
+      column_ : str
+    )->dict[str, dict[str]]:
         """
         show a column 
 
         :param: str
         :param: str
-        :return: None
+        :return: dict[str, dict[str]]:
         """
         columns = self._db.columnShow(
           path_,
@@ -111,11 +118,11 @@ class CommandClass:
         )
         return columns
 
-    def pathList(self)->None:
+    def pathList(self)->list[dict[str,str]]:
         """
         show a column 
 
-        :return: None
+        :return: list[dict[str,str]]:
         """
         pathes : callable = self.pathesInit(self._config)
         pathes.check()
@@ -132,12 +139,12 @@ class CommandClass:
     def indexListFromDB(
       self,
       path_: str
-    )->None:
+    )->list[str]:
         """
         generate indexlist from db file
 
         :param: str
-        :return: None
+        :return: list[str]
         """
 
         return self._db.indexList(path_)
@@ -145,11 +152,28 @@ class CommandClass:
     def indexList(
       self,
       path_: str
-    )->None:
+    )->list[str]:
         """
         get indexlist
 
         :param: str
-        :return: None
+        :return: list[str]
         """
         return self._db.indexAll(path_)
+
+    def indexCheck(
+      self,
+      path_: str
+    )->str:
+        """
+        get indexlist
+
+        :param: str
+        :return: str
+        """
+        a = self._db.indexList(path_)
+        b = self._db.indexAll(path_)
+        for i in a:
+            if i not in b:
+                return "Index are corrupted"
+        return "Index are in good condition"

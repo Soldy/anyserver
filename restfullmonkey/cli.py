@@ -38,6 +38,12 @@ parser.add_argument("-idx", "--index",
   action='store_true'
 )
 
+parser.add_argument("-ixc", "--index-check",
+  dest="index_check",
+  help="index check",
+  action='store_true'
+)
+
 parser.add_argument("-sc", "--show-colum",
   dest="show_column",
   help="show column in a path",
@@ -99,6 +105,13 @@ if __name__ == "__main__":
             args.path
           )
         )
+    elif args.index_check :
+        if args.path != '':
+            outFormat.print(
+              command.indexCheck(
+                args.path
+              )
+            )
     elif args.list_columns :
         if args.path != '':
             outFormat.print(

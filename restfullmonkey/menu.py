@@ -35,6 +35,7 @@ def main(stdscr):
           "Column List",
           "Index List",
           "Index List from db",
+          "Index Check",
           "Count all",
           "Exit"
         ])
@@ -42,7 +43,7 @@ def main(stdscr):
             outFormat.print(
               command.pathList()
             )
-        elif selected == 4:
+        elif selected == 5:
             outFormat.print(
               command.countAll()
             )
@@ -65,6 +66,14 @@ def main(stdscr):
         elif selected == 3:
             outFormat.print(
               command.indexListFromDB(
+                pathListMenu(
+                  command.pathList(),
+                )
+              )
+            )
+        elif selected == 4:
+            outFormat.print(
+              command.indexCheck(
                 pathListMenu(
                   command.pathList(),
                 )
