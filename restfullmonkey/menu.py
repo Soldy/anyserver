@@ -37,6 +37,7 @@ def main(stdscr):
           "Index List from db",
           "Index Check",
           "Count all",
+          "Database reorganize",
           "Exit"
         ])
         if selected == 0:
@@ -78,6 +79,10 @@ def main(stdscr):
                   command.pathList(),
                 )
               )
+            )
+        elif selected == 6:
+            outFormat.print(
+              command.reorganize()
             )
         else :
             looping = False

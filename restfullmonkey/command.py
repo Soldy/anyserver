@@ -177,3 +177,12 @@ class CommandClass:
             if i not in b:
                 return "Index are corrupted"
         return "Index are in good condition"
+
+    def reorganize(self)->None:
+        """
+        reorganize databases
+
+        :return: str
+        """
+
+        return self._db.reorganize()

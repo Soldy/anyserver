@@ -76,3 +76,10 @@ class PathesAbstractClass:
         :return: dict[str, str]
         """
         return deepcopy(self._path)
+    def reorganize(self)->None:
+        """
+        database reorganize abstract
+
+        :return: None
+        """
+        return 'Database not require reorganization'

@@ -92,3 +92,12 @@ class IndexesAbstractClass:
             path = str(i)
             out[path] = self.get(path)
         return out
+
+    def reorganize(self)->None:
+        """
+        database reorganize abstract
+
+        :return: str
+        """
+
+        return 'Database not require reorganization'

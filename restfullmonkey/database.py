@@ -213,3 +213,11 @@ class DatabasesClass:
         if type_ == 'csv':
             return self._database.migrationToCsv(path,file_name_)
         return False
+
+    def reorganize(self)->None:
+        """
+        database reorganize layer
+
+        :return: str
+        """
+        return self._database.reorganize()

@@ -50,3 +50,17 @@ class PathesDbmClass(PathesAbstractClass):
                 self._path[k] = db[key].decode('utf-8')
                 self._serial = (int(self._path[k]), self._serial)
                 key = db.nextkey(key)
+
+    def reorganize(self)->None:
+        """
+        database gdm reorganize
+
+        :return: str
+        """
+
+        with dbm.gnu.open(
+          self._config['dbm_path'],
+          'cs'
+        ) as db:
+            db.reorganize()
+        return 'Database reorganized'

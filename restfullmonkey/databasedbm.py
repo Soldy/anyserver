@@ -391,3 +391,23 @@ class DatabasesDbmClass(DatabasesAbstractClass):
                 key = db.nextkey(key)
             db.close()
         return sorted(out)
+
+    def reorganize(self)->None:
+        """
+        database gdm reorganize
+
+        :return: str
+        """
+
+        for path in self._patheses.all():
+            db : dbm.gnu = dbm.gnu.open(
+              self._fileName(
+                path
+              ),
+              'cs'
+            )
+            db.reorganize()
+            db.close()
+        self._indexes.reorganize()
+        self._patheses.reorganize()
+        return 'Database reorganized'

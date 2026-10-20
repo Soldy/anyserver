@@ -67,6 +67,12 @@ parser.add_argument("-tc", "--column",
   default=""
 )
 
+parser.add_argument("-tc", "--reorganize",
+  dest="reorganize",
+  help="database reorganize",
+  action='store_true'
+)
+
 parser.add_argument("-csv", "--tocsv",
   type=str,
   dest="csv",
@@ -127,3 +133,7 @@ if __name__ == "__main__":
                 args.column
               )
             )
+    elif args.reorganize :
+        outFormat.print(
+          command.reorganize()
+        )

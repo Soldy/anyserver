@@ -213,3 +213,11 @@ class DatabasesAbstractClass:
             path_
           )
         )
+
+    def reorganize(self)->None:
+        """
+        database reorganize abstract
+
+        :return: str
+        """
+        return 'Database not require reorganization'

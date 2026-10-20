@@ -77,3 +77,13 @@ class IndexesDbmClass(IndexesAbstractClass):
             out[key.decode('utf-8')] = self.get(key)
             key = self._db.nextkey(key)
         return out
+
+    def reorganize(self)->None:
+        """
+        database gdm reorganize
+
+        :return: str
+        """
+
+        self._db.reorganize()
+        return 'Database reorganized'
