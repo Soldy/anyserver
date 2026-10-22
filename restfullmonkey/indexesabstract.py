@@ -2,16 +2,20 @@
 dbm indexes abstract
 """
 from copy import deepcopy
+from restfullmonkey.unifiedabstract import UnifiedAbstact
 
-class IndexesAbstractClass:
+class IndexesAbstractClass (UnifiedAbstact):
     """
     Index class.
     :param: logging :
     :param: dict[str,str] :
     """
-    def __init__(self, logging_, config_: str):
-        self._log    = logging_
-        self._config = config_
+    def __init__(
+      self,
+      logging_,
+      config_ : dict[str,str]
+    ):
+        super().__init__(logging_, config_)
         self._serials    = {}
         self._index  = {}
 
@@ -92,12 +96,3 @@ class IndexesAbstractClass:
             path = str(i)
             out[path] = self.get(path)
         return out
-
-    def reorganize(self)->None:
-        """
-        database reorganize abstract
-
-        :return: str
-        """
-
-        return 'Database not require reorganization'

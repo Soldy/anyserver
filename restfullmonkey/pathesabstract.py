@@ -2,8 +2,9 @@
 pathes apbstract
 """
 from copy import deepcopy
+from restfullmonkey.unifiedabstract import UnifiedAbstact
 
-class PathesAbstractClass:
+class PathesAbstractClass (UnifiedAbstact):
     """
     Multipath manager class
 
@@ -13,10 +14,9 @@ class PathesAbstractClass:
     def __init__(
       self,
       logging_,
-      config_
+      config_ : dict[str,str]
     ):
-        self._log    = logging_
-        self._config = config_
+        super().__init__(logging_, config_)
         self._serial = 0
         self._path = {}
         self._addToCahe('_')
@@ -76,10 +76,3 @@ class PathesAbstractClass:
         :return: dict[str, str]
         """
         return deepcopy(self._path)
-    def reorganize(self)->None:
-        """
-        database reorganize abstract
-
-        :return: None
-        """
-        return 'Database not require reorganization'
