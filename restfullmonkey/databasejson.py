@@ -27,6 +27,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
       config_ : dict[str,str]
     ):
         super().__init__(logging_, config_)
+        self._extension = 'json'
         self._db = {}
         self._indexes = IndexesJsonClass(
           self._log,
@@ -91,7 +92,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         """
         return os.path.join(
           self._config["db_dir"],
-          (path_+'_'+str(id_)+'.json')
+          (path_+'_'+str(id_)+'.'+self._extension)
         )
 
     def load(self, path_: str, id_: str):
@@ -402,3 +403,15 @@ class DatabasesJsonClass(DatabasesAbstractClass):
                 )
             return True
         return False
+
+    def pathDetect(self)->list[str]:
+        """
+        database path detect
+
+        incorrect implementation wip code
+
+        :return: list[str]
+        """
+        if self._config['save'] is False:
+            return []
+        return self.databaseFileList(self._config['db_dir'])

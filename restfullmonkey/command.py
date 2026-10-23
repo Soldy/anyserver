@@ -178,7 +178,7 @@ class CommandClass:
                 return "Index are corrupted"
         return "Index are in good condition"
 
-    def reorganize(self)->None:
+    def reorganize(self)->str:
         """
         reorganize databases
 
@@ -186,3 +186,13 @@ class CommandClass:
         """
 
         return self._db.reorganize()
+
+    def pathDetect(self)->list[str]:
+        """
+        databases path detect
+        wip
+
+        :return: list[str]
+        """
+
+        return self._db.pathDetect()

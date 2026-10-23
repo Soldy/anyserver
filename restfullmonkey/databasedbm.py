@@ -27,6 +27,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
       config_ : dict[str,str]
     ):
         super().__init__(logging_, config_)
+        self._extension = 'dbm'
         self._indexes : IndexesDbmClass = IndexesDbmClass(
           self._log,
           self._config
@@ -64,7 +65,7 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         """
         return os.path.join(
           self._config['dbm_dir'],
-          (path_+'.dbm')
+          (path_+'.'+self._extension)
         )
     def _dbOpenRead(self, path_:str)->dbm.gnu:
         """
@@ -411,3 +412,12 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         self._indexes.reorganize()
         self._patheses.reorganize()
         return 'Database reorganized'
+
+    def pathDetect(self)->list[str]:
+        """
+        database path detect with debug porpuse
+
+        :return: list[str]
+        """
+
+        return self.databaseFileList(self._config['dbm_dir'])

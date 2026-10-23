@@ -1,6 +1,7 @@
 """"
 unified database abstract
 """
+from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,7 +18,9 @@ class UnifiedAbstact:
       config_ : dict[str,str]
     ):
         self._log    = logging_
-        self._config = config_
+        self._config : dict[str,str] = deepcopy(config_)
+        self._extension : str = 'temp'
+        self._single_file : bool = True
 
     def reorganize(self)->None:
         """
@@ -45,3 +48,19 @@ class UnifiedAbstact:
         )
         source.rename(destination)
         return True
+
+    def databaseFileList(self, path_ : str)->list[str]:
+        """
+        database file list detect
+
+        :param: str
+        :return: list[str]
+        """
+        if self._single_file:
+            return []
+        out : list[str] = []
+        folder : Path = Path(path_)
+        for i in folder.iterdir():
+            if i.is_file() and i.suffix == ('.'+self._extension):
+                out.append(str(i.stem))
+        return out

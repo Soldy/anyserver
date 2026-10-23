@@ -21,6 +21,7 @@ class DatabasesAbstractClass (UnifiedAbstact):
       config_ : dict[str,str]
     ):
         super().__init__(logging_, config_)
+        self._single_file = False
         self._helper : DatabaseHelpClass = DatabaseHelpClass(
           self._log,
           self._config

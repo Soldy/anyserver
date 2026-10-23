@@ -214,10 +214,18 @@ class DatabasesClass:
             return self._database.migrationToCsv(path,file_name_)
         return False
 
-    def reorganize(self)->None:
+    def reorganize(self)->str:
         """
         database reorganize layer
 
         :return: str
         """
         return self._database.reorganize()
+
+    def pathDetect(self)->list[str]:
+        """
+        database reorganize layer
+
+        :return: list[str]
+        """
+        return self._database.pathDetect()
