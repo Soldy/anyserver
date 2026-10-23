@@ -2,13 +2,13 @@
 database abstract
 """
 import logging
-
 from collections.abc import Iterable
+from restfullmonkey.unifiedabstract import UnifiedAbstact
 from restfullmonkey.indexesabstract import IndexesAbstractClass
 from restfullmonkey.pathesabstract import PathesAbstractClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 
-class DatabasesAbstractClass:
+class DatabasesAbstractClass (UnifiedAbstact):
     """
     database dbm class
 
@@ -20,8 +20,7 @@ class DatabasesAbstractClass:
       logging_ : logging,
       config_ : dict[str,str]
     ):
-        self._log : logging = logging_
-        self._config : dict[str, str]  = config_
+        super().__init__(logging_, config_)
         self._helper : DatabaseHelpClass = DatabaseHelpClass(
           self._log,
           self._config
@@ -213,11 +212,3 @@ class DatabasesAbstractClass:
             path_
           )
         )
-
-    def reorganize(self)->None:
-        """
-        database reorganize abstract
-
-        :return: str
-        """
-        return 'Database not require reorganization'

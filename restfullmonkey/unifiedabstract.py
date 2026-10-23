@@ -1,7 +1,6 @@
 """"
 unified database abstract
 """
-
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,7 +25,6 @@ class UnifiedAbstact:
 
         :return: str
         """
-
         return 'Database not require reorganization'
 
     def backup(self, original_ :str)->bool:
@@ -36,7 +34,6 @@ class UnifiedAbstact:
         :param: str
         :return: bool
         """
-
         source : Path = Path(original_)
         if not source.is_file():
             return False
