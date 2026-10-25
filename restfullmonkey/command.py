@@ -195,4 +195,4 @@ class CommandClass:
         :return: list[str]
         """
 
-        return self._db.pathDetect()
+        return [self._helper.pathFixReverse(i) for i  in self._db.pathDetect()]
