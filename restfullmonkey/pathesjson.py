@@ -12,6 +12,15 @@ class PathesJsonClass(PathesAbstractClass):
     :param: logging :
     :param: dict[str,str] :
     """
+    def __init__(
+      self,
+      logging_,
+      config_ : dict[str,str]
+    ):
+        super().__init__(logging_, config_)
+        self._store = self._config['path']
+        self._extension = 'json'
+
     def _load(self):
         """
         Path cache load 

@@ -12,6 +12,15 @@ class IndexesJsonClass(IndexesAbstractClass):
     :param: logging :
     :param: dict[str,str] :
     """
+    def __init__(
+      self,
+      logging_,
+      config_ : dict[str,str]
+    ):
+        super().__init__(logging_, config_)
+        self._store = self._config['index']
+        self._extension = 'json'
+
     def _loadIndex(self):
         """
         Index cache load
@@ -74,3 +83,18 @@ class IndexesJsonClass(IndexesAbstractClass):
         if before != self._serials[path_]:
             self._saveIndex()
         return str(self._serials[path_])
+    def fixPath(
+      self,
+      path_ : str,
+      indexes_ : list[str]
+    )->bool:
+        """
+        database backup
+
+        :param: str
+        :param: list[str]
+        :return: bool
+        """
+        self._index[path_] = []
+        for i in indexes_:
+            self._index[path_].append(deepcopy(i))

@@ -27,6 +27,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
       config_ : dict[str,str]
     ):
         super().__init__(logging_, config_)
+        self._store = self._config["db_dir"],
         self._extension = 'json'
         self._db = {}
         self._indexes = IndexesJsonClass(
@@ -174,9 +175,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
           path_
         )
         _id = self._indexes.add(
-          self._patheses.get(
-            path_
-          )
+          path
         )
         self._set(path, _id, data_)
         return 0
@@ -354,24 +353,6 @@ class DatabasesJsonClass(DatabasesAbstractClass):
             out[a] =  self.count(a)
         return out
 
-    def indexList(
-        self,
-        path_: str
-    )->list[str]:
-        """
-        for special cases we need a reverse index scan
-
-        :param: str :  path name
-        :return: list[str] :
-        """
-        out = []
-        path = self._patheses.get(path_)
-        if path not in self._db:
-            return out
-        for i in self._db[path]:
-            out.append(str(i))
-        return sorted(out)
-
     def migrationToCsv(
       self,
       path_ : str,
@@ -404,6 +385,24 @@ class DatabasesJsonClass(DatabasesAbstractClass):
             return True
         return False
 
+    def indexList(
+        self,
+        path_: str
+    )->list[str]:
+        """
+        for special cases we need a reverse index scan
+
+        :param: str :  path name
+        :return: list[str] :
+        """
+        out = []
+        path = self._patheses.get(path_)
+        if path not in self._db:
+            return out
+        for i in self._db[path]:
+            out.append(str(i))
+        return sorted(out)
+
     def pathDetect(self)->list[str]:
         """
         database path detect
@@ -415,3 +414,26 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         if self._config['save'] is False:
             return []
         return self.databaseFileList(self._config['db_dir'])
+
+    def backupMove(self)->bool:
+        """
+        database backup
+
+        :return: bool
+        """
+        self._patheses.backupMove()
+        self._indexes.backupMove()
+        self._backupMove()
+
+    def fixPath(self, path_ : str)->bool:
+        """
+        database backup
+
+        :param: str
+        :return: bool
+        """
+        self._indexes.fixPath(
+          self._patheses.get(path_),
+          self.pathDetect(path_)
+        )
+

@@ -21,6 +21,7 @@ class UnifiedAbstact:
         self._config : dict[str,str] = deepcopy(config_)
         self._extension : str = 'temp'
         self._single_file : bool = True
+        self._store : str = ''
 
     def reorganize(self)->None:
         """
@@ -30,15 +31,19 @@ class UnifiedAbstact:
         """
         return 'Database not require reorganization'
 
-    def backup(self, original_ :str)->bool:
+    def _backupMove(self, original_ : str = '')->bool:
         """
         database reorganize abstract
 
         :param: str
         :return: bool
         """
+        if original_ == '':
+            original_ = self._store
+        if original_ == '':
+            return False
         source : Path = Path(original_)
-        if not source.is_file():
+        if not source.is_file() or not source.is_dir():
             return False
         destination = source.with_name(
           source.stem+
@@ -47,6 +52,9 @@ class UnifiedAbstact:
           source.suffix
         )
         source.rename(destination)
+        if source.is_dir():
+            newDir = Path(original_)
+            newDir.mkdir()
         return True
 
     def databaseFileList(self, path_ : str)->list[str]:
