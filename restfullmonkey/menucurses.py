@@ -25,8 +25,11 @@ def tableMake(
         for i in rows:
             newrow = {}
             newrow['name'] = str(i)
-            for a in rows[i]:
-                newrow[a] = str(rows[i][a])
+            if isinstance(rows[i], str) or isinstance(rows[i], int):
+                newrow['value'] = str(rows[i])
+            else :
+                for a in rows[i]:
+                    newrow[a] = str(rows[i][a])
             row_checked.append(copy.deepcopy(newrow))
         rows = row_checked
     # Use dictionary keys as column nameso
