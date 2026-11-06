@@ -119,11 +119,17 @@ def menuCurses(scr_, items)->int:
     """
     curses.curs_set(0)  # Hide cursor
     selected = 0
+    height : int
+    width : int
+    height, width = scr_.getmaxyx()
+    height = height - 1
 
     while True:
         scr_.clear()
 
         for index, item in enumerate(items):
+            if index > height:
+               break
             if index == selected:
                 scr_.addstr(
                     index,
