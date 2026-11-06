@@ -11,6 +11,9 @@ class PathesDbmClass(PathesAbstractClass):
     :param: logging :
     :param: dict[str,str] :
     """
+    def __init__(self, logging_, config_: str):
+        super().__init__(logging_, config_)
+        self.check()
     def check(self)->bool:
         """
         Path dbm check
@@ -26,13 +29,18 @@ class PathesDbmClass(PathesAbstractClass):
         :param: str : path_
         :return: str
         """
-        path = super().get(path_)
+        if path_ in self._path:
+            return str(self._path[path_])
         with dbm.gnu.open(
           self._config['dbm_path'],
           'cs'
         ) as db:
-            db[path_] = str(path)
-        return path
+            db[path_] = str(self._serial)
+            self._path[path_] = str(
+              self._serial
+            )
+            self._serial += 1
+        return str(self._path[path_])
 
     def _load(self)->None:
         """
@@ -40,6 +48,7 @@ class PathesDbmClass(PathesAbstractClass):
 
         :return: None
         """
+        serials = []
         with dbm.gnu.open(
           self._config['dbm_path'],
           'cs'
@@ -48,8 +57,16 @@ class PathesDbmClass(PathesAbstractClass):
             while key is not None:
                 k = key.decode('utf-8')
                 self._path[k] = db[key].decode('utf-8')
-                self._serial = (int(self._path[k]), self._serial)
+                serials.append(
+                  int(
+                    db[key].decode('utf-8')
+                  )
+                )
                 key = db.nextkey(key)
+            if len(serials) > 0:
+                self._serial = int(
+                  max(serials)
+                )
 
     def reorganize(self)->None:
         """

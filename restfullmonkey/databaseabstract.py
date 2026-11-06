@@ -112,6 +112,8 @@ class DatabasesAbstractClass (UnifiedAbstact):
               row_
             )
             return details_
+        if row_ == {}:
+            return details_
         for p in row_:
             if p not in details_:
                 details_[p] = self.columDetailCreate(

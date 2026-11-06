@@ -32,6 +32,7 @@ def main(stdscr):
     while looping:
         selected = menuCurses(stdscr, [
           "Path List",
+          "Path Detect",
           "Column List",
           "Index List",
           "Index List from db",
@@ -39,17 +40,18 @@ def main(stdscr):
           "Count all",
           "Database reorganize",
           "Database path detect",
+          "Backup Move",
           "Exit"
         ])
         if selected == 0:
             outFormat.print(
               command.pathList()
             )
-        elif selected == 5:
-            outFormat.print(
-              command.countAll()
-            )
         elif selected == 1:
+            outFormat.print(
+              command.pathDetect()
+            )
+        elif selected == 2:
             outFormat.print(
               command.columnsList(
                 pathListMenu(
@@ -57,7 +59,7 @@ def main(stdscr):
                 )
               )
             )
-        elif selected == 2:
+        elif selected == 3:
             outFormat.print(
               command.indexList(
                 pathListMenu(
@@ -65,7 +67,7 @@ def main(stdscr):
                 )
               )
             )
-        elif selected == 3:
+        elif selected == 4:
             outFormat.print(
               command.indexListFromDB(
                 pathListMenu(
@@ -73,7 +75,7 @@ def main(stdscr):
                 )
               )
             )
-        elif selected == 4:
+        elif selected == 5:
             outFormat.print(
               command.indexCheck(
                 pathListMenu(
@@ -83,11 +85,19 @@ def main(stdscr):
             )
         elif selected == 6:
             outFormat.print(
-              command.reorganize()
+              command.countAll()
             )
         elif selected == 7:
             outFormat.print(
-              command.pathDetect()
+              command.reorganize()
+            )
+        elif selected == 8:
+            outFormat.print(
+              command.fixAll()
+            )
+        elif selected == 9:
+            outFormat.print(
+              command.backupMove()
             )
         else :
             looping = False

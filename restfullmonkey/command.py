@@ -196,3 +196,20 @@ class CommandClass:
         """
 
         return [self._helper.pathFixReverse(i) for i  in self._db.pathDetect()]
+
+
+    def backupMove(self)->list[str]:
+        """
+
+        :return: str
+        """
+
+        return self._db.backupMove()
+
+    def fixAll(self)->dict[str,bool]:
+        """
+
+        :return: dict[str,bool]
+        """
+
+        return self._db.fixAll()

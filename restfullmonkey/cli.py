@@ -10,11 +10,13 @@ parser.add_argument('-r', '--report',
   help="short report",
   action='store_false'
 )
+
 parser.add_argument('-c', '--count',
   dest='count',
   help="count the records",
   action='store_true'
 )
+
 parser.add_argument("-lp", "--list-paths",
   dest="list_paths",
   help="list all paths",
@@ -32,6 +34,7 @@ parser.add_argument("-ifd", "--index-from-db",
   help="index form database",
   action='store_true'
 )
+
 parser.add_argument("-idx", "--index",
   dest="index_full",
   help="index from index file",
@@ -50,6 +53,11 @@ parser.add_argument("-sc", "--show-colum",
   action='store_true'
 )
 
+parser.add_argument("-fx", "--fix-all",
+  dest="fix_all",
+  help="fix all pathes",
+  action='store_true'
+)
 
 parser.add_argument("-p", "--path",
   type=str,
@@ -67,7 +75,7 @@ parser.add_argument("-tc", "--column",
   default=""
 )
 
-parser.add_argument("-tc", "--reorganize",
+parser.add_argument("-reo", "--reorganize",
   dest="reorganize",
   help="database reorganize",
   action='store_true'
@@ -136,4 +144,8 @@ if __name__ == "__main__":
     elif args.reorganize :
         outFormat.print(
           command.reorganize()
+        )
+    elif args.fix_all :
+        outFormat.print(
+          command.fixAll()
         )

@@ -420,4 +420,28 @@ class DatabasesDbmClass(DatabasesAbstractClass):
         :return: list[str]
         """
 
-        return self.databaseFileList(self._config['dbm_dir'])
+        return sorted(self.databaseFileList(self._config['dbm_dir']))
+
+    def fixAll(self)->list[str,bool]:
+        """
+        database backup
+
+        :return: bool
+        """
+        out = {}
+        for i in self.pathDetect():
+            out[i] = self.fixPath(i)
+        print(out)
+        return out
+
+    def fixPath(self, path_ : str)->bool:
+        """
+        database backup
+
+        :param: str
+        :return: bool
+        """
+        return self._indexes.fixPath(
+          self._patheses.get(path_),
+          self.indexList(path_)
+        )

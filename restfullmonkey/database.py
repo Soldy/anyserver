@@ -229,3 +229,17 @@ class DatabasesClass:
         :return: list[str]
         """
         return self._database.pathDetect()
+
+    def backupMove(self)->bool:
+        """
+
+        :return: bool:
+        """
+        self._database.backupMove()
+
+    def fixAll(self)->list[str,bool]:
+        """
+
+        :return: bool:
+        """
+        return self._database.fixAll()

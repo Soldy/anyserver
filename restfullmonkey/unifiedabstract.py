@@ -72,3 +72,12 @@ class UnifiedAbstact:
             if i.is_file() and i.suffix == ('.'+self._extension):
                 out.append(str(i.stem))
         return out
+
+    def backupMove(self)->bool:
+        """
+        database backup
+
+        :return: bool
+        """
+        self._backupMove()
+        return True

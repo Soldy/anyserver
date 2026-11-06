@@ -424,6 +424,16 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         self._patheses.backupMove()
         self._indexes.backupMove()
         self._backupMove()
+        return True
+
+    def fixAll(self)->list[str,bool]:
+        """
+        database backup
+
+        :return: bool
+        """
+        for i in self.pathDetect():
+            self.fixPath(i)
 
     def fixPath(self, path_ : str)->bool:
         """
@@ -436,4 +446,3 @@ class DatabasesJsonClass(DatabasesAbstractClass):
           self._patheses.get(path_),
           self.pathDetect(path_)
         )
-
