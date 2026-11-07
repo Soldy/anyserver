@@ -4,7 +4,7 @@ Simplified curses menu
 
 
 import curses
-import copy
+from copy import deepcopy
 
 def tableMake(
   rows : list[str|dict[str,str|int|float]]|dict[str,dict[str,str|int|float]]
@@ -34,7 +34,7 @@ def tableMake(
             else :
                 for a in rows[i]:
                     newrow[a] = str(rows[i][a])
-            row_checked.append(copy.deepcopy(newrow))
+            row_checked.append(deepcopy(newrow))
         rows = row_checked
     # Use dictionary keys as column nameso
     if isinstance(rows[0], dict):
@@ -126,19 +126,21 @@ def menuCurses(scr_, items)->int:
 
     while True:
         scr_.clear()
-
         for index, item in enumerate(items):
+            text : str = deepcopy(item)
+            if len(text) > width - 3:
+                text = text[:(width - 3)]
             if index > height:
-               break
+                break
             if index == selected:
                 scr_.addstr(
                     index,
                     0,
-                    f"> {item}",
+                    f"> {text}",
                     curses.A_REVERSE
                 )
             else:
-                scr_.addstr(index, 0, f"  {item}")
+                scr_.addstr(index, 0, f"  {text}")
 
         scr_.refresh()
 
