@@ -26,9 +26,7 @@ def tableMake(
             newrow = {}
             newrow['name'] = str(i)
             if (
-              isinstance(rows[i], str) or
-              isinstance(rows[i], int) or
-              isinstance(rows[i], bool)
+              isinstance(rows[i], (str, int, bool))
             ):
                 newrow['value'] = str(rows[i])
             else :
