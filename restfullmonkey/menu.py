@@ -2,6 +2,7 @@
 extreme simple menu main
 """
 import curses
+from argparse import Namespace
 from restfullmonkey.outformat import OutFormat
 from restfullmonkey.command import CommandClass
 from restfullmonkey.menucurses import menuCurses, timeMessage
@@ -14,80 +15,93 @@ def main(stdscr):
     :param: curses.window
 
     """
-    command = CommandClass()
-    args = command.args()
-    outFormat = OutFormat()
-    outFormat = OutFormat(args.text_format)
-    outFormat.setSCR(stdscr)
-    def columnsList()->any:
+    command : CommandClass = CommandClass()
+    args : Namespace = command.args()
+    outFormat : OutFormat = OutFormat(args.text_format)
+    looping : bool = True
+    titles : list[str] = []
+    funcs : list[callable] = []
+    def columnsList()->list[str]:
+        """
+
+        :return: list[str]
+        """
         return command.columnsList(
-          pathListMenu(
-            command.pathList(),
-          )
+          pathListMenu()
         )
 
-    def indexList()->any:
+    def indexList()->list[str]:
+        """
+
+        :return: list[str]
+        """
         return command.indexList(
-          pathListMenu(
-            command.pathList(),
-          )
+          pathListMenu()
         )
 
-    def indexListFromDB()->any:
+    def indexListFromDB()->list[str]:
+        """
+
+        :return: list[str]
+        """
         return command.indexListFromDB(
-          pathListMenu(
-            command.pathList(),
-          )
+          pathListMenu()
         )
 
-    def indexCheck()->any:
+    def indexCheck()->str:
+        """
+
+        :return: str
+        """
         return command.indexCheck(
-           pathListMenu(
-             command.pathList(),
-           )
+           pathListMenu()
         )
 
-    def pathListMenu(
-      pathes_ : dict[str,str]
-    ):
+    def listMenu(
+      list_ : dict[str,str]
+    )->int:
+        """
+
+        :return: int
+        """
         menu = []
-        for i in pathes_:
+        for i in list_:
             menu.append(i['path'])
         selected = menuCurses(stdscr, menu)
         return menu[selected]
 
-    looping = True
+    def pathListMenu()->int:
+        """
+
+        :return: int
+        """
+        return listMenu(
+          command.pathList(),
+        )
+    menu_list : dict[str,callable] = {
+      "Path List" : command.pathList,
+      "Path Detect" : command.pathDetect,
+      "Column List" : columnsList,
+      "Index List" : indexList,
+      "Index List from db" : indexListFromDB,
+      "Index Check" : indexCheck,
+      "Count all" : command.countAll,
+      "Database reorganize" : command.reorganize,
+      "Database path detect" : command.fixAll,
+      "Backup Move" : command.backupMove,
+    }
+
+    for i in menu_list:
+        titles.append(i)
+        funcs.append(menu_list[i])
+    titles.append("Exit")
+    outFormat.setSCR(stdscr)
     while looping:
-        titles = [
-          "Path List",
-          "Path Detect",
-          "Column List",
-          "Index List",
-          "Index List from db",
-          "Index Check",
-          "Count all",
-          "Database reorganize",
-          "Database path detect",
-          "Backup Move",
-          "Exit"
-        ]
-        funcs = [
-          command.pathList,
-          command.pathDetect,
-          columnsList,
-          indexList,
-          indexListFromDB,
-          indexCheck,
-          command.countAll,
-          command.reorganize,
-          command.fixAll,
-          command.backupMove
-        ]
         selected = menuCurses(stdscr, titles)
         timeMessage(stdscr, 'processing')
         if args.oneshot:
             looping = False
-        if len(funcs) >= selected:
+        if len(funcs)-1 >= selected:
             outFormat.print(
               funcs[selected]()
             )
