@@ -3,6 +3,7 @@ json indexes class
 """
 import os
 import json
+from copy import deepcopy
 from restfullmonkey.indexesabstract import IndexesAbstractClass
 
 
@@ -83,6 +84,7 @@ class IndexesJsonClass(IndexesAbstractClass):
         if before != self._serials[path_]:
             self._saveIndex()
         return str(self._serials[path_])
+
     def fixPath(
       self,
       path_ : str,

@@ -27,7 +27,7 @@ class DatabasesJsonClass(DatabasesAbstractClass):
       config_ : dict[str,str]
     ):
         super().__init__(logging_, config_)
-        self._store = self._config["db_dir"],
+        self._store = self._config["db_dir"]
         self._extension = 'json'
         self._db = {}
         self._indexes = IndexesJsonClass(
@@ -444,5 +444,5 @@ class DatabasesJsonClass(DatabasesAbstractClass):
         """
         self._indexes.fixPath(
           self._patheses.get(path_),
-          self.pathDetect(path_)
+          self.pathDetect()
         )
