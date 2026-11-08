@@ -13,7 +13,6 @@ def main(stdscr):
     temp main menu
 
     :param: curses.window
-
     """
     command : CommandClass = CommandClass()
     args : Namespace = command.args()
@@ -42,7 +41,13 @@ def main(stdscr):
         return listMenu(
           command.pathList(),
     )
-    def pathLayer(fun_):
+
+    def pathLayer(fun_: callable)->callable:
+        """
+
+        :param: callable
+        :return: callable
+        """
         def out():
             return fun_(
               pathListMenu()
