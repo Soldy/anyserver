@@ -4,7 +4,7 @@ extreme simple menu main
 import curses
 from restfullmonkey.outformat import OutFormat
 from restfullmonkey.command import CommandClass
-from restfullmonkey.menucurses import menuCurses
+from restfullmonkey.menucurses import menuCurses, timeMessage
 
 
 def main(stdscr):
@@ -84,11 +84,12 @@ def main(stdscr):
           command.backupMove
         ]
         selected = menuCurses(stdscr, titles)
+        timeMessage(stdscr, 'processing')
         if args.oneshot:
             looping = False
         if len(funcs) >= selected:
             outFormat.print(
-              funcs[selected]
+              funcs[selected]()
             )
         else :
             looping = False

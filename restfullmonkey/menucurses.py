@@ -152,3 +152,21 @@ def menuCurses(scr_, items_ : list[str])->int:
             return selected
         elif key == ord("q"):
             return None
+
+def timeMessage(scr_, msg_ : str )->None:
+    """
+    menu function
+
+    :param: __curses.window:
+    :param: str:
+    """
+    height : int
+    width : int
+    height, width = scr_.getmaxyx()
+    scr_.clear()
+    scr_.addstr(
+      max((int(height/2)-1), 0),
+      max(int((width - len(msg_))/2), 0),
+      msg_
+    )
+    scr_.refresh()
