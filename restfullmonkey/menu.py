@@ -3,10 +3,10 @@ extreme simple menu main
 """
 import curses
 from argparse import Namespace
+from typing import Callable
 from restfullmonkey.outformat import OutFormat
 from restfullmonkey.command import CommandClass
 from restfullmonkey.menucurses import menuCurses, timeMessage
-
 
 def main(stdscr):
     """
@@ -19,42 +19,48 @@ def main(stdscr):
     outFormat : OutFormat = OutFormat(args.text_format)
     looping : bool = True
     titles : list[str] = []
-    funcs : list[callable] = []
+    funcs : list[Callable[[],str|dict[str,str|dict[str,str]]]] = []
+    menu_list : dict[str,Callable[[],str|dict[str,str|dict[str,str]]]] = {}
     def listMenu(
-      list_ : dict[str,str]
-    )->int:
+      list_ : list[str|dict[str,str]]
+    )->str|dict[str,str]:
         """
 
-        :return: int
+        :return: str|dict[str,str]:
         """
-        menu = []
+        menu : list[str] = []
         for i in list_:
-            menu.append(i['path'])
+            if isinstance(i, dict) and 'path' in i:
+                menu.append(i['path'])
+            else:
+                menu.append(str(i))
         selected = menuCurses(stdscr, menu)
         return menu[selected]
 
-    def pathListMenu()->int:
+    def pathListMenu()->str|dict[str,str]:
         """
 
-        :return: int
+        :return: str|dict[str,str]:
         """
         return listMenu(
           command.pathList(),
-    )
+        )
 
-    def pathLayer(fun_: callable)->callable:
+    def pathLayer(
+      fun_: Callable[[list[dict[str,str]]],str|dict[str,str]]
+    )->Callable[[],str|dict[str,str]]:
         """
 
-        :param: callable
-        :return: callable
+        :param: callable[[list[dict[str,str]]],str|dict[str,str]]
+        :return: callable[str|dict[str,str]]
         """
-        def out():
+        def out()->Callable[[],str|dict[str,str]]:
             return fun_(
               pathListMenu()
             )
         return out
 
-    menu_list : dict[str,callable] = {
+    menu_list = {
       "Path List" : command.pathList,
       "Path Detect" : command.pathDetect,
       "Column List" : pathLayer(command.columnsList),
@@ -72,12 +78,15 @@ def main(stdscr):
         funcs.append(v)
     titles.append("Exit")
     outFormat.setSCR(stdscr)
+    # We don’t need any try-catch.
+    # If the code fails, we land on the CLI with the error message.
+    # That's the expectation here.
     while looping:
         selected = menuCurses(stdscr, titles)
         timeMessage(stdscr, 'processing')
         if args.oneshot:
             looping = False
-        if len(funcs)-1 >= selected:
+        if -1 < selected <= len(funcs)-1:
             outFormat.print(
               funcs[selected]()
             )
