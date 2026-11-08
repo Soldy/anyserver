@@ -41,7 +41,7 @@ class OutFormat:
 
         :param: str
         """
-#pylint: disab comm e=W0719
+#pylint: disable=W0719
         if format_ not in ['json', 'text']:
             raise Exception(
               'Wrong api output format: \n'+
