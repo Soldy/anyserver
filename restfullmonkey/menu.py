@@ -19,6 +19,34 @@ def main(stdscr):
     outFormat = OutFormat()
     outFormat = OutFormat(args.text_format)
     outFormat.setSCR(stdscr)
+    def columnsList()->any:
+        return command.columnsList(
+          pathListMenu(
+            command.pathList(),
+          )
+        )
+
+    def indexList()->any:
+        return command.indexList(
+          pathListMenu(
+            command.pathList(),
+          )
+        )
+
+    def indexListFromDB()->any:
+        return command.indexListFromDB(
+          pathListMenu(
+            command.pathList(),
+          )
+        )
+
+    def indexCheck()->any:
+        return command.indexCheck(
+           pathListMenu(
+             command.pathList(),
+           )
+        )
+
     def pathListMenu(
       pathes_ : dict[str,str]
     ):
@@ -30,7 +58,7 @@ def main(stdscr):
 
     looping = True
     while looping:
-        selected = menuCurses(stdscr, [
+        titles = [
           "Path List",
           "Path Detect",
           "Column List",
@@ -42,66 +70,27 @@ def main(stdscr):
           "Database path detect",
           "Backup Move",
           "Exit"
-        ])
-        if selected == 0:
+        ]
+        funcs = [
+          command.pathList,
+          command.pathDetect,
+          columnsList,
+          indexList,
+          indexListFromDB,
+          indexCheck,
+          command.countAll,
+          command.reorganize,
+          command.fixAll,
+          command.backupMove
+        ]
+        selected = menuCurses(stdscr, titles)
+        if args.oneshot:
+            looping = False
+        if len(funcs) >= selected:
             outFormat.print(
-              command.pathList()
-            )
-        elif selected == 1:
-            outFormat.print(
-              command.pathDetect()
-            )
-        elif selected == 2:
-            outFormat.print(
-              command.columnsList(
-                pathListMenu(
-                  command.pathList(),
-                )
-              )
-            )
-        elif selected == 3:
-            outFormat.print(
-              command.indexList(
-                pathListMenu(
-                  command.pathList(),
-                )
-              )
-            )
-        elif selected == 4:
-            outFormat.print(
-              command.indexListFromDB(
-                pathListMenu(
-                  command.pathList(),
-                )
-              )
-            )
-        elif selected == 5:
-            outFormat.print(
-              command.indexCheck(
-                pathListMenu(
-                  command.pathList(),
-                )
-              )
-            )
-        elif selected == 6:
-            outFormat.print(
-              command.countAll()
-            )
-        elif selected == 7:
-            outFormat.print(
-              command.reorganize()
-            )
-        elif selected == 8:
-            outFormat.print(
-              command.fixAll()
-            )
-        elif selected == 9:
-            outFormat.print(
-              command.backupMove()
+              funcs[selected]
             )
         else :
-            looping = False
-        if args.oneshot:
             looping = False
 
 if __name__ == "__main__":
