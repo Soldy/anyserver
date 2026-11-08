@@ -84,7 +84,6 @@ class IndexesDbmClass(IndexesAbstractClass):
 
         :return: str
         """
-
         self._db.reorganize()
         return 'Database reorganized'
 
@@ -100,7 +99,6 @@ class IndexesDbmClass(IndexesAbstractClass):
         :param: list[str]
         :return: bool
         """
-
         self._db[path_] = json.dumps({
           'serial' : max(indexes_),
           'index'  : sorted(indexes_)
