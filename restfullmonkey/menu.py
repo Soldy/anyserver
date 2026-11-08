@@ -21,42 +21,6 @@ def main(stdscr):
     looping : bool = True
     titles : list[str] = []
     funcs : list[callable] = []
-    def columnsList()->list[str]:
-        """
-
-        :return: list[str]
-        """
-        return command.columnsList(
-          pathListMenu()
-        )
-
-    def indexList()->list[str]:
-        """
-
-        :return: list[str]
-        """
-        return command.indexList(
-          pathListMenu()
-        )
-
-    def indexListFromDB()->list[str]:
-        """
-
-        :return: list[str]
-        """
-        return command.indexListFromDB(
-          pathListMenu()
-        )
-
-    def indexCheck()->str:
-        """
-
-        :return: str
-        """
-        return command.indexCheck(
-           pathListMenu()
-        )
-
     def listMenu(
       list_ : dict[str,str]
     )->int:
@@ -77,23 +41,30 @@ def main(stdscr):
         """
         return listMenu(
           command.pathList(),
-        )
+    )
+    def pathLayer(fun_):
+        def out():
+            return fun_(
+              pathListMenu()
+            )
+        return out
+
     menu_list : dict[str,callable] = {
       "Path List" : command.pathList,
       "Path Detect" : command.pathDetect,
-      "Column List" : columnsList,
-      "Index List" : indexList,
-      "Index List from db" : indexListFromDB,
-      "Index Check" : indexCheck,
+      "Column List" : pathLayer(command.columnsList),
+      "Index List" : pathLayer(command.indexList),
+      "Index List from db" : pathLayer(command.indexListFromDB),
+      "Index Check" : pathLayer(command.indexCheck),
       "Count all" : command.countAll,
       "Database reorganize" : command.reorganize,
       "Database path detect" : command.fixAll,
       "Backup Move" : command.backupMove,
     }
 
-    for i in menu_list:
-        titles.append(i)
-        funcs.append(menu_list[i])
+    for k, v in menu_list.items():
+        titles.append(k)
+        funcs.append(v)
     titles.append("Exit")
     outFormat.setSCR(stdscr)
     while looping:
