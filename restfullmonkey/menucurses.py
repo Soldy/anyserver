@@ -150,8 +150,6 @@ def menuCurses(scr_, items_ : list[str])->int:
             selected = (selected + 1) % items_len
         elif key in (curses.KEY_ENTER, 10, 13):
             return selected
-        elif key == ord("q"):
-            return None
 
 def timeMessage(scr_, msg_ : str )->None:
     """
