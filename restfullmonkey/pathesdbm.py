@@ -29,17 +29,14 @@ class PathesDbmClass(PathesAbstractClass):
         :param: str : path_
         :return: str
         """
-        if path_ in self._path:
-            return str(self._path[path_])
-        with dbm.gnu.open(
-          self._config['dbm_path'],
-          'cs'
-        ) as db:
-            db[path_] = str(self._serial)
-            self._path[path_] = str(
-              self._serial
-            )
-            self._serial += 1
+        if path_ not in self._path:
+            with dbm.gnu.open(
+              self._config['dbm_path'],
+              'cs'
+            ) as db:
+                db[path_] = str(
+                  super().get(path_)
+                )
         return str(self._path[path_])
 
     def _load(self)->None:
