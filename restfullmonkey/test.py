@@ -18,6 +18,7 @@ from restfullmonkey.indexesdbm import IndexesDbmClass
 from restfullmonkey.databasehelp import DatabaseHelpClass
 from restfullmonkey.database import DatabasesClass
 from restfullmonkey.server import serverStart
+from restfullmonkey.menucurses import lineToShow
 #import .server
 
 _ob = {}
@@ -229,7 +230,31 @@ def simpleIndexTest(
     })
     return indexes
 
-
+def test_lineToShow():
+    assert (lineToShow('1', 20) == ['         1          '])
+    sample = (
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna '+
+      'aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. '+
+      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '+
+      'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    )
+    result = [
+      'Lorem ipsum dolor sit amet,',
+      'consectetur adipiscing elit, sed',
+      'do eiusmod tempor incididunt ut',
+      'labore et dolore magna aliqua. Ut',
+      'enim ad minim veniam, quis nostrud',
+      'exercitation ullamco laboris nisi',
+      'ut aliquip ex ea commodo',
+      'consequat. Duis aute irure dolor',
+      'in reprehenderit in voluptate',
+      'velit esse cillum dolore eu fugiat',
+      'nulla pariatur. Excepteur sint',
+      'occaecat cupidatat non proident,',
+      'sunt in culpa qui officia deserunt',
+      '    mollit anim id est laborum.    '
+    ]
+    assert (lineToShow(sample, 35) == result)
 
 def test_config():
     config = simpleConfigTest({

@@ -4,6 +4,48 @@ Simplified curses menu
 import curses
 from copy import deepcopy
 
+def lineToShow(
+  text_: str,
+  max_: int
+) -> list[str]:
+    """
+    Split the text to lines
+
+    :param: str
+    :param: int
+    :return: list[str]
+    """
+    if max_ < 4:
+        return['']
+    result : list[str] = []
+    def newLine(line_:str):
+        if line_ != '':
+            result.append(str(line_).strip().center(max_))
+        return ''
+    for line in text_.splitlines():
+        words : list[str] = line.split()
+        current : str = ''
+
+        for word in words:
+            word = word.strip()
+            candidate = current
+            if len(word) > max_:
+                word = word[:max_ - 3] + "..."
+                current = newLine(current)
+                newLine(word)
+                continue
+            if candidate != '':
+                candidate += ' '
+            candidate += word
+            if len(candidate) >= max_:
+                result.append(current)
+                current = word
+            else:
+                current = candidate
+        newLine(current)
+
+    return result
+
 def tableMake(
   rows_ : list[str|dict[str,str|int|float]]|dict[str,dict[str,str|int|float]]
 )->str:
@@ -14,7 +56,7 @@ def tableMake(
     :return: str
     """
 
-    if not rows_:
+    if not rows_ or not rows_[0]:
         return ""
     # fix the path dict to list
     if isinstance(rows_, dict):
@@ -111,6 +153,13 @@ def printCurses(scr_, text_: str)->None:
 def menuCurses(scr_, items_ : list[str])->int:
     """
     menu function
+    This is usually managed as admin menus.
+    If the item_ comes empty, it is a bug somewhere before this function.
+    So we want to crash as soon as possible.
+    If we manage the empty items list, it will cause a crash later.
+    Debugging becomes more complex.
+    So some code are lame.
+    How the dope says: Die Motherf*cker
 
     :param: __curses.window:
     :param: list[str]:
@@ -136,7 +185,7 @@ def menuCurses(scr_, items_ : list[str])->int:
                 scr_.addstr(
                     index,
                     0,
-                    f"> {text}",
+                    ("> "+text),
                     curses.A_REVERSE
                 )
             else:
